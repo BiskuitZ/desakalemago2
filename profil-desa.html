@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil Desa - Desa Kalemago</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .heading-font { font-family: 'Playfair Display', sans-serif; }
+    .nav-red { background: linear-gradient(to right, #b91c1c, #991b1b); }
+  </style>
+</head>
+<body class="bg-[#F5F5F5] text-gray-800">
+
+  <!-- Navbar (sama persis) -->
+  <nav class="nav-red fixed top-0 w-full z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3 text-white">
+          <div class="w-11 h-11 bg-white/20 rounded-2xl flex items-center justify-center text-4xl">🌿</div>
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight">Desa Kalemago</h1>
+            <p class="text-xs text-white/70 -mt-1">Kec. Lore Timur, Kab. Poso</p>
+          </div>
+        </div>
+        <div class="hidden md:flex items-center gap-8 text-white font-medium text-base">
+          <a href="index.html" class="hover:text-emerald-200 transition">Home</a>
+          <a href="profil-desa.html" class="hover:text-emerald-200 transition">Profil Desa</a>
+          <a href="infografis.html" class="hover:text-emerald-200 transition">Infografis</a>
+          <a href="listing.html" class="hover:text-emerald-200 transition">Listing</a>
+          <a href="belanja.html" class="hover:text-emerald-200 transition">Belanja</a>
+        </div>
+        <button onclick="toggleMobileMenu()" class="md:hidden text-white text-3xl"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden bg-red-900 py-6">
+      <div class="flex flex-col items-center gap-6 text-white font-medium text-lg">
+        <a href="index.html">Home</a>
+        <a href="profil-desa.html">Profil Desa</a>
+        <a href="infografis.html">Infografis</a>
+        <a href="listing.html">Listing</a>
+        <a href="belanja.html">Belanja</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="pt-24 pb-20">
+    <div class="max-w-7xl mx-auto px-6">
+      <h1 class="text-5xl font-bold heading-font text-center mb-12">Profil Desa Kalemago</h1>
+      
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <img src="https://picsum.photos/id/1015/800/600" alt="Pemandangan Desa Kalemago" class="rounded-3xl shadow-2xl w-full">
+        </div>
+        <div class="space-y-6 text-lg">
+          <p>Desa Kalemago merupakan salah satu desa di Kecamatan Lore Timur, Kabupaten Poso, Provinsi Sulawesi Tengah. Desa ini terletak di kawasan Lembah Napu yang dikenal dengan keindahan alamnya dan situs megalit purbakala.</p>
+          <p>Luas wilayah desa sekitar 1.200 Ha dengan mayoritas penduduk bermata pencaharian sebagai petani.</p>
+          
+          <div class="grid grid-cols-2 gap-6 pt-6">
+            <div class="bg-white p-6 rounded-3xl shadow">
+              <p class="text-emerald-600 font-medium">Luas Wilayah</p>
+              <p class="text-3xl font-bold">1.200 Ha</p>
+            </div>
+            <div class="bg-white p-6 rounded-3xl shadow">
+              <p class="text-emerald-600 font-medium">Jumlah Dusun</p>
+              <p class="text-3xl font-bold">5 Dusun</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>
