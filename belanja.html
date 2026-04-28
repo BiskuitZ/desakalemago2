@@ -14,7 +14,6 @@
     .glass { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); }
     
     /* Animated Loading Text (same as index.html) */
-    #loading-overlay {
       display: none;
       position: fixed;
       top: 0;
@@ -63,19 +62,6 @@
 <body class="bg-gray-50 text-gray-800 h-full">
 
   <!-- Animated Loading Text (same as index.html) -->
-  <div id="loading-overlay" class="fixed inset-0 bg-emerald-950/90 backdrop-blur-xl flex items-center justify-center z-[999999]" style="display: none;">
-    <div class="text-center">
-      <h1 class="loading-text text-6xl font-bold text-white tracking-[8px]">
-        <span class="let1">l</span>
-        <span class="let2">o</span>
-        <span class="let3">a</span>
-        <span class="let4">d</span>
-        <span class="let5">i</span>
-        <span class="let6">n</span>
-        <span class="let7">g</span>
-      </h1>
-      <p class="text-emerald-400 text-sm mt-4 tracking-widest">PLEASE WAIT</p>
-    </div>
   </div>
 
   <!-- Header -->
@@ -91,10 +77,6 @@
         </div>
 
         <nav class="hidden md:flex items-center gap-3 text-white font-medium ml-8">
-          <a href="index.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-emerald-300 transition px-2 py-1 text-sm">Home</a>
-          <a href="profildesa.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-emerald-300 transition px-2 py-1 text-sm">Profil Desa</a>
-          <a href="infografis.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-emerald-300 transition px-2 py-1 text-sm">Infografis</a>
-          <a href="listing.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-emerald-300 transition px-2 py-1 text-sm">Listing</a>
           <a href="belanja.html" class="border-b-2 border-emerald-400 px-2 py-1 text-sm">Belanja</a>
         </nav>
 
@@ -360,7 +342,6 @@
       const link = e.target.closest('a[href]');
       if (link && link.href && !link.href.includes('#') && !link.href.startsWith('javascript:')) {
         if (link.href !== window.location.href) {
-          const overlay = document.getElementById('loading-overlay');
           if (overlay) overlay.style.display = 'flex';
         }
       }
@@ -368,7 +349,6 @@
       buttons.forEach(button => {
         button.addEventListener('click', function(e) {
           if (!button.onclick || !button.onclick.toString().includes('toggleMenu')) {
-            showLoading();
             button.disabled = true;
             setTimeout(() => { button.disabled = false; }, 2000);
           }
@@ -378,7 +358,6 @@
 
     window.addEventListener('pageshow', function(event) {
       if (event.persisted) {
-        hideLoading();
       }
     });
 
@@ -415,7 +394,6 @@
     });
     // Global click listener for all links and buttons (fallback)
     document.addEventListener('click', function(e) {
-      const overlay = document.getElementById('loading-overlay');
       if (!overlay) return;
       
       const target = e.target.closest('a, button');
@@ -434,7 +412,6 @@
 
     // Final safety: hide loader after page is fully loaded
     window.addEventListener('load', function() {
-      const overlay = document.getElementById('loading-overlay');
       if (overlay) overlay.style.display = 'none';
     });
 

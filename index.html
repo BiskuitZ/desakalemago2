@@ -16,7 +16,6 @@
     }
     
     /* Animated Loading Text */
-    #loading-overlay {
       display: none;
       position: fixed;
       top: 0;
@@ -61,7 +60,6 @@
       }
     }
     
-    #loading-overlay img {
       width: 200px;
       height: 200px;
       object-fit: contain;
@@ -144,19 +142,6 @@
 </head>
 <body class="bg-gray-50 text-gray-800 h-full">
   <!-- Animated Loading Text -->
-  <div id="loading-overlay" class="fixed inset-0 bg-emerald-950/90 backdrop-blur-xl flex items-center justify-center z-[9990]" style="display: none;">
-    <div class="text-center">
-      <h1 class="loading-text text-6xl font-bold text-white tracking-[8px]">
-        <span class="let1">l</span>
-        <span class="let2">o</span>
-        <span class="let3">a</span>
-        <span class="let4">d</span>
-        <span class="let5">i</span>
-        <span class="let6">n</span>
-        <span class="let7">g</span>
-      </h1>
-      <p class="text-emerald-400 text-sm mt-4 tracking-widest">PLEASE WAIT</p>
-    </div>
   </div>
 
   <div id="root" class="min-h-full">
@@ -251,7 +236,6 @@
       const link = e.target.closest('a[href]');
       if (link && link.href && !link.href.includes('#') && !link.href.startsWith('javascript:')) {
         if (link.href !== window.location.href) {
-          const overlay = document.getElementById('loading-overlay');
           if (overlay) overlay.style.display = 'flex';
         }
       }
@@ -259,7 +243,6 @@
 
     window.addEventListener('pageshow', function(event) {
       if (event.persisted) {
-        hideLoading();
       }
     });
   </script>
@@ -269,7 +252,7 @@
     
     <!-- Video Background -->
     <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0">
-      <source src="SAVANA PADANG NAPU POSO - Rumah Katu Production.mp4" type="video/mp4">
+      <source src="Video/SAVANA PADANG NAPU POSO - Rumah Katu Production.mp4" type="video/mp4">
     </video>
     
     <!-- Light Overlay (video tetap terang seperti original) -->
@@ -696,13 +679,11 @@
       links.forEach(link => {
         link.addEventListener('click', function(e) {
           if (this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
-            showLoading();
           }
         });
       });
       buttons.forEach(button => {
         button.addEventListener('click', function(e) {
-          showLoading();
           button.disabled = true;
         });
       });
@@ -710,7 +691,6 @@
 
     window.addEventListener('pageshow', function(event) {
       if (event.persisted) {
-        hideLoading();
       }
     });
   </script>
