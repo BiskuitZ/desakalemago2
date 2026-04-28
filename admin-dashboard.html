@@ -177,36 +177,32 @@
 
     // Check authentication
     async function checkAuth() {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        window.location.href = 'login.html';
-        return;
-      }
+  const userStr = localStorage.getItem('user');
+  
+  if (!userStr) {
+    window.location.href = 'login.html';
+    return;
+  }
 
-      try {
-        const response = await fetch(API_URL, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+  try {
+    const user = JSON.parse(userStr);
+    
+    // Verifikasi ke backend tanpa token
+    const response = await fetch(`https://desakalemago2-backend-production.up.railway.app/api/auth/profile?username=${user.username}`);
+    const data = await response.json();
 
-        const data = await response.json();
-
-        if (data.success) {
-          document.getElementById('userName').textContent = data.user.name;
-          document.getElementById('userRole').textContent = data.user.role.toUpperCase();
-        } else {
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          window.location.href = 'login.html';
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        window.location.href = 'login.html';
-      }
+    if (data.success) {
+      document.getElementById('userName').textContent = data.user.name;
+      document.getElementById('userRole').textContent = data.user.role.toUpperCase();
+    } else {
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
     }
-
+  } catch (error) {
+    console.error('Auth check failed:', error);
+    window.location.href = 'login.html';
+  }
+}
     function logout() {
       if (confirm('Yakin ingin logout?')) {
         localStorage.removeItem('token');
