@@ -198,10 +198,11 @@
     }
 
     function logout() {
-      if (confirm('Yakin ingin logout?')) {
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      }
+      // Hapus data user
+      localStorage.removeItem('user');
+      
+      // Redirect ke login
+      window.location.href = 'login.html';
     }
 
     function showToast(message) {
