@@ -109,7 +109,7 @@
 <body class="bg-gray-50 text-gray-800 h-full">
 
   <!-- Animated Loading Text (same as index.html) -->
-  <div id="loading-overlay" class="fixed inset-0 bg-emerald-950/90 backdrop-blur-xl flex items-center justify-center z-[99999]" style="display: none;">
+  <div id="loading-overlay" class="fixed inset-0 bg-emerald-950/90 backdrop-blur-xl flex items-center justify-center z-[9990]" style="display: none;">
     <div class="text-center">
       <h1 class="loading-text text-6xl font-bold text-white tracking-[8px]">
         <span class="let1">l</span>
@@ -153,7 +153,7 @@
         </nav>
 
         <!-- Mobile Menu Button -->
-        <button class="md:hidden text-white focus:outline-none" onclick="toggleMenu()">
+        <button class="md:hidden text-white focus:outline-none" onclick="openMobileSidebar()">
           <i class="fas fa-bars text-2xl"></i>
         </button>
       </div>
@@ -166,7 +166,7 @@
           <div class="text-white">
             <h2 class="text-xl font-bold">Menu</h2>
           </div>
-          <button class="text-white focus:outline-none" onclick="toggleMenu()">
+          <button class="text-white focus:outline-none" onclick="openMobileSidebar()">
             <i class="fas fa-times text-2xl"></i>
           </button>
         </div>
