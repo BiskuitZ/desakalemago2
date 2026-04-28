@@ -44,6 +44,7 @@
         </button>
       </form>
 
+      <!-- TOMBOL DAFTAR AKUN -->
       <div class="mt-6 text-center">
         <p class="text-sm text-gray-600">
           Belum punya akun? 
@@ -92,10 +93,7 @@
         const data = await response.json();
 
         if (data.success) {
-          // Simpan user info
           localStorage.setItem('user', JSON.stringify(data.user));
-          
-          // Redirect ke dashboard
           window.location.href = 'admin-dashboard.html';
         } else {
           errorDiv.textContent = data.message || 'Login gagal';
@@ -111,7 +109,6 @@
       }
     });
 
-    // Cek apakah sudah login
     if (localStorage.getItem('user')) {
       window.location.href = 'admin-dashboard.html';
     }
