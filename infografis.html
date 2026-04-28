@@ -196,39 +196,16 @@
       menu.classList.toggle('translate-x-full');
     }
 
-    function showLoading() {
-      const overlay = document.getElementById('loading-overlay');
-      if (!overlay) return;
-      overlay.style.display = 'flex';
-    }
-
-    function hideLoading() {
-      const overlay = document.getElementById('loading-overlay');
-      if (!overlay) return;
-      overlay.style.display = 'none';
-    }
-
-    // Hide loader immediately (before anything else)
-    (function() {
-      const overlay = document.getElementById('loading-overlay');
-      if (overlay) overlay.style.display = 'none';
-    })();
-
-    document.addEventListener('DOMContentLoaded', function() {
-      // Register ChartJS datalabels plugin
-      Chart.register(ChartDataLabels);
-      
-      const links = document.querySelectorAll('a[href]');
-      const navigationButtons = document.querySelectorAll('button:not(.category-btn)');
-
-      // Handle navigation links
-      links.forEach(link => {
-        link.addEventListener('click', function(e) {
-          if (this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
-            showLoading();
-          }
-        });
-      });
+    // Loader HANYA untuk navigasi antar halaman
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href]');
+      if (link && link.href && !link.href.includes('#') && !link.href.startsWith('javascript:')) {
+        if (link.href !== window.location.href) {
+          const overlay = document.getElementById('loading-overlay');
+          if (overlay) overlay.style.display = 'flex';
+        }
+      }
+    });
 
       // Initialize male detail chart (with error handling)
       try {
