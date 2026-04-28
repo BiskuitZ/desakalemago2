@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Belanja - Desa Kalemago</title>
+  <link rel="icon" type="image/png" href="fotokkn/faviconkabposo.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { touch-action: manipulation; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    body { font-family: 'Inter', sans-serif; background-color: #f9fafb; color: #1f2937; }
+    .glass { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); }
+    
+    /* Animated Loading Text (same as index.html) */
+    #loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(16, 185, 129, 0.15);
+      backdrop-filter: blur(12px);
+      z-index: 999999 !important;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .loading-text {
+      font-size: 4.5rem;
+      font-weight: 800;
+      letter-spacing: 12px;
+    }
+    
+    .loading-text span {
+      display: inline-block;
+      animation: loading-wave 1.4s infinite ease-in-out;
+      color: #fff;
+    }
+    
+    .let1 { animation-delay: 0.1s; }
+    .let2 { animation-delay: 0.2s; }
+    .let3 { animation-delay: 0.3s; }
+    .let4 { animation-delay: 0.4s; }
+    .let5 { animation-delay: 0.5s; }
+    .let6 { animation-delay: 0.6s; }
+    .let7 { animation-delay: 0.7s; }
+    
+    @keyframes loading-wave {
+      0%, 100% { 
+        transform: translateY(0) scale(1); 
+        color: #fff;
+      }
+      50% { 
+        transform: translateY(-18px) scale(1.15); 
+        color: #34d399;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 h-full">
+
+  <!-- Animated Loading Text (same as index.html) -->
+  <div id="loading-overlay" class="fixed inset-0 bg-emerald-950/90 backdrop-blur-xl flex items-center justify-center z-[999999]" style="display: none;">
+    <div class="text-center">
+      <h1 class="loading-text text-6xl font-bold text-white tracking-[8px]">
+        <span class="let1">l</span>
+        <span class="let2">o</span>
+        <span class="let3">a</span>
+        <span class="let4">d</span>
+        <span class="let5">i</span>
+        <span class="let6">n</span>
+        <span class="let7">g</span>
+      </h1>
+      <p class="text-emerald-400 text-sm mt-4 tracking-widest">PLEASE WAIT</p>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="bg-emerald-950/90 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <img src="fotokkn/logokabposo.png" alt="Logo Kabupaten Poso" class="h-[64px] w-[45px] object-contain" />
+          <div class="text-white">
+            <h1 class="text-2xl md:text-3xl font-bold">Desa Kalemago</h1>
+            <p class="text-base md:text-lg">Kabupaten Poso</p>
+          </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-3 text-white font-medium ml-8">
+          <a href="index.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-emerald-300 transition px-2 py-1 text-sm">Home</a>
+          <a href="profildesa.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-emerald-300 transition px-2 py-1 text-sm">Profil Desa</a>
+          <a href="infografis.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-emerald-300 transition px-2 py-1 text-sm">Infografis</a>
+          <a href="listing.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-emerald-300 transition px-2 py-1 text-sm">Listing</a>
+          <a href="belanja.html" class="border-b-2 border-emerald-400 px-2 py-1 text-sm">Belanja</a>
+        </nav>
+
+        <button class="md:hidden text-white focus:outline-none" onclick="toggleMenu()">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-emerald-950/95 md:hidden transition-all duration-300 ease-in-out transform translate-x-full z-50">
+      <div class="flex flex-col h-full">
+        <div class="flex justify-between items-center p-4 border-b border-white/20">
+          <div class="text-white"><h2 class="text-xl font-bold">Menu</h2></div>
+          <button class="text-white focus:outline-none" onclick="toggleMenu()"><i class="fas fa-times text-2xl"></i></button>
+        </div>
+        <nav class="flex-1 overflow-y-auto">
+          <div class="flex flex-col gap-3 p-4">
+            <a href="index.html" class="flex items-center space-x-3 hover:text-emerald-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10"><i class="fas fa-home w-6"></i><span>Home</span></a>
+            <a href="profildesa.html" class="flex items-center space-x-3 hover:text-emerald-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10"><i class="fas fa-building w-6"></i><span>Profil Desa</span></a>
+            <a href="infografis.html" class="flex items-center space-x-3 hover:text-emerald-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10"><i class="fas fa-chart-pie w-6"></i><span>Infografis</span></a>
+            <a href="apbdes.html" class="flex items-center space-x-3 hover:text-emerald-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10"><i class="fas fa-file-invoice-dollar w-6"></i><span>APB Desa</span></a>
+            <a href="listing.html" class="flex items-center space-x-3 hover:text-emerald-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10"><i class="fas fa-list w-6"></i><span>Listing</span></a>
+            <a href="belanja.html" class="flex items-center space-x-3 text-emerald-400 transition py-3 px-4 text-white text-lg rounded-lg bg-white/10"><i class="fas fa-shopping-cart w-6"></i><span>Belanja</span></a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('translate-x-full');
+    }
+  </script>
+
+  <!-- Hero Section -->
+  <section class="relative h-[420px] flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-emerald-950/70 via-emerald-900/60 to-emerald-950/70"></div>
+    
+    <div class="relative z-10 text-center px-6 max-w-4xl">
+      <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm mb-6 border border-white/30">
+        <i class="fas fa-leaf text-emerald-400"></i>
+        <span class="text-white font-medium">Produk Unggulan Desa Kalemago</span>
+      </div>
+      <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-4 drop-shadow-2xl">Belanja Produk Desa</h1>
+      <p class="text-xl text-white/90 max-w-2xl mx-auto">Dukung ekonomi masyarakat Desa Kalemago dengan membeli produk berkualitas tinggi</p>
+    </div>
+  </section>
+
+  <!-- Product Section -->
+  <main class="container mx-auto px-6 py-16">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <div class="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-800 rounded-full text-sm font-semibold mb-4">PRODUK UNGGULAN</div>
+        <h2 class="text-4xl font-bold text-emerald-900 mb-4">Kopi Robusta Kalemago</h2>
+        <p class="text-lg text-gray-600 max-w-md mx-auto">Ditanam di ketinggian ideal Desa Kalemago, Kecamatan Lore Timur</p>
+      </div>
+
+      <!-- Product Card -->
+      <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-emerald-100" data-scroll="fade-up">
+        <div class="grid md:grid-cols-2 gap-0">
+          <!-- Product Image -->
+          <div class="relative h-[420px] md:h-auto overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+                 alt="Kopi Robusta Kalemago" 
+                 class="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+            
+            <div class="absolute top-6 left-6">
+              <div class="bg-emerald-600 text-white px-4 py-1.5 rounded-2xl text-sm font-semibold flex items-center gap-2 shadow-lg">
+                <i class="fas fa-medal"></i>
+                <span>Produk Unggulan</span>
+              </div>
+            </div>
+            
+            <div class="absolute bottom-6 right-6 bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl">
+              <div class="flex items-center gap-2 text-sm">
+                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span class="font-semibold text-emerald-700">Stok Terbatas</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="p-10 flex flex-col">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold tracking-widest rounded-full">ROBUSTA</div>
+                <div class="px-3 py-1 bg-amber-100 text-amber-700 text-xs font-bold tracking-widest rounded-full">250 GRAM</div>
+              </div>
+
+              <h3 class="text-4xl font-bold text-emerald-950 mb-4">Kopi Robusta Kalemago</h3>
+              
+              <div class="flex items-baseline gap-2 mb-6">
+                <span class="text-5xl font-extrabold text-emerald-900">Rp85.000</span>
+                <span class="text-gray-500">/ 250 gram</span>
+              </div>
+
+              <div class="prose prose-emerald text-gray-600 mb-8">
+                <p>Kopi Robusta premium yang ditanam di kebun rakyat Desa Kalemago pada ketinggian 800–1.200 mdpl. Memiliki cita rasa bold, aroma khas cokelat hitam, dan aftertaste yang panjang.</p>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-globe text-emerald-600 text-xl"></i>
+                  <div>
+                    <div class="text-xs text-gray-500">Asal</div>
+                    <div class="font-semibold">Desa Kalemago</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-seedling text-emerald-600 text-xl"></i>
+                  <div>
+                    <div class="text-xs text-gray-500">Varietas</div>
+                    <div class="font-semibold">Robusta</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-calendar text-emerald-600 text-xl"></i>
+                  <div>
+                    <div class="text-xs text-gray-500">Panen</div>
+                    <div class="font-semibold">2025</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-weight-hanging text-emerald-600 text-xl"></i>
+                  <div>
+                    <div class="text-xs text-gray-500">Kemasan</div>
+                    <div class="font-semibold">Vacuum Pack</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3 pt-6 border-t">
+              <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20ingin%20membeli%20Kopi%20Robusta%20Kalemago%20250gr" 
+                 target="_blank"
+                 class="w-full flex items-center justify-center gap-3 bg-emerald-700 hover:bg-emerald-800 transition-all text-white font-semibold py-4 rounded-2xl text-lg shadow-lg hover:shadow-xl">
+                <i class="fab fa-whatsapp text-2xl"></i>
+                <span>Beli via WhatsApp</span>
+              </a>
+              
+              <button onclick="showOrderModal()"
+                      class="w-full flex items-center justify-center gap-3 border border-emerald-700 hover:bg-emerald-50 transition-all text-emerald-700 font-semibold py-4 rounded-2xl text-lg">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Pesan Sekarang</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Section -->
+      <div class="mt-16 grid md:grid-cols-3 gap-6" data-scroll="fade-up" data-stagger="true">
+        <div class="glass p-6 rounded-3xl border border-emerald-100">
+          <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center mb-4">
+            <i class="fas fa-truck text-emerald-600 text-xl"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-2">Pengiriman Cepat</h4>
+          <p class="text-sm text-gray-600">Dikirim dalam 1x24 jam setelah pemesanan via Pos Indonesia / J&T</p>
+        </div>
+        <div class="glass p-6 rounded-3xl border border-emerald-100">
+          <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center mb-4">
+            <i class="fas fa-shield-alt text-emerald-600 text-xl"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-2">Kualitas Terjamin</h4>
+          <p class="text-sm text-gray-600">100% biji kopi pilihan dari petani lokal Desa Kalemago</p>
+        </div>
+        <div class="glass p-6 rounded-3xl border border-emerald-100">
+          <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center mb-4">
+            <i class="fas fa-handshake text-emerald-600 text-xl"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-2">Dukung Petani</h4>
+          <p class="text-sm text-gray-600">Setiap pembelian mendukung kesejahteraan petani kopi Desa Kalemago</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-emerald-950 py-12 text-white/80">
+    <div class="container mx-auto px-6 text-center">
+      <div class="flex justify-center space-x-6 mb-6">
+        <a href="#" class="hover:text-white transition"><i class="fab fa-facebook text-2xl"></i></a>
+        <a href="#" class="hover:text-white transition"><i class="fab fa-instagram text-2xl"></i></a>
+        <a href="#" class="hover:text-white transition"><i class="fab fa-whatsapp text-2xl"></i></a>
+      </div>
+      <p class="text-sm">&copy; 2025 Desa Kalemago • Kecamatan Lore Timur, Kabupaten Poso</p>
+      <p class="text-xs mt-1 opacity-60">Dikembangkan oleh KKNT Unsimar 2025</p>
+    </div>
+  </footer>
+
+  <!-- Order Modal -->
+  <div id="orderModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-[100]">
+    <div class="bg-white rounded-3xl w-full max-w-md mx-4 overflow-hidden">
+      <div class="p-8">
+        <div class="flex justify-between items-start mb-6">
+          <div>
+            <h3 class="text-2xl font-bold text-emerald-950">Pesan Kopi</h3>
+            <p class="text-sm text-gray-500">Kopi Robusta Kalemago 250gr</p>
+          </div>
+          <button onclick="hideOrderModal()" class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-times text-2xl"></i>
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap</label>
+            <input type="text" class="w-full border border-gray-300 rounded-2xl px-4 py-3 focus:outline-none focus:border-emerald-500" placeholder="Masukkan nama Anda">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Nomor WhatsApp</label>
+            <input type="tel" class="w-full border border-gray-300 rounded-2xl px-4 py-3 focus:outline-none focus:border-emerald-500" placeholder="08xxxxxxxxxx">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Jumlah</label>
+            <div class="flex items-center border border-gray-300 rounded-2xl px-4">
+              <button class="px-4 py-3 text-xl font-bold text-emerald-700 hover:text-emerald-800" onclick="changeQty(-1)">−</button>
+              <input id="qty" type="text" value="1" class="w-16 text-center font-semibold border-0 focus:outline-none">
+              <button class="px-4 py-3 text-xl font-bold text-emerald-700 hover:text-emerald-800" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-emerald-50 p-6 flex gap-3">
+        <button onclick="hideOrderModal()" class="flex-1 py-3.5 rounded-2xl border border-emerald-200 font-semibold text-emerald-700 hover:bg-white transition">Batal</button>
+        <button onclick="submitOrder()" class="flex-1 py-3.5 bg-emerald-700 hover:bg-emerald-800 transition rounded-2xl font-semibold text-white">Kirim Pesanan</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showOrderModal() {
+      document.getElementById('orderModal').classList.remove('hidden');
+      document.getElementById('orderModal').classList.add('flex');
+    }
+
+    function hideOrderModal() {
+      document.getElementById('orderModal').classList.remove('flex');
+      document.getElementById('orderModal').classList.add('hidden');
+    }
+
+    function changeQty(delta) {
+      const input = document.getElementById('qty');
+      let value = parseInt(input.value) || 1;
+      value = Math.max(1, value + delta);
+      input.value = value;
+    }
+
+    function submitOrder() {
+      const qty = document.getElementById('qty').value;
+      alert(`Terima kasih! Pesanan ${qty} pcs Kopi Robusta Kalemago telah diterima.\n\nKami akan menghubungi Anda via WhatsApp segera.`);
+      hideOrderModal();
+    }
+
+    // Loader HANYA untuk navigasi antar halaman
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href]');
+      if (link && link.href && !link.href.includes('#') && !link.href.startsWith('javascript:')) {
+        if (link.href !== window.location.href) {
+          const overlay = document.getElementById('loading-overlay');
+          if (overlay) overlay.style.display = 'flex';
+        }
+      }
+    });
+      buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          if (!button.onclick || !button.onclick.toString().includes('toggleMenu')) {
+            showLoading();
+            button.disabled = true;
+            setTimeout(() => { button.disabled = false; }, 2000);
+          }
+        });
+      });
+    });
+
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        hideLoading();
+      }
+    });
+
+    // Scroll Animations
+    function initScrollAnimations() {
+      const animatedElements = document.querySelectorAll('[data-scroll]');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const animation = el.dataset.scroll || 'fade-up';
+            const delay = parseInt(el.dataset.delay) || (index * 80);
+            
+            setTimeout(() => {
+              el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+              el.style.transitionDelay = `${delay}ms`;
+              el.style.opacity = '1';
+              el.style.transform = 'translateY(0)';
+            }, 50);
+            observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
+
+      animatedElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(60px)';
+        observer.observe(el);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initScrollAnimations();
+    });
+    // Global click listener for all links and buttons (fallback)
+    document.addEventListener('click', function(e) {
+      const overlay = document.getElementById('loading-overlay');
+      if (!overlay) return;
+      
+      const target = e.target.closest('a, button');
+      if (target) {
+        if (target.tagName === 'A') {
+          if (target.href && target.href !== window.location.href && !target.href.includes('#') && !target.href.startsWith('javascript:')) {
+            overlay.style.display = 'flex';
+          }
+        } else if (target.tagName === 'BUTTON') {
+          if (!target.onclick || !target.onclick.toString().includes('toggleMenu')) {
+            overlay.style.display = 'flex';
+          }
+        }
+      }
+    }, true);
+
+    // Final safety: hide loader after page is fully loaded
+    window.addEventListener('load', function() {
+      const overlay = document.getElementById('loading-overlay');
+      if (overlay) overlay.style.display = 'none';
+    });
+
+  </script>
+</body>
+</html>
