@@ -223,30 +223,14 @@
       menu.classList.toggle('translate-x-full');
     }
 
-    function showLoading() {
-      const overlay = document.getElementById('loading-overlay');
-      overlay.classList.remove('hidden');
-    }
-
-    function hideLoading() {
-      const overlay = document.getElementById('loading-overlay');
-      overlay.classList.add('hidden');
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const links = document.querySelectorAll('a[href]');
-      links.forEach(link => {
-        link.addEventListener('click', function(e) {
-          if (this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
-            showLoading();
-          }
-        });
-      });
-    });
-
-    window.addEventListener('pageshow', function(event) {
-      if (event.persisted) {
-        hideLoading();
+    // Loader HANYA untuk navigasi antar halaman
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href]');
+      if (link && link.href && !link.href.includes('#') && !link.href.startsWith('javascript:')) {
+        if (link.href !== window.location.href) {
+          const overlay = document.getElementById('loading-overlay');
+          if (overlay) overlay.style.display = 'flex';
+        }
       }
     });
   </script>
