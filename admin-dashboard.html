@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body class="bg-gray-100">
+  <!-- Navbar -->
   <nav class="bg-emerald-800 text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 py-4">
       <div class="flex items-center justify-between">
@@ -35,6 +36,7 @@
   </nav>
 
   <div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Welcome Banner -->
     <div class="bg-gradient-to-r from-emerald-700 to-emerald-600 rounded-3xl p-8 text-white mb-8 shadow-xl">
       <div class="flex items-center justify-between">
         <div>
@@ -47,6 +49,7 @@
       </div>
     </div>
 
+    <!-- Stats Grid -->
     <div class="grid md:grid-cols-4 gap-6 mb-8">
       <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition">
         <div class="flex items-center justify-between mb-4">
@@ -93,6 +96,7 @@
       </div>
     </div>
 
+    <!-- Quick Actions -->
     <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
       <h3 class="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-3">
         <i class="fas fa-bolt text-emerald-600"></i>
@@ -129,6 +133,7 @@
       </div>
     </div>
 
+    <!-- Recent Activity -->
     <div class="bg-white rounded-3xl shadow-lg p-8">
       <h3 class="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-3">
         <i class="fas fa-history text-emerald-600"></i>
@@ -170,24 +175,29 @@
   <script>
     const API_URL = 'https://desakalemago2-backend-production.up.railway.app/api/auth/profile';
 
+    // Check authentication
     async function checkAuth() {
-      const userStr = localStorage.getItem('user');
+      const token = localStorage.getItem('token');
       
-      if (!userStr) {
+      if (!token) {
         window.location.href = 'login.html';
         return;
       }
 
       try {
-        const user = JSON.parse(userStr);
-        
-        const response = await fetch(`${API_URL}?username=${user.username}`);
+        const response = await fetch(API_URL, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
         const data = await response.json();
 
         if (data.success) {
           document.getElementById('userName').textContent = data.user.name;
           document.getElementById('userRole').textContent = data.user.role.toUpperCase();
         } else {
+          localStorage.removeItem('token');
           localStorage.removeItem('user');
           window.location.href = 'login.html';
         }
@@ -198,11 +208,11 @@
     }
 
     function logout() {
-      // Hapus data user
-      localStorage.removeItem('user');
-      
-      // Redirect ke login
-      window.location.href = 'login.html';
+      if (confirm('Yakin ingin logout?')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+      }
     }
 
     function showToast(message) {
@@ -221,6 +231,7 @@
       }, 3000);
     }
 
+    // Initialize
     checkAuth();
   </script>
 </body>
