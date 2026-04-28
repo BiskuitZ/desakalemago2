@@ -179,7 +179,7 @@
           <a href="/" class="hover:text-yellow-300 transition border-b-2 border-white px-2 py-1 text-sm">Home</a>
           <a href="profildesa.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Profil Desa</a>
           <a href="infografis.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Infografis</a>
-          <a href="apbdes.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">APB Desa</a>
+          <!-- Removed Video link as per user request -->
           <a href="listing.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Listing</a>
           <a href="belanja.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Belanja</a>
         </nav>
@@ -191,7 +191,7 @@
         </a>
 
         <!-- Mobile Menu Button -->
-        <button class="md:hidden text-white focus:outline-none" onclick="toggleMenu()">
+        <button class="md:hidden text-white focus:outline-none" onclick="openMobileSidebar()">
           <i class="fas fa-bars text-2xl"></i>
         </button>
       </div>
@@ -222,9 +222,9 @@
               <i class="fas fa-chart-pie w-6"></i>
               <span>Infografis</span>
             </a>
-            <a href="apbdes.html" class="flex items-center space-x-3 hover:text-yellow-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10">
-              <i class="fas fa-file-invoice-dollar w-6"></i>
-              <span>APB Desa</span>
+            <a href="video.html" class="flex items-center space-x-3 hover:text-yellow-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10">
+              <i class="fas fa-video w-6"></i>
+              <span>Video</span>
             </a>
             <a href="listing.html" class="flex items-center space-x-3 hover:text-yellow-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10">
               <i class="fas fa-list w-6"></i>
@@ -818,6 +818,118 @@
       setTimeout(() => {
         initScrollAnimations();
       }, 100);
+    });
+  </script>
+
+  <!-- Mobile Files Sidebar (Dark File Explorer Style - Mobile Only) -->
+  <div id="mobile-sidebar" class="fixed inset-y-0 left-0 w-80 bg-zinc-950 border-r border-white/10 z-[99999] transform -translate-x-full transition-transform duration-300 ease-out md:hidden shadow-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-black/60">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-emerald-600 rounded-2xl flex items-center justify-center">
+          <i class="fas fa-folder-open text-white text-xl"></i>
+        </div>
+        <div>
+          <div class="font-bold text-white text-[21px] tracking-tight">Files</div>
+          <div class="text-emerald-400 text-[10px] font-mono -mt-0.5 tracking-[1px]">DESA KALEMAGO</div>
+        </div>
+      </div>
+      <button onclick="closeMobileSidebar()" class="w-9 h-9 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 rounded-2xl transition active:scale-95">
+        <i class="fas fa-times text-2xl"></i>
+      </button>
+    </div>
+
+    <div class="px-1.5 py-2 text-sm h-[calc(100vh-130px)] overflow-y-auto">
+      <a href="index.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-home text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Home</div>
+          <div class="text-[10px] text-white/40 font-mono">index.html • 38 KB</div>
+        </div>
+      </a>
+      <a href="profildesa.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-building text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Profil Desa</div>
+          <div class="text-[10px] text-white/40 font-mono">profildesa.html • 29 KB</div>
+        </div>
+      </a>
+      <a href="infografis.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-chart-pie text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Infografis</div>
+          <div class="text-[10px] text-white/40 font-mono">infografis.html • 35 KB</div>
+        </div>
+      </a>
+      <a href="apbdes.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-file-invoice-dollar text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">APB Desa</div>
+          <div class="text-[10px] text-white/40 font-mono">apbdes.html • 13 KB</div>
+        </div>
+      </a>
+      <a href="listing.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-map text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Listing / Peta</div>
+          <div class="text-[10px] text-white/40 font-mono">listing.html • 12 KB</div>
+        </div>
+      </a>
+      <a href="belanja.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-shopping-bag text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Belanja</div>
+          <div class="text-[10px] text-white/40 font-mono">belanja.html • 21 KB</div>
+        </div>
+      </a>
+
+      <div class="h-px bg-white/10 my-2 mx-4"></div>
+
+      <a href="login.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-sign-in-alt text-amber-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Login Admin</div>
+          <div class="text-[10px] text-white/40 font-mono">login.html • 5 KB</div>
+        </div>
+      </a>
+      <a href="register.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-user-plus text-amber-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Register</div>
+          <div class="text-[10px] text-white/40 font-mono">register.html • 7 KB</div>
+        </div>
+      </a>
+      <a href="admin-dashboard.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-tachometer-alt text-amber-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Admin Dashboard</div>
+          <div class="text-[10px] text-white/40 font-mono">admin-dashboard.html • 10 KB</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="absolute bottom-0 left-0 right-0 bg-zinc-950/90 border-t border-white/10 px-5 py-3 text-center">
+      <div class="text-[10px] text-white/30">KKNT Unsimar 2025 • Desa Kalemago</div>
+    </div>
+  </div>
+
+  <script>
+    function openMobileSidebar() {
+      const sidebar = document.getElementById('mobile-sidebar');
+      if (sidebar) sidebar.style.transform = 'translateX(0)';
+    }
+
+    function closeMobileSidebar() {
+      const sidebar = document.getElementById('mobile-sidebar');
+      if (sidebar) sidebar.style.transform = 'translateX(-100%)';
+    }
+
+    // Close sidebar when clicking outside (optional enhancement)
+    document.addEventListener('click', function(e) {
+      const sidebar = document.getElementById('mobile-sidebar');
+      if (!sidebar || sidebar.style.transform === 'translateX(-100%)') return;
+      if (!sidebar.contains(e.target) && !e.target.closest('button[onclick*="openMobileSidebar"]')) {
+        sidebar.style.transform = 'translateX(-100%)';
+      }
     });
   </script>
 </body>
