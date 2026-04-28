@@ -181,34 +181,28 @@
       try {
         const user = JSON.parse(userStr);
         
-        // Tampilkan data dari localStorage dulu
-        document.getElementById('userName').textContent = user.name || user.username;
-        document.getElementById('userRole').textContent = (user.role || 'user').toUpperCase();
-        
-        // Coba verifikasi ke backend (opsional)
-        try {
-          const response = await fetch(`${API_URL}?username=${user.username}`);
-          const data = await response.json();
+        const response = await fetch(`${API_URL}?username=${user.username}`);
+        const data = await response.json();
 
-          if (data.success) {
-            document.getElementById('userName').textContent = data.user.name;
-            document.getElementById('userRole').textContent = data.user.role.toUpperCase();
-          }
-        } catch (backendError) {
-          console.log('Backend offline, using local data');
+        if (data.success) {
+          document.getElementById('userName').textContent = data.user.name;
+          document.getElementById('userRole').textContent = data.user.role.toUpperCase();
+        } else {
+          localStorage.removeItem('user');
+          window.location.href = 'login.html';
         }
       } catch (error) {
-        console.error('Auth error:', error);
-        localStorage.removeItem('user');
+        console.error('Auth check failed:', error);
         window.location.href = 'login.html';
       }
     }
 
     function logout() {
-      if (confirm('Yakin ingin logout?')) {
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      }
+      // Hapus data user
+      localStorage.removeItem('user');
+      
+      // Redirect ke login
+      window.location.href = 'login.html';
     }
 
     function showToast(message) {
