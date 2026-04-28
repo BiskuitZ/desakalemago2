@@ -9,6 +9,7 @@
 </head>
 <body class="bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-950 min-h-screen flex items-center justify-center">
   <div class="w-full max-w-md px-6">
+    <!-- Logo & Title -->
     <div class="text-center mb-8">
       <div class="flex justify-center mb-4">
         <img src="fotokkn/logokabposo.png" alt="Logo Kabupaten Poso" class="w-24 h-24 object-contain">
@@ -17,8 +18,10 @@
       <p class="text-emerald-300 mt-2">Website Resmi Desa Kalemago</p>
     </div>
 
+    <!-- Login Card -->
     <div class="bg-white rounded-3xl shadow-2xl p-8">
       <form id="loginForm" class="space-y-6">
+        <!-- Username -->
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-2">
             <i class="fas fa-user mr-2 text-emerald-600"></i>Username
@@ -27,6 +30,7 @@
                  class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
         </div>
 
+        <!-- Password -->
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-2">
             <i class="fas fa-lock mr-2 text-emerald-600"></i>Password
@@ -35,8 +39,11 @@
                  class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
         </div>
 
-        <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-2xl text-sm"></div>
+        <!-- Error Message -->
+        <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-2xl text-sm">
+        </div>
 
+        <!-- Submit Button -->
         <button type="submit" id="loginBtn"
                 class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-4 rounded-2xl font-bold text-lg transition flex items-center justify-center gap-3 shadow-lg">
           <i class="fas fa-sign-in-alt"></i>
@@ -44,15 +51,8 @@
         </button>
       </form>
 
-      <!-- TOMBOL DAFTAR AKUN -->
-      <div class="mt-6 text-center">
-        <p class="text-sm text-gray-600">
-          Belum punya akun? 
-          <a href="register.html" class="text-emerald-600 hover:text-emerald-700 font-semibold">Daftar di sini</a>
-        </p>
-      </div>
-
-      <div class="mt-4 p-4 bg-emerald-50 rounded-2xl border border-emerald-200">
+      <!-- Default Credentials Info -->
+      <div class="mt-6 p-4 bg-emerald-50 rounded-2xl border border-emerald-200">
         <p class="text-xs text-emerald-700 text-center">
           <i class="fas fa-info-circle mr-1"></i>
           <strong>Default:</strong> admin / admin123
@@ -60,6 +60,7 @@
       </div>
     </div>
 
+    <!-- Back to Home -->
     <div class="text-center mt-6">
       <a href="index.html" class="text-emerald-300 hover:text-white transition flex items-center justify-center gap-2 text-sm">
         <i class="fas fa-arrow-left"></i>
@@ -79,6 +80,7 @@
       const loginBtn = document.getElementById('loginBtn');
       const errorDiv = document.getElementById('errorMessage');
 
+      // Reset error
       errorDiv.classList.add('hidden');
       loginBtn.disabled = true;
       loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
@@ -86,32 +88,155 @@
       try {
         const response = await fetch(API_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json'
+          },
           body: JSON.stringify({ username, password })
         });
 
         const data = await response.json();
 
         if (data.success) {
+          // Simpan token dan user info
+          localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
+
+          // Redirect ke dashboard
           window.location.href = 'admin-dashboard.html';
         } else {
+          // Tampilkan error
           errorDiv.textContent = data.message || 'Login gagal';
           errorDiv.classList.remove('hidden');
           loginBtn.disabled = false;
           loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
         }
       } catch (error) {
-        errorDiv.textContent = 'Tidak dapat terhubung ke server';
+        console.error('Login error:', error);
+        errorDiv.textContent = 'Tidak dapat terhubung ke server. Pastikan backend berjalan di https://desakalemago2-backend-production.up.railway.app';
         errorDiv.classList.remove('hidden');
         loginBtn.disabled = false;
         loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
       }
     });
 
-    if (localStorage.getItem('user')) {
+    // Cek apakah sudah login
+    if (localStorage.getItem('token')) {
       window.location.href = 'admin-dashboard.html';
     }
+  <!-- Mobile Files Sidebar (Slide from Right) -->
+  <div id="mobile-sidebar" class="fixed inset-y-0 right-0 w-80 bg-zinc-950 border-l border-white/10 z-[9990] transform translate-x-full transition-transform duration-300 ease-out md:hidden shadow-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-black/60">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-emerald-600 rounded-2xl flex items-center justify-center">
+          <i class="fas fa-folder-open text-white text-xl"></i>
+        </div>
+        <div>
+          <div class="font-bold text-white text-[21px] tracking-tight">Files</div>
+          <div class="text-emerald-400 text-[10px] font-mono -mt-0.5 tracking-[1px]">DESA KALEMAGO</div>
+        </div>
+      </div>
+      <button onclick="closeMobileSidebar()" class="w-9 h-9 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 rounded-2xl transition active:scale-95">
+        <i class="fas fa-times text-2xl"></i>
+      </button>
+    </div>
+
+    <div class="px-1.5 py-2 text-sm h-[calc(100vh-130px)] overflow-y-auto">
+      <a href="index.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-home text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Home</div>
+          <div class="text-[10px] text-white/40 font-mono">index.html • 38 KB</div>
+        </div>
+      </a>
+      <a href="profildesa.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-building text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Profil Desa</div>
+          <div class="text-[10px] text-white/40 font-mono">profildesa.html • 29 KB</div>
+        </div>
+      </a>
+      <a href="infografis.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-chart-pie text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Infografis</div>
+          <div class="text-[10px] text-white/40 font-mono">infografis.html • 35 KB</div>
+        </div>
+      </a>
+      <a href="apbdes.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-file-invoice-dollar text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">APB Desa</div>
+          <div class="text-[10px] text-white/40 font-mono">apbdes.html • 13 KB</div>
+        </div>
+      </a>
+      <a href="listing.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-map text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Listing / Peta</div>
+          <div class="text-[10px] text-white/40 font-mono">listing.html • 12 KB</div>
+        </div>
+      </a>
+      <a href="belanja.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-shopping-bag text-emerald-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Belanja</div>
+          <div class="text-[10px] text-white/40 font-mono">belanja.html • 21 KB</div>
+        </div>
+      </a>
+
+      <div class="h-px bg-white/10 my-2 mx-4"></div>
+
+      <a href="login.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-sign-in-alt text-amber-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Login Admin</div>
+          <div class="text-[10px] text-white/40 font-mono">login.html • 5 KB</div>
+        </div>
+      </a>
+      <a href="register.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-user-plus text-amber-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Register</div>
+          <div class="text-[10px] text-white/40 font-mono">register.html • 7 KB</div>
+        </div>
+      </a>
+      <a href="admin-dashboard.html" class="flex items-center gap-3.5 px-4 py-[13px] hover:bg-white/5 active:bg-white/10 rounded-3xl mb-px group transition-colors">
+        <i class="fas fa-tachometer-alt text-amber-400 text-lg w-5"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-white font-semibold">Admin Dashboard</div>
+          <div class="text-[10px] text-white/40 font-mono">admin-dashboard.html • 10 KB</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="absolute bottom-0 left-0 right-0 bg-zinc-950/90 border-t border-white/10 px-5 py-3 text-center">
+      <div class="text-[10px] text-white/30">KKNT Unsimar 2025 • Desa Kalemago</div>
+    </div>
+  </div>
+
+  <script>
+    function openMobileSidebar() {
+      const sidebar = document.getElementById('mobile-sidebar');
+      if (sidebar) sidebar.style.transform = 'translateX(0)';
+    }
+
+    function closeMobileSidebar() {
+      const sidebar = document.getElementById('mobile-sidebar');
+      if (sidebar) sidebar.style.transform = 'translateX(100%)';
+    }
+
+    // Click outside to close
+    document.addEventListener('click', function(e) {
+      const sidebar = document.getElementById('mobile-sidebar');
+      if (!sidebar) return;
+      const isOpen = sidebar.style.transform === 'translateX(0)';
+      if (!isOpen) return;
+
+      const hamburger = e.target.closest('button[onclick*="openMobileSidebar"]');
+      if (!sidebar.contains(e.target) && !hamburger) {
+        closeMobileSidebar();
+      }
+    });
   </script>
 </body>
 </html>
