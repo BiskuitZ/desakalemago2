@@ -246,44 +246,15 @@
       menu.classList.toggle('translate-x-full');
     }
 
-    function showLoading() {
-      const overlay = document.getElementById('loading-overlay');
-      if (!overlay) return;
-      overlay.style.display = 'flex';
-    }
-
-    function hideLoading() {
-      const overlay = document.getElementById('loading-overlay');
-      if (!overlay) return;
-      overlay.style.display = 'none';
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      // Semua link navigasi
-      const links = document.querySelectorAll('a[href]');
-      links.forEach(link => {
-        link.addEventListener('click', function(e) {
-          if (this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
-            showLoading();
-          }
-        });
-      });
-
-      // Semua tombol (button)
-      const buttons = document.querySelectorAll('button');
-      buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-          // Jangan tampilkan loading untuk tombol menu mobile
-          if (!button.onclick || !button.onclick.toString().includes('toggleMenu')) {
-            showLoading();
-            // Disable tombol sementara agar tidak double click
-            button.disabled = true;
-            setTimeout(() => {
-              button.disabled = false;
-            }, 2000);
-          }
-        });
-      });
+    // Loader HANYA untuk navigasi antar halaman (bukan semua tombol)
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href]');
+      if (link && link.href && !link.href.includes('#') && !link.href.startsWith('javascript:')) {
+        if (link.href !== window.location.href) {
+          const overlay = document.getElementById('loading-overlay');
+          if (overlay) overlay.style.display = 'flex';
+        }
+      }
     });
 
     window.addEventListener('pageshow', function(event) {
@@ -298,7 +269,7 @@
     
     <!-- Video Background -->
     <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0">
-      <source src="SAVANA PADANG NAPU POSO - Rumah Katu Production.mp4" type="video/mp4">
+      <source src="Video/SAVANA PADANG NAPU POSO - Rumah Katu Production.mp4" type="video/mp4">
     </video>
     
     <!-- Light Overlay (video tetap terang seperti original) -->
