@@ -181,18 +181,25 @@
       try {
         const user = JSON.parse(userStr);
         
-        const response = await fetch(`${API_URL}?username=${user.username}`);
-        const data = await response.json();
+        // Tampilkan data dari localStorage dulu
+        document.getElementById('userName').textContent = user.name || user.username;
+        document.getElementById('userRole').textContent = (user.role || 'user').toUpperCase();
+        
+        // Coba verifikasi ke backend (opsional)
+        try {
+          const response = await fetch(`${API_URL}?username=${user.username}`);
+          const data = await response.json();
 
-        if (data.success) {
-          document.getElementById('userName').textContent = data.user.name;
-          document.getElementById('userRole').textContent = data.user.role.toUpperCase();
-        } else {
-          localStorage.removeItem('user');
-          window.location.href = 'login.html';
+          if (data.success) {
+            document.getElementById('userName').textContent = data.user.name;
+            document.getElementById('userRole').textContent = data.user.role.toUpperCase();
+          }
+        } catch (backendError) {
+          console.log('Backend offline, using local data');
         }
       } catch (error) {
-        console.error('Auth check failed:', error);
+        console.error('Auth error:', error);
+        localStorage.removeItem('user');
         window.location.href = 'login.html';
       }
     }
