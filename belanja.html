@@ -359,29 +359,16 @@
       hideOrderModal();
     }
 
-    function showLoading() {
-      const overlay = document.getElementById('loading-overlay');
-      if (!overlay) return;
-      overlay.style.display = 'flex';
-    }
-
-    function hideLoading() {
-      const overlay = document.getElementById('loading-overlay');
-      if (!overlay) return;
-      overlay.style.display = 'none';
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const links = document.querySelectorAll('a[href]');
-      links.forEach(link => {
-        link.addEventListener('click', function(e) {
-          if (this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
-            showLoading();
-          }
-        });
-      });
-
-      const buttons = document.querySelectorAll('button');
+    // Loader HANYA untuk navigasi antar halaman
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href]');
+      if (link && link.href && !link.href.includes('#') && !link.href.startsWith('javascript:')) {
+        if (link.href !== window.location.href) {
+          const overlay = document.getElementById('loading-overlay');
+          if (overlay) overlay.style.display = 'flex';
+        }
+      }
+    });
       buttons.forEach(button => {
         button.addEventListener('click', function(e) {
           if (!button.onclick || !button.onclick.toString().includes('toggleMenu')) {
