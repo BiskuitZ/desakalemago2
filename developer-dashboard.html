@@ -174,9 +174,21 @@
           <input type="number" id="productPrice" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
         </div>
         
+        <!-- UPLOAD GAMBAR -->
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">URL Gambar</label>
-          <input type="text" id="productImage" value="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Gambar Produk</label>
+          <div class="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center hover:border-purple-500 transition">
+            <input type="file" id="productImageFile" accept="image/*" class="hidden" onchange="previewImage(this)">
+            <label for="productImageFile" class="cursor-pointer">
+              <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+              <p class="text-gray-600 font-medium">Klik untuk upload gambar</p>
+              <p class="text-xs text-gray-400 mt-1">PNG, JPG (Maks. 2MB)</p>
+            </label>
+            <div id="imagePreview" class="hidden mt-4">
+              <img id="previewImg" class="max-h-32 mx-auto rounded-xl shadow-md">
+              <button onclick="removeImagePreview()" class="mt-2 text-red-500 text-sm hover:underline">Hapus Gambar</button>
+            </div>
+          </div>
         </div>
         
         <div>
@@ -377,46 +389,79 @@
       document.getElementById('addProductModal').classList.add('hidden');
     }
 
+    // Preview image
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('previewImg').src = e.target.result;
+          document.getElementById('imagePreview').classList.remove('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function removeImagePreview() {
+      document.getElementById('productImageFile').value = '';
+      document.getElementById('imagePreview').classList.add('hidden');
+      document.getElementById('previewImg').src = '';
+    }
+
+    // ADD PRODUCT WITH IMAGE UPLOAD
     async function addProduct() {
       const name = document.getElementById('productName').value;
       const price = document.getElementById('productPrice').value;
-      const image = document.getElementById('productImage').value;
       const description = document.getElementById('productDescription').value;
       const stock = document.getElementById('productStock').value;
+      const imageFile = document.getElementById('productImageFile').files[0];
       
-      if (!name || !price || !image || !description) {
-        alert('Semua field wajib diisi!');
+      if (!name || !price || !description || !imageFile) {
+        alert('Semua field wajib diisi termasuk gambar!');
         return;
       }
       
-      try {
-        const res = await fetch(`${API_URL}/api/products`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
-          body: JSON.stringify({ name, price, image, description, stock })
-        });
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const base64Image = e.target.result;
         
-        const data = await res.json();
-        
-        if (data.success) {
-          alert('✅ Produk berhasil ditambahkan!');
-          hideAddProductModal();
-          loadProductManagement();
+        try {
+          const res = await fetch(`${API_URL}/api/products`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-username': JSON.parse(localStorage.getItem('user')).username
+            },
+            body: JSON.stringify({
+              name,
+              price: parseInt(price),
+              image: base64Image,
+              description,
+              stock: parseInt(stock) || 0
+            })
+          });
           
-          // Clear form
-          document.getElementById('productName').value = '';
-          document.getElementById('productPrice').value = '';
-          document.getElementById('productDescription').value = '';
-          document.getElementById('productStock').value = '50';
-        } else {
-          alert('❌ Gagal: ' + (data.message || 'Unknown error'));
+          const data = await res.json();
+          
+          if (data.success) {
+            alert('✅ Produk berhasil ditambahkan dengan gambar!');
+            hideAddProductModal();
+            loadProductManagement();
+            
+            // Clear form
+            document.getElementById('productName').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productDescription').value = '';
+            document.getElementById('productStock').value = '50';
+            document.getElementById('productImageFile').value = '';
+            document.getElementById('imagePreview').classList.add('hidden');
+          } else {
+            alert('❌ Gagal: ' + (data.message || 'Unknown error'));
+          }
+        } catch (err) {
+          alert('❌ Error: ' + err.message);
         }
-      } catch (err) {
-        alert('❌ Error: ' + err.message);
-      }
+      };
+      reader.readAsDataURL(imageFile);
     }
 
     async function editProduct(id, name, price, image, description, stock) {
@@ -426,14 +471,13 @@
       const newPrice = prompt('Harga baru:', price);
       if (!newPrice) return;
       
-      const newImage = prompt('URL Gambar baru:', image);
-      if (!newImage) return;
-      
       const newDescription = prompt('Deskripsi baru:', description);
       if (!newDescription) return;
       
       const newStock = prompt('Stok baru:', stock);
       if (!newStock) return;
+      
+      const newImage = prompt('URL Gambar baru (kosongkan jika tidak diubah):', image);
       
       try {
         const res = await fetch(`${API_URL}/api/products/${id}`, {
@@ -445,7 +489,7 @@
           body: JSON.stringify({
             name: newName,
             price: parseInt(newPrice),
-            image: newImage,
+            image: newImage || image,
             description: newDescription,
             stock: parseInt(newStock)
           })
