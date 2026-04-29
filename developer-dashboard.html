@@ -232,6 +232,40 @@
         <span>Simpan Perubahan</span>
       </button>
     </div>
+
+    <!-- WEB DESIGNER / TEAM MANAGEMENT -->
+    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
+          <i class="fas fa-users text-purple-600"></i>
+          Edit Tim Web Designer (Index.html)
+        </h3>
+        <button onclick="addNewMember()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
+          <i class="fas fa-plus"></i>
+          <span>Tambah Anggota</span>
+        </button>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-gray-200">
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">No</th>
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">Nama</th>
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">Jabatan</th>
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">Foto</th>
+              <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="teamTableBody"></tbody>
+        </table>
+      </div>
+      
+      <button onclick="saveTeamData()" class="mt-6 bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-2xl font-semibold flex items-center gap-2">
+        <i class="fas fa-save"></i>
+        <span>Simpan Perubahan</span>
+      </button>
+    </div>
   </div>
 
   <!-- ADD PRODUCT MODAL -->
@@ -305,6 +339,7 @@
       await loadProductManagement();
       await loadPopulationData();
       await loadAPBDesData();
+      await loadTeamData();
     }
 
     async function loadVisitorStats() {
@@ -696,6 +731,120 @@
         
         if (result.success) {
           alert('✅ Data APBDes berhasil disimpan dan tersinkron ke GitHub!');
+        } else {
+          alert('❌ Gagal: ' + (result.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    }
+
+    // TEAM / WEB DESIGNER MANAGEMENT
+    let currentTeam = [];
+
+    async function loadTeamData() {
+      try {
+        const res = await fetch(`${API_URL}/api/team`);
+        const data = await res.json();
+        
+        if (data.success) {
+          currentTeam = data.team;
+          renderTeamTable();
+        }
+      } catch (err) {
+        console.error('Error loading team:', err);
+      }
+    }
+
+    function renderTeamTable() {
+      const tbody = document.getElementById('teamTableBody');
+      tbody.innerHTML = '';
+      
+      currentTeam.forEach((member, index) => {
+        const row = document.createElement('tr');
+        row.className = 'border-b border-gray-100 hover:bg-gray-50';
+        row.innerHTML = `
+          <td class="py-3 px-4">${index + 1}</td>
+          <td class="py-3 px-4 font-semibold">${member.name}</td>
+          <td class="py-3 px-4">${member.role}</td>
+          <td class="py-3 px-4">
+            ${member.photo ? `<img src="${member.photo}" class="w-10 h-10 rounded-full object-cover">` : '<span class="text-gray-400">No photo</span>'}
+          </td>
+          <td class="py-3 px-4 text-center">
+            <button onclick="editTeamMember(${index})" class="text-blue-600 hover:text-blue-800 mx-1"><i class="fas fa-edit"></i></button>
+            <button onclick="deleteTeamMember(${index})" class="text-red-600 hover:text-red-800 mx-1"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function addNewMember() {
+      const name = prompt('Nama anggota baru:');
+      if (!name) return;
+      
+      const role = prompt('Jabatan:');
+      if (!role) return;
+      
+      const photo = prompt('URL Foto (kosongkan jika tidak ada):') || '';
+      const instagram = prompt('Link Instagram (opsional):') || '#';
+      
+      currentTeam.push({
+        id: Date.now(),
+        name: name,
+        role: role,
+        photo: photo,
+        instagram: instagram
+      });
+      
+      renderTeamTable();
+    }
+
+    function editTeamMember(index) {
+      const member = currentTeam[index];
+      
+      const newName = prompt('Nama baru:', member.name);
+      if (!newName) return;
+      
+      const newRole = prompt('Jabatan baru:', member.role);
+      if (!newRole) return;
+      
+      const newPhoto = prompt('URL Foto baru:', member.photo);
+      const newInstagram = prompt('Link Instagram baru:', member.instagram);
+      
+      currentTeam[index] = {
+        ...member,
+        name: newName,
+        role: newRole,
+        photo: newPhoto || member.photo,
+        instagram: newInstagram || member.instagram
+      };
+      
+      renderTeamTable();
+    }
+
+    function deleteTeamMember(index) {
+      if (!confirm(`Yakin ingin menghapus ${currentTeam[index].name}?`)) return;
+      
+      currentTeam.splice(index, 1);
+      renderTeamTable();
+    }
+
+    async function saveTeamData() {
+      try {
+        const res = await fetch(`${API_URL}/api/team`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-username': JSON.parse(localStorage.getItem('user')).username
+          },
+          body: JSON.stringify(currentTeam)
+        });
+        
+        const result = await res.json();
+        
+        if (result.success) {
+          alert('✅ Data tim Web Designer berhasil disimpan dan tersinkron ke GitHub!');
         } else {
           alert('❌ Gagal: ' + (result.message || 'Unknown error'));
         }
