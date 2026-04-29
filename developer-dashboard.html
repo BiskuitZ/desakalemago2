@@ -747,18 +747,52 @@
         const res = await fetch(`${API_URL}/api/team`);
         const data = await res.json();
         
-        if (data.success) {
+        if (data.success && data.team) {
           currentTeam = data.team;
+          renderTeamTable();
+        } else {
+          console.log('No team data found');
+          currentTeam = [];
           renderTeamTable();
         }
       } catch (err) {
         console.error('Error loading team:', err);
+        // Fallback data
+        currentTeam = [
+          {
+            id: 1,
+            name: "Muh. Rizky Ramadhan",
+            role: "Koordinator Desa & Founder Website",
+            photo: "fotokkn/rama.png",
+            instagram: "#"
+          },
+          {
+            id: 2,
+            name: "Sri Wulandari",
+            role: "Wakil Koordinator Desa",
+            photo: "",
+            instagram: "#"
+          },
+          {
+            id: 3,
+            name: "Nurul Yumni",
+            role: "Sekretaris",
+            photo: "",
+            instagram: "#"
+          }
+        ];
+        renderTeamTable();
       }
     }
 
     function renderTeamTable() {
       const tbody = document.getElementById('teamTableBody');
       tbody.innerHTML = '';
+      
+      if (!currentTeam || currentTeam.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Belum ada data tim</td></tr>';
+        return;
+      }
       
       currentTeam.forEach((member, index) => {
         const row = document.createElement('tr');
@@ -768,7 +802,10 @@
           <td class="py-3 px-4 font-semibold">${member.name}</td>
           <td class="py-3 px-4">${member.role}</td>
           <td class="py-3 px-4">
-            ${member.photo ? `<img src="${member.photo}" class="w-10 h-10 rounded-full object-cover">` : '<span class="text-gray-400">No photo</span>'}
+            ${member.photo ? 
+              `<img src="${member.photo}" class="w-10 h-10 rounded-full object-cover border">` : 
+              '<span class="text-gray-400 italic">No photo</span>'
+            }
           </td>
           <td class="py-3 px-4 text-center">
             <button onclick="editTeamMember(${index})" class="text-blue-600 hover:text-blue-800 mx-1"><i class="fas fa-edit"></i></button>
@@ -809,8 +846,8 @@
       const newRole = prompt('Jabatan baru:', member.role);
       if (!newRole) return;
       
-      const newPhoto = prompt('URL Foto baru:', member.photo);
-      const newInstagram = prompt('Link Instagram baru:', member.instagram);
+      const newPhoto = prompt('URL Foto baru:', member.photo || '');
+      const newInstagram = prompt('Link Instagram baru:', member.instagram || '#');
       
       currentTeam[index] = {
         ...member,
@@ -845,6 +882,7 @@
         
         if (result.success) {
           alert('✅ Data tim Web Designer berhasil disimpan dan tersinkron ke GitHub!');
+          await loadTeamData();
         } else {
           alert('❌ Gagal: ' + (result.message || 'Unknown error'));
         }
