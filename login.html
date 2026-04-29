@@ -13,7 +13,7 @@
       <div class="flex justify-center mb-4">
         <img src="fotokkn/logokabposo.png" alt="Logo Kabupaten Poso" class="w-24 h-24 object-contain">
       </div>
-      <h1 class="text-3xl font-bold text-white">Login Admin</h1>
+      <h1 class="text-3xl font-bold text-white">Login</h1>
       <p class="text-emerald-300 mt-2">Website Resmi Desa Kalemago</p>
     </div>
 
@@ -44,7 +44,6 @@
         </button>
       </form>
 
-      <!-- TOMBOL DAFTAR AKUN -->
       <div class="mt-6 text-center">
         <p class="text-sm text-gray-600">
           Belum punya akun? 
@@ -94,7 +93,15 @@
 
         if (data.success) {
           localStorage.setItem('user', JSON.stringify(data.user));
-          window.location.href = 'admin-dashboard.html';
+          
+          // REDIRECT BERDASARKAN ROLE
+          if (data.user.role === 'developer') {
+            window.location.href = 'developer-dashboard.html';
+          } else if (data.user.role === 'admin') {
+            window.location.href = 'admin-dashboard.html';
+          } else {
+            window.location.href = 'user-dashboard.html';
+          }
         } else {
           errorDiv.textContent = data.message || 'Login gagal';
           errorDiv.classList.remove('hidden');
@@ -110,7 +117,10 @@
     });
 
     if (localStorage.getItem('user')) {
-      window.location.href = 'admin-dashboard.html';
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user.role === 'developer') window.location.href = 'developer-dashboard.html';
+      else if (user.role === 'admin') window.location.href = 'admin-dashboard.html';
+      else window.location.href = 'user-dashboard.html';
     }
   </script>
 </body>
