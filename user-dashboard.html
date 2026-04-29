@@ -39,7 +39,6 @@
       <p class="text-emerald-200 text-lg" id="welcomeMessage">Memuat...</p>
     </div>
 
-    <!-- VISITOR STATS -->
     <div class="bg-white rounded-3xl shadow-lg p-8">
       <h3 class="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-3">
         <i class="fas fa-chart-line text-emerald-600"></i>
@@ -74,15 +73,8 @@
       
       const user = JSON.parse(userStr);
       
-      // REDIRECT BERDASARKAN ROLE
-      if (user.role === 'admin') {
-        window.location.href = 'admin-dashboard.html';
-        return;
-      }
-      if (user.role === 'developer') {
-        window.location.href = 'developer-dashboard.html';
-        return;
-      }
+      if (user.role === 'admin') { window.location.href = 'admin-dashboard.html'; return; }
+      if (user.role === 'developer') { window.location.href = 'developer-dashboard.html'; return; }
       
       document.getElementById('userName').textContent = user.name || user.username;
       document.getElementById('welcomeMessage').textContent = `Halo, ${user.name || user.username}!`;
