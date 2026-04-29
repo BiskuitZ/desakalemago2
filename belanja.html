@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body class="bg-gray-50">
-  <!-- Header -->
   <nav class="bg-emerald-800 text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 py-4">
       <div class="flex items-center justify-between">
@@ -36,7 +35,6 @@
       <p class="text-xl text-gray-600 max-w-2xl mx-auto">Dukung ekonomi desa dengan membeli produk lokal berkualitas</p>
     </div>
 
-    <!-- PRODUCTS GRID -->
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="productsGrid">
       <!-- Products loaded from backend -->
     </div>
@@ -86,7 +84,6 @@
     const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
     let currentProduct = null;
 
-    // Load products from backend
     async function loadProducts() {
       try {
         const res = await fetch(`${API_URL}/api/products`);
@@ -112,8 +109,7 @@
                   </div>
                 </div>
                 
-                <button onclick="showOrderModal(${product.id}, '${product.name}', ${product.price})" 
-                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-semibold flex items-center justify-center gap-2">
+                <button onclick="showOrderModal(${product.id}, '${product.name}', ${product.price})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-semibold flex items-center justify-center gap-2">
                   <i class="fab fa-whatsapp"></i>
                   <span>Pesan via WhatsApp</span>
                 </button>
@@ -124,23 +120,6 @@
         }
       } catch (err) {
         console.error('Error loading products:', err);
-        // Fallback to default product
-        document.getElementById('productsGrid').innerHTML = `
-          <div class="bg-white rounded-3xl shadow-lg overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400" alt="Kopi Robusta" class="w-full h-64 object-cover">
-            <div class="p-6">
-              <h3 class="text-2xl font-bold text-emerald-800 mb-2">Kopi Robusta Kalemago</h3>
-              <p class="text-gray-600 mb-4">Kopi robusta premium dari Desa Kalemago, 250gr</p>
-              <div class="flex items-center justify-between mb-4">
-                <p class="text-3xl font-extrabold text-emerald-600">Rp 25.000</p>
-              </div>
-              <button onclick="showOrderModal(1, 'Kopi Robusta Kalemago', 25000)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-semibold flex items-center justify-center gap-2">
-                <i class="fab fa-whatsapp"></i>
-                <span>Pesan via WhatsApp</span>
-              </button>
-            </div>
-          </div>
-        `;
       }
     }
 
@@ -187,7 +166,6 @@ Terima kasih!`;
       hideOrderModal();
     }
 
-    // Initialize
     loadProducts();
   </script>
 </body>
