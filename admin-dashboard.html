@@ -108,6 +108,17 @@
       if (!userStr) { window.location.href = 'login.html'; return; }
       
       const user = JSON.parse(userStr);
+      
+      // REDIRECT BERDASARKAN ROLE
+      if (user.role === 'user') {
+        window.location.href = 'user-dashboard.html';
+        return;
+      }
+      if (user.role === 'developer') {
+        window.location.href = 'developer-dashboard.html';
+        return;
+      }
+      
       document.getElementById('userName').textContent = user.name || user.username;
       document.getElementById('welcomeMessage').textContent = `Halo Admin, ${user.name || user.username}!`;
       
@@ -141,9 +152,7 @@
         document.getElementById('dashWind').textContent = Math.round(current.wind_speed_10m) + ' km/j';
         document.getElementById('dashHumidity').textContent = current.relative_humidity_2m + '%';
         document.getElementById('dashVisibility').textContent = Math.round((current.visibility || 10000) / 1000) + ' km';
-      } catch (err) {
-        console.log('Weather error');
-      }
+      } catch (err) {}
     }
 
     function logout() {
