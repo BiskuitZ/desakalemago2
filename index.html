@@ -516,6 +516,7 @@
       
       <div class="flex flex-col gap-8 max-w-4xl mx-auto" id="webDesignerTeam">
         <!-- Team members will be loaded dynamically from backend -->
+        <div class="text-center text-white/70">Memuat data tim...</div>
       </div>
     </div>
   </section>
@@ -749,7 +750,7 @@
         const res = await fetch(`${API_URL}/api/team`);
         const data = await res.json();
         
-        if (data.success && data.team) {
+        if (data.success && data.team && data.team.length > 0) {
           const container = document.getElementById('webDesignerTeam');
           container.innerHTML = '';
           
@@ -775,9 +776,21 @@
             
             container.appendChild(div);
           });
+        } else {
+          // Fallback jika tidak ada data
+          document.getElementById('webDesignerTeam').innerHTML = `
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center">
+              <p class="text-white/70">Data tim belum tersedia</p>
+            </div>
+          `;
         }
       } catch (err) {
         console.log('Using default team data');
+        document.getElementById('webDesignerTeam').innerHTML = `
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center">
+            <p class="text-white/70">Gagal memuat data tim</p>
+          </div>
+        `;
       }
     }
 
