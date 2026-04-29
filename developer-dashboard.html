@@ -39,7 +39,6 @@
       <p class="text-purple-200 text-lg" id="welcomeMessage">Memuat...</p>
     </div>
 
-    <!-- VISITOR STATS -->
     <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
       <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
         <i class="fas fa-chart-line text-purple-600"></i>
@@ -64,7 +63,6 @@
       </div>
     </div>
 
-    <!-- WEATHER -->
     <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
       <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
         <i class="fas fa-cloud-sun text-purple-600"></i>
@@ -99,7 +97,6 @@
       </div>
     </div>
 
-    <!-- USER MANAGEMENT -->
     <div class="bg-white rounded-3xl shadow-lg p-8">
       <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
         <i class="fas fa-users-cog text-purple-600"></i>
@@ -117,9 +114,7 @@
               <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
             </tr>
           </thead>
-          <tbody id="userTableBody">
-            <!-- Loaded via JS -->
-          </tbody>
+          <tbody id="userTableBody"></tbody>
         </table>
       </div>
     </div>
@@ -134,15 +129,8 @@
       
       const user = JSON.parse(userStr);
       
-      // REDIRECT BERDASARKAN ROLE
-      if (user.role === 'user') {
-        window.location.href = 'user-dashboard.html';
-        return;
-      }
-      if (user.role === 'admin') {
-        window.location.href = 'admin-dashboard.html';
-        return;
-      }
+      if (user.role === 'user') { window.location.href = 'user-dashboard.html'; return; }
+      if (user.role === 'admin') { window.location.href = 'admin-dashboard.html'; return; }
       
       document.getElementById('userName').textContent = user.name || user.username;
       document.getElementById('welcomeMessage').textContent = `Halo Developer, ${user.name || user.username}!`;
