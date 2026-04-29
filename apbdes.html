@@ -191,41 +191,41 @@
   <main class="container mx-auto px-6 py-12">
     <h2 class="text-3xl font-bold text-emerald-800 mb-8 text-center">APB Desa Kalemago 2024</h2>
     
-    <!-- Overview Cards -->
+    <!-- Overview Cards - DINAMIS DARI BACKEND -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
       <div class="bg-white rounded-lg shadow-lg p-6">
         <h3 class="text-xl font-semibold text-emerald-800 mb-4">Pendapatan Desa</h3>
-        <p class="text-3xl font-bold text-gray-900">Rp1.236.022.433,05</p>
+        <p class="text-3xl font-bold text-gray-900">Rp <span id="totalPendapatan">1.236.022.433</span></p>
       </div>
       
       <div class="bg-white rounded-lg shadow-lg p-6">
         <h3 class="text-xl font-semibold text-emerald-800 mb-4">Belanja Desa</h3>
-        <p class="text-3xl font-bold text-gray-900">Rp1.236.472.443,05</p>
+        <p class="text-3xl font-bold text-gray-900">Rp <span id="totalBelanja">1.236.472.443</span></p>
         <div class="mt-4 space-y-2">
           <div class="flex justify-between items-center text-sm">
             <span class="text-gray-600">Bidang Penyelanggaraan Pemerintah Desa</span>
-            <span class="font-medium">Rp548.906.163,68</span>
+            <span class="font-medium">Rp <span id="belanjaPemerintah">548.906.163</span></span>
           </div>
           <div class="flex justify-between items-center text-sm">
             <span class="text-gray-600">Bidang Pembangunan Desa</span>
-            <span class="font-medium">Rp369.564.500,00</span>
+            <span class="font-medium">Rp <span id="belanjaPembangunan">369.564.500</span></span>
           </div>
           <div class="flex justify-between items-center text-sm">
             <span class="text-gray-600">Bidang Pembinaan Kemasyarakatan Desa</span>
-            <span class="font-medium">Rp77.244.826,00</span>
+            <span class="font-medium">Rp <span id="belanjaPembinaan">77.244.826</span></span>
           </div>
           <div class="flex justify-between items-center text-sm">
             <span class="text-gray-600">Bidang Penanggulangan Bencana dan Keadaan Mendesak</span>
-            <span class="font-medium">Rp82.800.000,00</span>
+            <span class="font-medium">Rp <span id="belanjaBencana">82.800.000</span></span>
           </div>
         </div>
         <div class="mt-6 border-t border-gray-300 pt-4 flex justify-between font-semibold">
           <span>Jumlah Belanja</span>
-          <span>Rp1.078.515.489,68</span>
+          <span>Rp <span id="jumlahBelanja">1.078.515.489</span></span>
         </div>
         <div class="mt-2 border-t border-gray-300 pt-4 flex justify-between font-semibold text-emerald-700">
           <span>Surplus/Defisit</span>
-          <span>Rp157.956.953,37</span>
+          <span>Rp <span id="surplusDefisit">157.956.953</span></span>
         </div>
       </div>
     </div>
@@ -323,6 +323,44 @@
     window.addEventListener('pageshow', () => {
       setTimeout(() => initScrollAnimations(), 100);
     });
+  </script>
+
+  <!-- SCRIPT UNTUK LOAD DATA DARI BACKEND -->
+  <script>
+    const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
+
+    // Load APBDes Data dari Backend
+    async function loadAPBDesData() {
+      try {
+        const res = await fetch(`${API_URL}/api/apbdes`);
+        const data = await res.json();
+        
+        if (data.success) {
+          // Update semua elemen dengan data dari backend
+          document.getElementById('totalPendapatan').textContent = data.data.pendapatan.toLocaleString('id-ID');
+          document.getElementById('totalBelanja').textContent = data.data.belanja.toLocaleString('id-ID');
+          
+          // Update breakdown belanja
+          document.getElementById('belanjaPemerintah').textContent = (data.data.belanjaPegawai || 548906163).toLocaleString('id-ID');
+          document.getElementById('belanjaPembangunan').textContent = (data.data.belanjaBarang || 369564500).toLocaleString('id-ID');
+          document.getElementById('belanjaPembinaan').textContent = (data.data.belanjaModal || 77244826).toLocaleString('id-ID');
+          document.getElementById('belanjaBencana').textContent = (data.data.belanjaBencana || 82800000).toLocaleString('id-ID');
+          
+          // Hitung total belanja
+          const totalBelanja = data.data.belanja;
+          document.getElementById('jumlahBelanja').textContent = totalBelanja.toLocaleString('id-ID');
+          
+          // Hitung surplus/defisit
+          const surplus = data.data.pendapatan - totalBelanja;
+          document.getElementById('surplusDefisit').textContent = surplus.toLocaleString('id-ID');
+        }
+      } catch (err) {
+        console.log('Using default APBDes data');
+      }
+    }
+
+    // Panggil fungsi saat halaman dimuat
+    loadAPBDesData();
   </script>
 </body>
 </html>
