@@ -133,6 +133,17 @@
       if (!userStr) { window.location.href = 'login.html'; return; }
       
       const user = JSON.parse(userStr);
+      
+      // REDIRECT BERDASARKAN ROLE
+      if (user.role === 'user') {
+        window.location.href = 'user-dashboard.html';
+        return;
+      }
+      if (user.role === 'admin') {
+        window.location.href = 'admin-dashboard.html';
+        return;
+      }
+      
       document.getElementById('userName').textContent = user.name || user.username;
       document.getElementById('welcomeMessage').textContent = `Halo Developer, ${user.name || user.username}!`;
       
