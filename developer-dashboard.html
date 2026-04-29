@@ -99,7 +99,7 @@
       </div>
     </div>
 
-    <!-- USER MANAGEMENT - TERHUBUNG DENGAN BACKEND -->
+    <!-- USER MANAGEMENT -->
     <div class="bg-white rounded-3xl shadow-lg p-8">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
@@ -123,10 +123,76 @@
               <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
             </tr>
           </thead>
-          <tbody id="userTableBody">
-            <!-- Data loaded from backend -->
-          </tbody>
+          <tbody id="userTableBody"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- PRODUCT MANAGEMENT -->
+    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
+          <i class="fas fa-box text-purple-600"></i>
+          Manajemen Produk (Belanja)
+        </h3>
+        <button onclick="showAddProductModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
+          <i class="fas fa-plus"></i>
+          <span>Tambah Produk</span>
+        </button>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-gray-200">
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">ID</th>
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">Nama Produk</th>
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">Harga</th>
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">Stok</th>
+              <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="productTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD PRODUCT MODAL -->
+  <div id="addProductModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-3xl p-8 w-full max-w-md mx-4">
+      <h3 class="text-2xl font-bold text-purple-800 mb-6">Tambah Produk Baru</h3>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Produk</label>
+          <input type="text" id="productName" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Harga (Rp)</label>
+          <input type="number" id="productPrice" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">URL Gambar</label>
+          <input type="text" id="productImage" value="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi</label>
+          <textarea id="productDescription" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500"></textarea>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Stok</label>
+          <input type="number" id="productStock" value="50" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+        </div>
+      </div>
+      
+      <div class="flex gap-4 mt-6">
+        <button onclick="hideAddProductModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-2xl font-semibold">Batal</button>
+        <button onclick="addProduct()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-2xl font-semibold">Tambah Produk</button>
       </div>
     </div>
   </div>
@@ -149,6 +215,7 @@
       await loadVisitorStats();
       await loadWeather();
       await loadUserManagement();
+      await loadProductManagement();
     }
 
     async function loadVisitorStats() {
@@ -180,7 +247,7 @@
       } catch (err) {}
     }
 
-    // LOAD USER MANAGEMENT DARI BACKEND
+    // USER MANAGEMENT
     async function loadUserManagement() {
       try {
         const res = await fetch(`${API_URL}/api/admin/users`, {
@@ -188,7 +255,6 @@
         });
         
         const data = await res.json();
-        
         if (data.success) {
           const tbody = document.getElementById('userTableBody');
           tbody.innerHTML = '';
@@ -206,26 +272,16 @@
                 </span>
               </td>
               <td class="py-3 px-4 text-center">
-                <button onclick="editUser(${user.id}, '${user.username}', '${user.name}', '${user.role}')" class="text-blue-600 hover:text-blue-800 mx-1" title="Edit">
-                  <i class="fas fa-edit"></i>
-                </button>
-                ${user.role !== 'developer' ? `
-                <button onclick="deleteUser(${user.id}, '${user.username}')" class="text-red-600 hover:text-red-800 mx-1" title="Hapus">
-                  <i class="fas fa-trash"></i>
-                </button>
-                ` : ''}
+                <button onclick="editUser(${user.id}, '${user.username}', '${user.name}', '${user.role}')" class="text-blue-600 hover:text-blue-800 mx-1"><i class="fas fa-edit"></i></button>
+                ${user.role !== 'developer' ? `<button onclick="deleteUser(${user.id}, '${user.username}')" class="text-red-600 hover:text-red-800 mx-1"><i class="fas fa-trash"></i></button>` : ''}
               </td>
             `;
             tbody.appendChild(row);
           });
         }
-      } catch (err) {
-        console.error('Error loading users:', err);
-        alert('Gagal memuat data pengguna');
-      }
+      } catch (err) {}
     }
 
-    // EDIT USER - TERHUBUNG DENGAN BACKEND
     async function editUser(id, username, name, role) {
       const newUsername = prompt('Username baru:', username);
       if (!newUsername) return;
@@ -244,28 +300,21 @@
             'Content-Type': 'application/json',
             'x-username': JSON.parse(localStorage.getItem('user')).username
           },
-          body: JSON.stringify({
-            username: newUsername,
-            name: newName,
-            password: newPassword || undefined,
-            role: newRole
-          })
+          body: JSON.stringify({ username: newUsername, name: newName, password: newPassword || undefined, role: newRole })
         });
         
         const data = await res.json();
-        
         if (data.success) {
-          alert('✅ User berhasil diupdate dan tersinkron ke GitHub!');
-          loadUserManagement(); // Refresh table
+          alert('✅ User berhasil diupdate!');
+          loadUserManagement();
         } else {
-          alert('❌ Gagal update: ' + (data.message || 'Unknown error'));
+          alert('❌ Gagal: ' + (data.message || 'Unknown error'));
         }
       } catch (err) {
         alert('❌ Error: ' + err.message);
       }
     }
 
-    // DELETE USER - TERHUBUNG DENGAN BACKEND
     async function deleteUser(id, username) {
       if (!confirm(`Yakin ingin menghapus user "${username}"?`)) return;
       
@@ -276,12 +325,161 @@
         });
         
         const data = await res.json();
+        if (data.success) {
+          alert('✅ User berhasil dihapus!');
+          loadUserManagement();
+        } else {
+          alert('❌ Gagal: ' + (data.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    }
+
+    // PRODUCT MANAGEMENT
+    async function loadProductManagement() {
+      try {
+        const res = await fetch(`${API_URL}/api/products`);
+        const data = await res.json();
         
         if (data.success) {
-          alert('✅ User berhasil dihapus dan tersinkron ke GitHub!');
-          loadUserManagement(); // Refresh table
+          const tbody = document.getElementById('productTableBody');
+          tbody.innerHTML = '';
+          
+          data.products.forEach(product => {
+            const row = document.createElement('tr');
+            row.className = 'border-b border-gray-100 hover:bg-gray-50';
+            row.innerHTML = `
+              <td class="py-3 px-4 font-mono text-sm">${product.id}</td>
+              <td class="py-3 px-4 font-semibold">${product.name}</td>
+              <td class="py-3 px-4">Rp ${product.price.toLocaleString('id-ID')}</td>
+              <td class="py-3 px-4">${product.stock}</td>
+              <td class="py-3 px-4 text-center">
+                <button onclick="editProduct(${product.id}, '${product.name}', ${product.price}, '${product.image}', '${product.description}', ${product.stock})" class="text-blue-600 hover:text-blue-800 mx-1"><i class="fas fa-edit"></i></button>
+                <button onclick="deleteProduct(${product.id}, '${product.name}')" class="text-red-600 hover:text-red-800 mx-1"><i class="fas fa-trash"></i></button>
+              </td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
+      } catch (err) {
+        console.error('Error loading products:', err);
+      }
+    }
+
+    function showAddProductModal() {
+      document.getElementById('addProductModal').classList.remove('hidden');
+      document.getElementById('addProductModal').classList.add('flex');
+    }
+
+    function hideAddProductModal() {
+      document.getElementById('addProductModal').classList.remove('flex');
+      document.getElementById('addProductModal').classList.add('hidden');
+    }
+
+    async function addProduct() {
+      const name = document.getElementById('productName').value;
+      const price = document.getElementById('productPrice').value;
+      const image = document.getElementById('productImage').value;
+      const description = document.getElementById('productDescription').value;
+      const stock = document.getElementById('productStock').value;
+      
+      if (!name || !price || !image || !description) {
+        alert('Semua field wajib diisi!');
+        return;
+      }
+      
+      try {
+        const res = await fetch(`${API_URL}/api/products`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-username': JSON.parse(localStorage.getItem('user')).username
+          },
+          body: JSON.stringify({ name, price, image, description, stock })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+          alert('✅ Produk berhasil ditambahkan!');
+          hideAddProductModal();
+          loadProductManagement();
+          
+          // Clear form
+          document.getElementById('productName').value = '';
+          document.getElementById('productPrice').value = '';
+          document.getElementById('productDescription').value = '';
+          document.getElementById('productStock').value = '50';
         } else {
-          alert('❌ Gagal hapus: ' + (data.message || 'Unknown error'));
+          alert('❌ Gagal: ' + (data.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    }
+
+    async function editProduct(id, name, price, image, description, stock) {
+      const newName = prompt('Nama produk baru:', name);
+      if (!newName) return;
+      
+      const newPrice = prompt('Harga baru:', price);
+      if (!newPrice) return;
+      
+      const newImage = prompt('URL Gambar baru:', image);
+      if (!newImage) return;
+      
+      const newDescription = prompt('Deskripsi baru:', description);
+      if (!newDescription) return;
+      
+      const newStock = prompt('Stok baru:', stock);
+      if (!newStock) return;
+      
+      try {
+        const res = await fetch(`${API_URL}/api/products/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-username': JSON.parse(localStorage.getItem('user')).username
+          },
+          body: JSON.stringify({
+            name: newName,
+            price: parseInt(newPrice),
+            image: newImage,
+            description: newDescription,
+            stock: parseInt(newStock)
+          })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+          alert('✅ Produk berhasil diupdate!');
+          loadProductManagement();
+        } else {
+          alert('❌ Gagal: ' + (data.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    }
+
+    async function deleteProduct(id, name) {
+      if (!confirm(`Yakin ingin menghapus produk "${name}"?`)) return;
+      
+      try {
+        const res = await fetch(`${API_URL}/api/products/${id}`, {
+          method: 'DELETE',
+          headers: { 'x-username': JSON.parse(localStorage.getItem('user')).username }
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+          alert('✅ Produk berhasil dihapus!');
+          loadProductManagement();
+        } else {
+          alert('❌ Gagal: ' + (data.message || 'Unknown error'));
         }
       } catch (err) {
         alert('❌ Error: ' + err.message);
@@ -295,7 +493,6 @@
       }
     }
 
-    // Initialize
     checkAuth();
     setInterval(loadVisitorStats, 30000);
   </script>
