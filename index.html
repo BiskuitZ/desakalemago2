@@ -452,14 +452,14 @@
         <h4 class="text-2xl font-semibold mb-6 text-white/90">Kepala Desa Kalemago</h4>
         <p class="max-w-xl text-lg leading-relaxed text-white/90">
           <strong>Assalamu Alaikum Warohmatullahi Wabarakatu.</strong><br />
-          Website ini hadir sebagai wujud transformasi desa Kalemago menjadi desa yang mampu memanfaatkan teknologi informasi dan komunikasi, terintegrasi kedalam sistem online. Keterbukaan informasi publik, pelayanan publik dan kegiatan perekonomian di desa, guna mewujudkan desa Kalemago sebagai desa wisata yang berkelanjutan, adaptasi dan mitigasi terhadap perubahan iklim serta menjadi desa yang mandiri.<br /><br />
+          Website ini hadir sebagai wujud transformasi desa Kalemago menjadi desa yang mampu memanfaatkan teknologi informasi dan komunikasi, terintegrasi kedalam sistem online. Keterbukaan informasi publik, pelayanan publik dan kegiatan perekonomian di desa, guna mewujudukan desa Kalemago sebagai desa wisata yang berkelanjutan, adaptasi dan mitigasi terhadap perubahan iklim serta menjadi desa yang mandiri.<br /><br />
           Terima kasih kepada semua pihak yang telah banyak memberi dukungan dan kontribusi baik berupa tenaga, pikiran dan semangat, terkhusus kepada Kelompok Kuliah Kerja Nyata (KKNT) Unsimar 2025 dengan bantuan Program Kerjanya sehingga website ini dapat terealisasi.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- Administrasi Penduduk Section -->
+  <!-- Administrasi Penduduk Section - DINAMIS DARI BACKEND -->
   <section class="container mx-auto px-6 py-12">
     <h2 class="text-3xl font-bold text-emerald-800 mb-6 text-center">Administrasi Penduduk</h2>
     <p class="max-w-4xl text-gray-700 mb-8 mx-auto text-center">
@@ -467,25 +467,25 @@
     </p>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center max-w-4xl mx-auto">
       <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-        <p class="text-4xl font-extrabold text-emerald-800">1.045</p>
+        <p class="text-4xl font-extrabold text-emerald-800" id="popTotal">1,045</p>
         <p class="font-semibold text-gray-700">Penduduk</p>
       </div>
       <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-        <p class="text-4xl font-extrabold text-emerald-800">524</p>
+        <p class="text-4xl font-extrabold text-emerald-800" id="popMale">524</p>
         <p class="font-semibold text-gray-700">Laki-laki</p>
       </div>
       <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-        <p class="text-4xl font-extrabold text-emerald-800">521</p>
+        <p class="text-4xl font-extrabold text-emerald-800" id="popFemale">521</p>
         <p class="font-semibold text-gray-700">Perempuan</p>
       </div>
       <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-        <p class="text-4xl font-extrabold text-emerald-800">285</p>
+        <p class="text-4xl font-extrabold text-emerald-800" id="popFamilies">285</p>
         <p class="font-semibold text-gray-700">Kepala Keluarga</p>
       </div>
     </div>
   </section>
 
-  <!-- APB Desa Section -->
+  <!-- APB Desa Section - DINAMIS DARI BACKEND -->
   <section class="bg-gradient-to-br from-emerald-900 to-emerald-800 py-12 shadow-lg text-white">
     <div class="container mx-auto px-6 max-w-4xl">
       <h2 class="text-3xl font-bold mb-6 text-center">APB Desa 2024</h2>
@@ -495,11 +495,11 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center max-w-3xl mx-auto">
         <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 shadow">
           <p class="text-xl font-semibold text-white/80">Pendapatan Desa</p>
-          <p class="text-2xl font-extrabold text-yellow-300">Rp1.236.022.433,05</p>
+          <p class="text-2xl font-extrabold text-yellow-300">Rp <span id="apbPendapatan">1.236.022.433</span></p>
         </div>
         <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 shadow">
           <p class="text-xl font-semibold text-white/80">Belanja Desa</p>
-          <p class="text-2xl font-extrabold text-yellow-300">Rp1.236.022.433,05</p>
+          <p class="text-2xl font-extrabold text-yellow-300">Rp <span id="apbBelanja">1.236.022.433</span></p>
         </div>
       </div>
       <div class="text-center mt-4">
@@ -507,9 +507,6 @@
       </div>
     </div>
   </section>
-
-
-
 
   <!-- Sambutan KKNT Section -->
   <section class="bg-gradient-to-br from-emerald-900 to-emerald-800 py-16 md:py-20 shadow-lg text-white">
@@ -819,6 +816,47 @@
         initScrollAnimations();
       }, 100);
     });
+  </script>
+
+  <!-- SCRIPT UNTUK LOAD DATA DARI BACKEND -->
+  <script>
+    const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
+
+    // Load Population Data dari Backend
+    async function loadPopulationData() {
+      try {
+        const res = await fetch(`${API_URL}/api/population`);
+        const data = await res.json();
+        
+        if (data.success) {
+          document.getElementById('popTotal').textContent = data.data.total.toLocaleString('id-ID');
+          document.getElementById('popMale').textContent = data.data.male.toLocaleString('id-ID');
+          document.getElementById('popFemale').textContent = data.data.female.toLocaleString('id-ID');
+          document.getElementById('popFamilies').textContent = data.data.families.toLocaleString('id-ID');
+        }
+      } catch (err) {
+        console.log('Using default population data');
+      }
+    }
+
+    // Load APBDes Data dari Backend
+    async function loadAPBDesData() {
+      try {
+        const res = await fetch(`${API_URL}/api/apbdes`);
+        const data = await res.json();
+        
+        if (data.success) {
+          document.getElementById('apbPendapatan').textContent = data.data.pendapatan.toLocaleString('id-ID');
+          document.getElementById('apbBelanja').textContent = data.data.belanja.toLocaleString('id-ID');
+        }
+      } catch (err) {
+        console.log('Using default APBDes data');
+      }
+    }
+
+    // Panggil fungsi saat halaman dimuat
+    loadPopulationData();
+    loadAPBDesData();
   </script>
 </body>
 </html>
