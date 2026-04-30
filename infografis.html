@@ -137,12 +137,12 @@
 
         <!-- Desktop Navigation (Hanya di Desktop) -->
         <nav class="hidden md:flex items-center gap-3 text-white font-medium ml-8">
-          <a href="index.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-yellow-300 transition px-2 py-1 text-sm">Home</a>
-          <a href="profildesa.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-yellow-300 transition px-2 py-1 text-sm">Profil Desa</a>
+          <a href="index.html" class="hover:text-yellow-300 transition px-2 py-1 text-sm">Home</a>
+          <a href="profildesa.html" class="hover:text-yellow-300 transition px-2 py-1 text-sm">Profil Desa</a>
           <a href="infografis.html" class="hover:text-yellow-300 border-b-2 border-yellow-300 transition px-2 py-1 text-sm">Infografis</a>
-          <a href="apbdes.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">APB Desa</a>
-          <a href="listing.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-yellow-300 transition px-2 py-1 text-sm">Listing</a>
-          <a href="belanja.html" onclick="document.getElementById('loading-overlay').style.display='flex'" class="hover:text-yellow-300 transition px-2 py-1 text-sm">Belanja</a>
+          <a href="apbdes.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">APB Desa</a>
+          <a href="listing.html" class="hover:text-yellow-300 transition px-2 py-1 text-sm">Listing</a>
+          <a href="belanja.html" class="hover:text-yellow-300 transition px-2 py-1 text-sm">Belanja</a>
         </nav>
 
         <!-- Hamburger Button (Hanya di Mobile) + Login di Desktop -->
@@ -170,13 +170,16 @@
       sidebar.classList.toggle('flex');
     }
 
-    // Loader HANYA untuk navigasi antar halaman
+    // Loader HANYA untuk navigasi antar halaman (kecuali hamburger & sidebar)
     document.addEventListener('click', function(e) {
       const link = e.target.closest('a[href]');
       if (link && link.href && !link.href.includes('#') && !link.href.startsWith('javascript:')) {
-        if (link.href !== window.location.href) {
-          const overlay = document.getElementById('loading-overlay');
-          if (overlay) overlay.style.display = 'flex';
+        // Jangan trigger loader jika klik di dalam sidebar atau tombol hamburger
+        if (!link.closest('#sidebar') && !link.closest('button[onclick*="toggleSidebar"]')) {
+          if (link.href !== window.location.href) {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) overlay.style.display = 'flex';
+          }
         }
       }
     });
