@@ -602,9 +602,41 @@
   </div><!-- end of root div -->
 
   <script>
+    const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
+
+    async function loadPopulationData() {
+      try {
+        const res = await fetch(`${API_URL}/api/population`);
+        if (!res.ok) throw new Error('Failed to fetch');
+        const result = await res.json();
+        if (result.success && result.data) {
+          const data = result.data;
+          
+          // Update gender chart if it exists
+          if (window.genderChart) {
+            window.genderChart.data.datasets[0].data = [data.male, data.female];
+            window.genderChart.update();
+          }
+          
+          // Update any text elements showing gender totals
+          const maleEl = document.getElementById('popMale');
+          const femaleEl = document.getElementById('popFemale');
+          if (maleEl) maleEl.textContent = data.male.toLocaleString('id-ID');
+          if (femaleEl) femaleEl.textContent = data.female.toLocaleString('id-ID');
+        }
+      } catch (err) {
+        console.log('Using default population data for gender chart');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       // Register ChartJS datalabels plugin
       Chart.register(ChartDataLabels);
+      
+      // Load population data on page load (sync with index.html)
+      setTimeout(() => {
+        loadPopulationData();
+      }, 500);
       
       // Category switching functionality
       const categoryButtons = document.querySelectorAll('.category-btn');
@@ -636,6 +668,7 @@
               if (category === 'penduduk') {
                 setTimeout(() => {
                   initGenderChart();
+                  loadPopulationData(); // Sync with index.html
                 }, 50);
               } else if (category === 'cuaca') {
                 setTimeout(() => {
