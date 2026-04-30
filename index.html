@@ -61,39 +61,6 @@
       }
     }
     
-    #loading-overlay img {
-      width: 200px;
-      height: 200px;
-      object-fit: contain;
-    }
-  </style>
-  <style>
-    .loader {
-      border-top-color: #3498db;
-      -webkit-animation: spin 1s linear infinite;
-      animation: spin 1s linear infinite;
-      border-radius: 50%;
-      border: 8px solid #f3f3f3;
-      border-top: 8px solid #3498db;
-      width: 96px;
-      height: 96px;
-    }
-    @-webkit-keyframes spin {
-      0% {
-        -webkit-transform: rotate(0deg);
-      }
-      100% {
-        -webkit-transform: rotate(360deg);
-      }
-    }
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
     body {
       font-family: 'Inter', sans-serif;
       min-width: 320px;
@@ -102,14 +69,7 @@
       position: relative;
       -webkit-font-smoothing: antialiased;
     }
-    .bg-overlay {
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-    .gradient-text {
-      background: linear-gradient(90deg, #4f46e5, #3b82f6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    
     @media screen and (max-width: 640px) {
       * {
         -webkit-tap-highlight-color: transparent;
@@ -136,7 +96,6 @@
       }
     }
 
-    /* Prevent pull-to-refresh and overscroll */
     body {
       overscroll-behavior-y: none;
     }
@@ -246,7 +205,6 @@
       menu.classList.toggle('translate-x-full');
     }
 
-    // Loader HANYA untuk navigasi antar halaman (bukan semua tombol)
     document.addEventListener('click', function(e) {
       const link = e.target.closest('a[href]');
       if (link && link.href && !link.href.includes('#') && !link.href.startsWith('javascript:')) {
@@ -266,24 +224,16 @@
 
   <!-- Hero Video dengan teks tengah -->
   <section class="hero-video relative h-[620px] flex items-center text-white overflow-hidden">
-    
-    <!-- Video Background -->
     <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0">
       <source src="SAVANA PADANG NAPU POSO - Rumah Katu Production.mp4" type="video/mp4">
     </video>
-    
-    <!-- Light Overlay (video tetap terang seperti original) -->
     <div class="hero-overlay absolute inset-0 bg-gradient-to-b from-black/25 via-black/20 to-black/30 z-10"></div>
-    
-    <!-- Centered Content -->
     <div class="relative z-20 max-w-5xl mx-auto px-6 text-center">
       <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-4 drop-shadow-2xl">Website Resmi</h1>
       <h2 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 drop-shadow-2xl">Desa Kalemago</h2>
       <p class="text-xl md:text-2xl text-white/90 mb-12 drop-shadow-md max-w-3xl mx-auto">
         Kecamatan Lore Timur, Kabupaten Poso, Sulawesi Tengah
       </p>
-      
-      <!-- Weather Widget - Modern Glassmorphism -->
       <div class="inline-flex items-center gap-4 bg-white/10 backdrop-blur-xl px-8 py-4 rounded-3xl border border-white/30 shadow-2xl hover:scale-[1.02] transition-transform duration-300">
         <div class="flex items-center gap-3">
           <i class="fas fa-cloud-sun text-3xl text-yellow-300"></i>
@@ -301,52 +251,27 @@
         </div>
       </div>
     </div>
-    
-    <!-- Weather Script - BMKG API -->
     <script>
-      // BMKG API - Desa Kalemago (Kode Resmi)
       const BMKG_ADM4 = '72.02.24.2005';
       const LOCATION_TEXT = 'Balai Desa Kalemago, Kec. Lore Timur';
-
       async function updateWeather() {
         try {
           const tempEl = document.getElementById('temperature');
           const weatherEl = document.getElementById('weather');
-          
           tempEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
           weatherEl.textContent = 'Memuat...';
-
           const response = await fetch(`https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=${BMKG_ADM4}`);
           if (!response.ok) throw new Error('Network error');
-
           const result = await response.json();
-          
           if (result && result.data && result.data.length > 0) {
-            // Ambil data cuaca saat ini (periode pertama, jam pertama)
             const current = result.data[0].cuaca[0][0];
-            
-            // Update suhu
             const temp = Math.round(current.t);
             tempEl.textContent = `${temp} °C`;
-
-            // Update kondisi cuaca
             weatherEl.textContent = current.weather_desc || 'Berawan';
-
-            // Update lokasi
             document.getElementById('location').textContent = LOCATION_TEXT;
-
-            // Update angin
-            const windSpeed = Math.round(current.ws || 5);
-            const windDir = current.wd || 'Utara';
-            document.getElementById('wind-info').innerHTML = `${windDir} (${windSpeed} km/j)`;
-
-            // Update kelembaban
-            const humidity = current.hu || 85;
-            document.getElementById('humidity-info').innerHTML = `${humidity}%`;
-
-            // Update jarak pandang
-            const visibilityKm = Math.round((current.vs || 10000) / 1000);
-            document.getElementById('visibility-info').innerHTML = `${visibilityKm} km`;
+            document.getElementById('wind-info').innerHTML = `${current.wd || 'Utara'} (${Math.round(current.ws || 5)} km/j)`;
+            document.getElementById('humidity-info').innerHTML = `${current.hu || 85}%`;
+            document.getElementById('visibility-info').innerHTML = `${Math.round((current.vs || 10000) / 1000)} km`;
           }
         } catch (error) {
           console.error('Weather error:', error);
@@ -354,8 +279,6 @@
           document.getElementById('weather').textContent = 'Berawan';
         }
       }
-
-      // Update setiap 10 menit
       updateWeather();
       setInterval(updateWeather, 10 * 60 * 1000);
     </script>
@@ -377,23 +300,17 @@
           </div>
           <span class="font-medium text-center">Infografis</span>
         </a>
-        <a href="/listing" class="flex flex-col items-center space-y-3 text-white hover:text-yellow-300 transition group">
+        <a href="listing.html" class="flex flex-col items-center space-y-3 text-white hover:text-yellow-300 transition group">
           <div class="w-16 h-16 flex items-center justify-center bg-white/10 rounded-lg group-hover:bg-white/20 transition">
             <i class="fas fa-list text-2xl"></i>
           </div>
           <span class="font-medium text-center">Listing</span>
         </a>
-        <a href="/belanja" class="flex flex-col items-center space-y-3 text-white hover:text-yellow-300 transition group">
+        <a href="belanja.html" class="flex flex-col items-center space-y-3 text-white hover:text-yellow-300 transition group">
           <div class="w-16 h-16 flex items-center justify-center bg-white/10 rounded-lg group-hover:bg-white/20 transition">
             <i class="fas fa-shopping-cart text-2xl"></i>
           </div>
           <span class="font-medium text-center">Belanja</span>
-        </a>
-        <a href="/galeri" class="flex flex-col items-center space-y-3 text-white hover:text-yellow-300 transition group">
-          <div class="w-16 h-16 flex items-center justify-center bg-white/10 rounded-lg group-hover:bg-white/20 transition">
-            <i class="fas fa-images text-2xl"></i>
-          </div>
-          <span class="font-medium text-center">Galeri</span>
         </a>
       </div>
     </div>
@@ -433,7 +350,7 @@
     </div>
     <div class="bg-emerald-800 rounded-lg shadow-lg p-6 text-white">
       <h3 class="text-xl font-bold mb-6">Peta Desa</h3>
-          <img src="fotokkn/PETA.jpg" alt="Peta Desa Kalemago" class="w-full h-[600px] object-contain rounded-lg shadow-lg">
+      <img src="fotokkn/PETA.jpg" alt="Peta Desa Kalemago" class="w-full h-[600px] object-contain rounded-lg shadow-lg">
       <p class="mt-4 text-sm leading-relaxed opacity-90">Menampilkan Peta Desa Dengan <em>Interest Point</em> Desa Kalemago</p>
     </div>
   </section>
@@ -459,7 +376,7 @@
     </div>
   </section>
 
-  <!-- Administrasi Penduduk Section - DINAMIS DARI BACKEND -->
+  <!-- Administrasi Penduduk Section -->
   <section class="container mx-auto px-6 py-12">
     <h2 class="text-3xl font-bold text-emerald-800 mb-6 text-center">Administrasi Penduduk</h2>
     <p class="max-w-4xl text-gray-700 mb-8 mx-auto text-center">
@@ -485,7 +402,7 @@
     </div>
   </section>
 
-  <!-- APB Desa Section - DINAMIS DARI BACKEND -->
+  <!-- APB Desa Section -->
   <section class="bg-gradient-to-br from-emerald-900 to-emerald-800 py-12 shadow-lg text-white">
     <div class="container mx-auto px-6 max-w-4xl">
       <h2 class="text-3xl font-bold mb-6 text-center">APB Desa 2024</h2>
@@ -508,14 +425,12 @@
     </div>
   </section>
 
-  <!-- WEB DESIGNER SECTION - DINAMIS DARI BACKEND -->
+  <!-- WEB DESIGNER SECTION -->
   <section class="bg-gradient-to-br from-emerald-900 to-emerald-800 py-16 text-white" data-scroll="fade-up" data-stagger="true">
     <div class="container mx-auto px-6">
       <h2 class="text-3xl font-bold text-center mb-4">Web Designer</h2>
       <p class="text-white/90 text-center mb-12 max-w-3xl mx-auto">Website ini di buat oleh Mahasiswa KKNT Unsimar Desa Kalemago Tahun 2025 yang struktur oleh sebagai berikut.</p>
-      
       <div class="flex flex-col gap-8 max-w-4xl mx-auto" id="webDesignerTeam">
-        <!-- Team members will be loaded dynamically from backend -->
         <div class="text-center text-white/70">Memuat data tim...</div>
       </div>
     </div>
@@ -545,7 +460,6 @@
     <div class="container mx-auto px-6">
       <h2 class="text-3xl font-bold text-center mb-4">Supporter</h2>
       <p class="text-white/90 text-center mb-12 max-w-3xl mx-auto">Berikut adalah nama-nama supporter yang telah berkontribusi dalam pengembangan dan pengelolaan website Desa Kalemago.</p>
-      
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
         <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 flex items-center space-x-4 shadow-lg hover:scale-105 transition transform duration-300">
           <img src="fotokkn/yumi.jpg" alt="Ahmad Fadli" class="w-16 h-16 rounded-full object-cover" />
@@ -579,18 +493,11 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const links = document.querySelectorAll('a[href]');
-      const buttons = document.querySelectorAll('button');
       links.forEach(link => {
         link.addEventListener('click', function(e) {
           if (this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
             showLoading();
           }
-        });
-      });
-      buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-          showLoading();
-          button.disabled = true;
         });
       });
     });
@@ -604,10 +511,8 @@
 
   <!-- Advanced Scroll Animations (Framer-like) -->
   <script>
-    // Modern Scroll Animation System
     function initScrollAnimations() {
       const animatedElements = document.querySelectorAll('[data-scroll]');
-      
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
           if (entry.isIntersecting) {
@@ -633,7 +538,6 @@
                 el.style.transform = 'scale(1)';
               }
               
-              // Add stagger class for child elements
               if (el.dataset.stagger) {
                 const children = el.children;
                 Array.from(children).forEach((child, i) => {
@@ -648,38 +552,21 @@
             observer.unobserve(el);
           }
         });
-      }, {
-        threshold: 0.15,
-        rootMargin: '0px 0px -80px 0px'
-      });
+      }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
 
       animatedElements.forEach(el => {
-        // Set initial state
         const animation = el.dataset.scroll || 'fade-up';
-        
-        if (animation === 'fade-up') {
-          el.style.opacity = '0';
-          el.style.transform = 'translateY(60px)';
-        } else if (animation === 'fade-left') {
-          el.style.opacity = '0';
-          el.style.transform = 'translateX(-60px)';
-        } else if (animation === 'fade-right') {
-          el.style.opacity = '0';
-          el.style.transform = 'translateX(60px)';
-        } else if (animation === 'scale') {
-          el.style.opacity = '0';
-          el.style.transform = 'scale(0.85)';
-        }
-        
+        if (animation === 'fade-up') { el.style.opacity = '0'; el.style.transform = 'translateY(60px)'; }
+        else if (animation === 'fade-left') { el.style.opacity = '0'; el.style.transform = 'translateX(-60px)'; }
+        else if (animation === 'fade-right') { el.style.opacity = '0'; el.style.transform = 'translateX(60px)'; }
+        else if (animation === 'scale') { el.style.opacity = '0'; el.style.transform = 'scale(0.85)'; }
         observer.observe(el);
       });
     }
 
-    // Subtle Parallax on Hero Video
     function initParallax() {
       const video = document.querySelector('.hero-video video');
       if (!video) return;
-
       window.addEventListener('scroll', () => {
         const scrolled = window.pageYOffset;
         const rate = scrolled * 0.3;
@@ -687,24 +574,13 @@
       }, { passive: true });
     }
 
-    // Initialize everything when DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
       initScrollAnimations();
       initParallax();
-      
-      // Optional: Add smooth reveal to Quick Links with stagger
-      const quickLinks = document.querySelector('.grid-cols-2.md\\:grid-cols-4');
-      if (quickLinks) {
-        quickLinks.setAttribute('data-scroll', 'fade-up');
-        quickLinks.setAttribute('data-stagger', 'true');
-      }
     });
 
-    // Re-initialize on page show (for back/forward navigation)
     window.addEventListener('pageshow', () => {
-      setTimeout(() => {
-        initScrollAnimations();
-      }, 100);
+      setTimeout(() => initScrollAnimations(), 100);
     });
   </script>
 
@@ -712,12 +588,10 @@
   <script>
     const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
 
-    // Load Population Data dari Backend
     async function loadPopulationData() {
       try {
         const res = await fetch(`${API_URL}/api/population`);
         const data = await res.json();
-        
         if (data.success) {
           document.getElementById('popTotal').textContent = data.data.total.toLocaleString('id-ID');
           document.getElementById('popMale').textContent = data.data.male.toLocaleString('id-ID');
@@ -729,12 +603,10 @@
       }
     }
 
-    // Load APBDes Data dari Backend
     async function loadAPBDesData() {
       try {
         const res = await fetch(`${API_URL}/api/apbdes`);
         const data = await res.json();
-        
         if (data.success) {
           document.getElementById('apbPendapatan').textContent = data.data.pendapatan.toLocaleString('id-ID');
           document.getElementById('apbBelanja').textContent = data.data.belanja.toLocaleString('id-ID');
@@ -744,20 +616,16 @@
       }
     }
 
-    // Load Web Designer Team dari Backend
     async function loadWebDesignerTeam() {
       try {
         const res = await fetch(`${API_URL}/api/team`);
         const data = await res.json();
-        
         if (data.success && data.team && data.team.length > 0) {
           const container = document.getElementById('webDesignerTeam');
           container.innerHTML = '';
-          
           data.team.forEach(member => {
             const div = document.createElement('div');
             div.className = 'bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center shadow-lg hover:transform hover:scale-105 transition duration-300';
-            
             div.innerHTML = `
               <div class="w-32 h-32 mx-auto bg-white rounded-full flex items-center justify-center mb-4 shadow-lg overflow-hidden">
                 ${member.photo ? 
@@ -773,11 +641,9 @@
                 <a href="${member.instagram || '#'}" class="text-white/60 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
               </div>
             `;
-            
             container.appendChild(div);
           });
         } else {
-          // Fallback jika tidak ada data
           document.getElementById('webDesignerTeam').innerHTML = `
             <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center">
               <p class="text-white/70">Data tim belum tersedia</p>
@@ -794,7 +660,6 @@
       }
     }
 
-    // Panggil semua fungsi saat halaman dimuat
     document.addEventListener('DOMContentLoaded', () => {
       loadPopulationData();
       loadAPBDesData();
