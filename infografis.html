@@ -499,19 +499,19 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
         <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-          <p class="text-4xl font-extrabold text-emerald-800">999</p>
+          <p class="text-4xl font-extrabold text-emerald-800" id="popTotal">999</p>
           <p class="font-semibold text-gray-700">Penduduk</p>
         </div>
         <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-          <p class="text-4xl font-extrabold text-emerald-800">514</p>
+          <p class="text-4xl font-extrabold text-emerald-800" id="popMale">514</p>
           <p class="font-semibold text-gray-700">Laki-laki</p>
         </div>
         <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-          <p class="text-4xl font-extrabold text-emerald-800">485</p>
+          <p class="text-4xl font-extrabold text-emerald-800" id="popFemale">485</p>
           <p class="font-semibold text-gray-700">Perempuan</p>
         </div>
         <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-          <p class="text-4xl font-extrabold text-emerald-800">285</p>
+          <p class="text-4xl font-extrabold text-emerald-800" id="popFamilies">285</p>
           <p class="font-semibold text-gray-700">Kepala Keluarga</p>
         </div>
       </div>
@@ -618,11 +618,16 @@
             window.genderChart.update();
           }
           
-          // Update any text elements showing gender totals
+          // Update all Administrasi Penduduk elements (sync with index.html)
+          const totalEl = document.getElementById('popTotal');
           const maleEl = document.getElementById('popMale');
           const femaleEl = document.getElementById('popFemale');
+          const familiesEl = document.getElementById('popFamilies');
+          
+          if (totalEl) totalEl.textContent = data.total.toLocaleString('id-ID');
           if (maleEl) maleEl.textContent = data.male.toLocaleString('id-ID');
           if (femaleEl) femaleEl.textContent = data.female.toLocaleString('id-ID');
+          if (familiesEl) familiesEl.textContent = data.families.toLocaleString('id-ID');
         }
       } catch (err) {
         console.log('Using default population data for gender chart');
