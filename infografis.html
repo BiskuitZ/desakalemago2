@@ -196,8 +196,10 @@
   <script>
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('hidden');
-      sidebar.classList.toggle('flex');
+      if (sidebar) {
+        sidebar.classList.toggle('hidden');
+        sidebar.classList.toggle('flex');
+      }
     }
 
     // Loader HANYA untuk navigasi antar halaman (kecuali hamburger & sidebar)
