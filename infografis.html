@@ -163,6 +163,20 @@
 
   </header>
 
+  <script>
+    function toggleSidebar() {
+      console.log('toggleSidebar called');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) {
+        sidebar.classList.toggle('hidden');
+        sidebar.classList.toggle('flex');
+        console.log('sidebar toggled');
+      } else {
+        console.error('Sidebar element not found!');
+      }
+    }
+  </script>
+
   <!-- SIDEBAR MOBILE (Hanya muncul di HP) -->
   <div id="sidebar" class="fixed inset-0 bg-black bg-opacity-50 z-[999] hidden md:hidden" onclick="toggleSidebar()">
     <div onclick="event.stopImmediatePropagation()" class="absolute right-0 top-0 h-full w-72 bg-emerald-900 shadow-2xl transform transition-transform duration-300">
