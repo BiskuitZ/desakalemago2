@@ -252,6 +252,7 @@ layout: null
               <th class="text-left py-3 px-4 font-semibold text-gray-600">No</th>
               <th class="text-left py-3 px-4 font-semibold text-gray-600">Nama</th>
               <th class="text-left py-3 px-4 font-semibold text-gray-600">Jabatan</th>
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">Atasan</th>
               <th class="text-left py-3 px-4 font-semibold text-gray-600">Foto</th>
               <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
             </tr>
@@ -794,10 +795,16 @@ layout: null
       currentTeam.forEach((member, index) => {
         const row = document.createElement('tr');
         row.className = 'border-b border-gray-100 hover:bg-gray-50';
+        
+        // Find parent name
+        const parent = member.parentId ? currentTeam.find(m => m.id === member.parentId) : null;
+        const parentName = parent ? parent.name : '<span class="text-gray-400 italic">Root</span>';
+        
         row.innerHTML = `
           <td class="py-3 px-4">${index + 1}</td>
           <td class="py-3 px-4 font-semibold">${member.name}</td>
           <td class="py-3 px-4">${member.role}</td>
+          <td class="py-3 px-4">${parentName}</td>
           <td class="py-3 px-4">
             ${member.photo ? 
               `<img src="${member.photo}" class="w-10 h-10 rounded-full object-cover border">` : 
@@ -820,6 +827,20 @@ layout: null
       const role = prompt('Jabatan:');
       if (!role) return;
       
+      // Show parent options
+      let parentOptions = 'Pilih Atasan (kosongkan jika Root):\n';
+      currentTeam.forEach((m, i) => {
+        parentOptions += `${i + 1}. ${m.name} (${m.role})\n`;
+      });
+      const parentChoice = prompt(parentOptions);
+      let parentId = null;
+      if (parentChoice) {
+        const parentIndex = parseInt(parentChoice) - 1;
+        if (currentTeam[parentIndex]) {
+          parentId = currentTeam[parentIndex].id;
+        }
+      }
+      
       const photo = prompt('URL Foto (kosongkan jika tidak ada):') || '';
       const instagram = prompt('Link Instagram (opsional):') || '#';
       
@@ -828,7 +849,8 @@ layout: null
         name: name,
         role: role,
         photo: photo,
-        instagram: instagram
+        instagram: instagram,
+        parentId: parentId
       });
       
       renderTeamTable();
@@ -843,6 +865,24 @@ layout: null
       const newRole = prompt('Jabatan baru:', member.role);
       if (!newRole) return;
       
+      // Parent selection
+      let parentOptions = 'Pilih Atasan (kosongkan jika Root):\n0. Root (Tidak ada atasan)\n';
+      currentTeam.forEach((m, i) => {
+        if (i !== index) { // Can't be own parent
+          parentOptions += `${i + 1}. ${m.name} (${m.role})\n`;
+        }
+      });
+      const parentChoice = prompt(parentOptions, member.parentId ? 
+        (currentTeam.findIndex(m => m.id === member.parentId) + 1) : '0');
+      
+      let parentId = null;
+      if (parentChoice && parentChoice !== '0') {
+        const parentIndex = parseInt(parentChoice) - 1;
+        if (currentTeam[parentIndex] && parentIndex !== index) {
+          parentId = currentTeam[parentIndex].id;
+        }
+      }
+      
       const newPhoto = prompt('URL Foto baru:', member.photo || '');
       const newInstagram = prompt('Link Instagram baru:', member.instagram || '#');
       
@@ -851,7 +891,8 @@ layout: null
         name: newName,
         role: newRole,
         photo: newPhoto || member.photo,
-        instagram: newInstagram || member.instagram
+        instagram: newInstagram || member.instagram,
+        parentId: parentId
       };
       
       renderTeamTable();
