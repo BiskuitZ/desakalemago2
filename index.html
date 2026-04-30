@@ -617,16 +617,29 @@
         if (data.success && data.team && data.team.length > 0) {
           const container = document.getElementById('webDesignerTeam');
           container.innerHTML = '';
-          data.team.forEach(member => {
+          
+          // Sort: Root first, then by parent
+          const sortedTeam = [...data.team].sort((a, b) => {
+            if (!a.parentId && b.parentId) return -1;
+            if (a.parentId && !b.parentId) return 1;
+            return 0;
+          });
+          
+          sortedTeam.forEach(member => {
+            const parent = member.parentId ? data.team.find(m => m.id === member.parentId) : null;
+            const isChild = !!member.parentId;
+            
             const div = document.createElement('div');
-            div.className = 'bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center shadow-lg hover:transform hover:scale-105 transition duration-300';
+            div.className = `bg-white/10 backdrop-blur-sm rounded-xl p-8 text-center shadow-lg hover:transform hover:scale-105 transition duration-300 ${isChild ? 'border-l-4 border-yellow-400' : ''}`;
+            
             div.innerHTML = `
-              <div class="w-32 h-32 mx-auto bg-white rounded-full flex items-center justify-center mb-4 shadow-lg overflow-hidden">
+              <div class="w-32 h-32 mx-auto bg-white rounded-full flex items-center justify-center mb-4 shadow-lg overflow-hidden ${isChild ? 'ring-2 ring-yellow-400' : ''}">
                 ${member.photo ? 
                   `<img src="${member.photo}" alt="${member.name}" class="w-32 h-32 rounded-full object-cover">` : 
                   `<i class="fas fa-user text-6xl text-emerald-800"></i>`
                 }
               </div>
+              ${isChild ? `<div class="text-yellow-400 text-xs mb-1"><i class="fas fa-level-up-alt"></i> ${parent ? parent.name : ''}</div>` : ''}
               <h3 class="text-2xl font-bold mb-2">${member.name}</h3>
               <div class="text-white/80 space-y-1 mb-4">
                 <p class="text-lg font-medium">${member.role}</p>
