@@ -143,14 +143,21 @@
           </div>
         </div>
 
-        <!-- Desktop Navigation -->
+        <!-- Desktop Navigation (SAMA DENGAN index.html) -->
         <nav class="hidden md:flex items-center gap-3 text-white font-medium ml-8">
           <a href="index.html" class="hover:text-yellow-300 transition px-2 py-1 text-sm">Home</a>
           <a href="profildesa.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Profil Desa</a>
           <a href="infografis.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Infografis</a>
+          <a href="apbdes.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">APB Desa</a>
           <a href="listing.html" class="border-b-2 border-yellow-300 px-2 py-1 text-sm">Listing</a>
           <a href="belanja.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Belanja</a>
         </nav>
+
+        <!-- Login Button -->
+        <a href="login.html" class="hidden md:flex items-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-2 rounded-2xl text-sm font-semibold transition">
+          <i class="fas fa-user-shield"></i>
+          <span>Login Admin</span>
+        </a>
 
         <!-- Mobile Menu Button -->
         <button class="md:hidden text-white focus:outline-none" onclick="toggleMenu()">
@@ -171,27 +178,39 @@
           </button>
         </div>
         <nav class="flex-1 overflow-y-auto">
-          <div class="flex flex-col gap-3 p-4">
-            <a href="index.html" class="flex items-center space-x-3 hover:text-yellow-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10">
+          <div class="flex flex-col gap-2 p-4">
+            <a href="index.html" onclick="toggleMenu()" class="flex items-center space-x-3 hover:text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg hover:bg-white/10">
               <i class="fas fa-home w-6"></i>
               <span>Home</span>
             </a>
-            <a href="profildesa.html" class="flex items-center space-x-3 hover:text-yellow-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10">
+            <a href="profildesa.html" onclick="toggleMenu()" class="flex items-center space-x-3 hover:text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg hover:bg-white/10">
               <i class="fas fa-building w-6"></i>
               <span>Profil Desa</span>
             </a>
-            <a href="infografis.html" class="flex items-center space-x-3 hover:text-yellow-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10">
+            <a href="infografis.html" onclick="toggleMenu()" class="flex items-center space-x-3 hover:text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg hover:bg-white/10">
               <i class="fas fa-chart-pie w-6"></i>
               <span>Infografis</span>
             </a>
-            <a href="listing.html" class="flex items-center space-x-3 text-yellow-300 transition py-3 px-4 text-white text-lg rounded-lg bg-white/10">
+            <a href="apbdes.html" onclick="toggleMenu()" class="flex items-center space-x-3 hover:text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg hover:bg-white/10">
+              <i class="fas fa-file-invoice-dollar w-6"></i>
+              <span>APB Desa</span>
+            </a>
+            <a href="listing.html" onclick="toggleMenu()" class="flex items-center space-x-3 text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg bg-white/10">
               <i class="fas fa-list w-6"></i>
               <span>Listing</span>
             </a>
-            <a href="belanja.html" class="flex items-center space-x-3 hover:text-yellow-300 transition py-3 px-4 text-white text-lg rounded-lg hover:bg-white/10">
+            <a href="belanja.html" onclick="toggleMenu()" class="flex items-center space-x-3 hover:text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg hover:bg-white/10">
               <i class="fas fa-shopping-cart w-6"></i>
               <span>Belanja</span>
             </a>
+            
+            <!-- Login Button di Mobile -->
+            <div class="pt-4 border-t border-white/20 mt-2">
+              <a href="login.html" onclick="toggleMenu()" class="flex items-center justify-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-3 rounded-2xl text-sm font-semibold transition">
+                <i class="fas fa-user-shield"></i>
+                <span>Login Admin</span>
+              </a>
+            </div>
           </div>
         </nav>
       </div>
