@@ -3,108 +3,246 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard User - Desa Kalemago</title>
+  <title>Belanja - Desa Kalemago</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="bg-gray-100">
-  <nav class="bg-emerald-800 text-white shadow-lg sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4">
+<body class="bg-gray-50">
+  <!-- Header (SAMA PERSIS DENGAN index.html) -->
+  <header class="bg-emerald-950/90 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4">
       <div class="flex items-center justify-between">
+        <!-- Logo and Title -->
         <div class="flex items-center gap-4">
-          <img src="fotokkn/logokabposo.png" alt="Logo" class="w-14 h-14 object-contain">
-          <div>
-            <h1 class="font-bold text-2xl">Dashboard User</h1>
-            <p class="text-emerald-300 text-sm">Desa Kalemago</p>
+          <img src="fotokkn/logokabposo.png" alt="Logo Kabupaten Poso" class="h-[64px] w-[45px] object-contain" />
+          <div class="text-white">
+            <h1 class="text-2xl md:text-3xl font-bold">Desa Kalemago</h1>
+            <p class="text-base md:text-lg">Kabupaten Poso</p>
           </div>
         </div>
-        
-        <div class="flex items-center gap-4">
-          <div class="text-right hidden md:block">
-            <p class="font-semibold" id="userName">Loading...</p>
-            <p class="text-emerald-300 text-xs" id="userRole">USER</p>
-          </div>
-          <button onclick="logout()" class="bg-emerald-700 hover:bg-red-600 px-5 py-2.5 rounded-2xl text-sm font-medium transition flex items-center gap-2">
-            <i class="fas fa-sign-out-alt"></i>
-            <span class="hidden md:inline">Logout</span>
-          </button>
-        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-3 text-white font-medium ml-8">
+          <a href="index.html" class="hover:text-yellow-300 transition px-2 py-1 text-sm">Home</a>
+          <a href="profildesa.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Profil Desa</a>
+          <a href="infografis.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Infografis</a>
+          <a href="apbdes.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">APB Desa</a>
+          <a href="listing.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Listing</a>
+          <a href="belanja.html" class="border-b-2 border-yellow-300 px-2 py-1 text-sm">Belanja</a>
+        </nav>
+
+        <!-- Login Button -->
+        <a href="login.html" class="hidden md:flex items-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-2 rounded-2xl text-sm font-semibold transition">
+          <i class="fas fa-user-shield"></i>
+          <span>Login Admin</span>
+        </a>
+
+        <!-- Mobile Menu Button -->
+        <button class="md:hidden text-white focus:outline-none" onclick="toggleMenu()">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
       </div>
     </div>
-  </nav>
+
+    <!-- Mobile Menu Overlay (SAMA PERSIS DENGAN index.html) -->
+    <div id="mobile-menu" class="fixed inset-0 bg-gradient-to-br from-emerald-900 to-emerald-800 bg-opacity-98 md:hidden transition-all duration-300 ease-in-out transform translate-x-full z-50 backdrop-blur-sm">
+      <div class="flex flex-col h-full">
+        <!-- Header Menu -->
+        <div class="flex justify-between items-center p-4 border-b border-white/20">
+          <div class="text-white">
+            <h2 class="text-xl font-bold">Menu</h2>
+          </div>
+          <button class="text-white focus:outline-none" onclick="toggleMenu()">
+            <i class="fas fa-times text-2xl"></i>
+          </button>
+        </div>
+        
+        <!-- Navigation Links - LENGKAP -->
+        <nav class="flex-1 overflow-y-auto">
+          <div class="flex flex-col gap-2 p-4">
+            <a href="index.html" onclick="toggleMenu()" class="flex items-center space-x-3 hover:text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg hover:bg-white/10">
+              <i class="fas fa-home w-6"></i>
+              <span>Home</span>
+            </a>
+            <a href="profildesa.html" onclick="toggleMenu()" class="flex items-center space-x-3 hover:text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg hover:bg-white/10">
+              <i class="fas fa-building w-6"></i>
+              <span>Profil Desa</span>
+            </a>
+            <a href="infografis.html" onclick="toggleMenu()" class="flex items-center space-x-3 hover:text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg hover:bg-white/10">
+              <i class="fas fa-chart-pie w-6"></i>
+              <span>Infografis</span>
+            </a>
+            <a href="apbdes.html" onclick="toggleMenu()" class="flex items-center space-x-3 hover:text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg hover:bg-white/10">
+              <i class="fas fa-file-invoice-dollar w-6"></i>
+              <span>APB Desa</span>
+            </a>
+            <a href="listing.html" onclick="toggleMenu()" class="flex items-center space-x-3 hover:text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg hover:bg-white/10">
+              <i class="fas fa-list w-6"></i>
+              <span>Listing</span>
+            </a>
+            <a href="belanja.html" onclick="toggleMenu()" class="flex items-center space-x-3 text-yellow-300 transition py-4 px-4 text-white text-lg rounded-lg bg-white/10">
+              <i class="fas fa-shopping-cart w-6"></i>
+              <span>Belanja</span>
+            </a>
+            
+            <!-- Login Button di Mobile -->
+            <div class="pt-4 border-t border-white/20 mt-2">
+              <a href="login.html" onclick="toggleMenu()" class="flex items-center justify-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-3 rounded-2xl text-sm font-semibold transition">
+                <i class="fas fa-user-shield"></i>
+                <span>Login Admin</span>
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('translate-x-full');
+    }
+  </script>
 
   <div class="max-w-7xl mx-auto px-6 py-8">
-    <div class="bg-gradient-to-r from-emerald-700 to-emerald-600 rounded-3xl p-8 text-white mb-8 shadow-xl">
-      <h2 class="text-4xl font-bold mb-2">Selamat Datang! 👋</h2>
-      <p class="text-emerald-200 text-lg" id="welcomeMessage">Memuat...</p>
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-emerald-800 mb-4">Produk Unggulan Desa Kalemago</h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">Dukung ekonomi desa dengan membeli produk lokal berkualitas</p>
     </div>
 
-    <div class="bg-white rounded-3xl shadow-lg p-8">
-      <h3 class="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-3">
-        <i class="fas fa-chart-line text-emerald-600"></i>
-        Statistik Pengunjung
-      </h3>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="productsGrid">
+      <!-- Products loaded from backend -->
+    </div>
+  </div>
+
+  <!-- ORDER MODAL -->
+  <div id="orderModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-3xl p-8 w-full max-w-md mx-4">
+      <h3 class="text-2xl font-bold text-emerald-800 mb-6">Pesan Produk</h3>
       
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="bg-emerald-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-emerald-800" id="totalVisitors">0</p>
-          <p class="text-emerald-600 font-semibold mt-2">Total Pengunjung</p>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
+          <input type="text" id="customerName" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-emerald-500">
         </div>
         
-        <div class="bg-blue-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-blue-800" id="todayVisitors">0</p>
-          <p class="text-blue-600 font-semibold mt-2">Pengunjung Hari Ini</p>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor WhatsApp</label>
+          <input type="tel" id="customerPhone" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-emerald-500">
         </div>
         
-        <div class="bg-purple-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-purple-800" id="onlineVisitors">12</p>
-          <p class="text-purple-600 font-semibold mt-2">Sedang Online</p>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Jumlah</label>
+          <input type="number" id="orderQty" value="1" min="1" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-emerald-500">
         </div>
+        
+        <div class="bg-emerald-50 rounded-2xl p-4">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Harga satuan</span>
+            <span class="font-semibold" id="modalPrice"></span>
+          </div>
+          <div class="flex justify-between text-lg font-bold mt-2 pt-2 border-t border-emerald-200">
+            <span>Total</span>
+            <span id="modalTotal"></span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex gap-4 mt-6">
+        <button onclick="hideOrderModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-2xl font-semibold">Batal</button>
+        <button onclick="submitOrder()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-semibold">Pesan via WhatsApp</button>
       </div>
     </div>
   </div>
 
   <script>
     const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
+    let currentProduct = null;
 
-    async function checkAuth() {
-      const userStr = localStorage.getItem('user');
-      if (!userStr) { window.location.href = 'login.html'; return; }
-      
-      const user = JSON.parse(userStr);
-      
-      if (user.role === 'admin') { window.location.href = 'admin-dashboard.html'; return; }
-      if (user.role === 'developer') { window.location.href = 'developer-dashboard.html'; return; }
-      
-      document.getElementById('userName').textContent = user.name || user.username;
-      document.getElementById('welcomeMessage').textContent = `Halo, ${user.name || user.username}!`;
-      
-      await loadVisitorStats();
-    }
-
-    async function loadVisitorStats() {
+    async function loadProducts() {
       try {
-        const res = await fetch(`${API_URL}/api/stats`);
+        const res = await fetch(`${API_URL}/api/products`);
         const data = await res.json();
+        
         if (data.success) {
-          document.getElementById('totalVisitors').textContent = data.totalVisitors || 1247;
-          document.getElementById('todayVisitors').textContent = Math.floor((data.totalVisitors || 1247) * 0.3);
+          const grid = document.getElementById('productsGrid');
+          grid.innerHTML = '';
+          
+          data.products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-xl transition';
+            card.innerHTML = `
+              <img src="${product.image}" alt="${product.name}" class="w-full h-64 object-cover">
+              <div class="p-6">
+                <h3 class="text-2xl font-bold text-emerald-800 mb-2">${product.name}</h3>
+                <p class="text-gray-600 mb-4">${product.description}</p>
+                
+                <div class="flex items-center justify-between mb-4">
+                  <div>
+                    <p class="text-3xl font-extrabold text-emerald-600">Rp ${product.price.toLocaleString('id-ID')}</p>
+                    <p class="text-sm text-gray-500">Stok: ${product.stock}</p>
+                  </div>
+                </div>
+                
+                <button onclick="showOrderModal(${product.id}, '${product.name}', ${product.price})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-semibold flex items-center justify-center gap-2">
+                  <i class="fab fa-whatsapp"></i>
+                  <span>Pesan via WhatsApp</span>
+                </button>
+              </div>
+            `;
+            grid.appendChild(card);
+          });
         }
       } catch (err) {
-        document.getElementById('totalVisitors').textContent = '1,247';
-        document.getElementById('todayVisitors').textContent = '89';
+        console.error('Error loading products:', err);
       }
     }
 
-    function logout() {
-      if (confirm('Yakin ingin logout?')) {
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      }
+    function showOrderModal(productId, productName, productPrice) {
+      currentProduct = { id: productId, name: productName, price: productPrice };
+      
+      document.getElementById('modalPrice').textContent = 'Rp ' + productPrice.toLocaleString('id-ID');
+      document.getElementById('modalTotal').textContent = 'Rp ' + productPrice.toLocaleString('id-ID');
+      document.getElementById('orderModal').classList.remove('hidden');
+      document.getElementById('orderModal').classList.add('flex');
     }
 
-    checkAuth();
-    setInterval(loadVisitorStats, 30000);
+    function hideOrderModal() {
+      document.getElementById('orderModal').classList.remove('flex');
+      document.getElementById('orderModal').classList.add('hidden');
+    }
+
+    function submitOrder() {
+      const name = document.getElementById('customerName').value;
+      const phone = document.getElementById('customerPhone').value;
+      const qty = document.getElementById('orderQty').value;
+      
+      if (!name || !phone || !qty) {
+        alert('Mohon isi semua data!');
+        return;
+      }
+      
+      const total = currentProduct.price * qty;
+      const message = `Halo, saya ingin memesan:
+      
+*${currentProduct.name}*
+Jumlah: ${qty} pcs
+Harga: Rp ${currentProduct.price.toLocaleString('id-ID')}
+Total: Rp ${total.toLocaleString('id-ID')}
+
+Nama: ${name}
+No. WA: ${phone}
+
+Terima kasih!`;
+
+      const whatsappUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+      
+      hideOrderModal();
+    }
+
+    loadProducts();
   </script>
 </body>
 </html>
