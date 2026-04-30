@@ -585,7 +585,9 @@
         const res = await fetch(`${API_URL}/api/population`);
         const data = await res.json();
         if (data.success) {
-          document.getElementById('popTotal').textContent = data.data.total.toLocaleString('id-ID');
+          // Total Penduduk = Laki-laki + Perempuan (auto-calculated)
+          const total = data.data.male + data.data.female;
+          document.getElementById('popTotal').textContent = total.toLocaleString('id-ID');
           document.getElementById('popMale').textContent = data.data.male.toLocaleString('id-ID');
           document.getElementById('popFemale').textContent = data.data.female.toLocaleString('id-ID');
           document.getElementById('popFamilies').textContent = data.data.families.toLocaleString('id-ID');
