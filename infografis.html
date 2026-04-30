@@ -618,13 +618,14 @@
             window.genderChart.update();
           }
           
-          // Update all Administrasi Penduduk elements (sync with index.html)
+          // Update all Administrasi Penduduk elements (Total = Male + Female)
           const totalEl = document.getElementById('popTotal');
           const maleEl = document.getElementById('popMale');
           const femaleEl = document.getElementById('popFemale');
           const familiesEl = document.getElementById('popFamilies');
           
-          if (totalEl) totalEl.textContent = data.total.toLocaleString('id-ID');
+          const total = data.male + data.female;
+          if (totalEl) totalEl.textContent = total.toLocaleString('id-ID');
           if (maleEl) maleEl.textContent = data.male.toLocaleString('id-ID');
           if (femaleEl) femaleEl.textContent = data.female.toLocaleString('id-ID');
           if (familiesEl) familiesEl.textContent = data.families.toLocaleString('id-ID');
