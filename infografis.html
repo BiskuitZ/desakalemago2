@@ -884,24 +884,7 @@
     window.addEventListener('pageshow', () => {
       setTimeout(() => initScrollAnimations(), 100);
     });
-    // Global click listener for all links and buttons (fallback)
-    document.addEventListener('click', function(e) {
-      const overlay = document.getElementById('loading-overlay');
-      if (!overlay) return;
-      
-      const target = e.target.closest('a, button');
-      if (target) {
-        if (target.tagName === 'A') {
-          if (target.href && target.href !== window.location.href && !target.href.includes('#') && !target.href.startsWith('javascript:')) {
-            overlay.style.display = 'flex';
-          }
-        } else if (target.tagName === 'BUTTON') {
-          if (!target.onclick || !target.onclick.toString().includes('toggleMenu')) {
-            overlay.style.display = 'flex';
-          }
-        }
-      }
-    }, true);
+    // Global click listener REMOVED - using smarter loader script above
 
     // Final safety: hide loader after page is fully loaded
     window.addEventListener('load', function() {
