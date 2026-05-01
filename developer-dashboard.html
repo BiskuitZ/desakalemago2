@@ -800,6 +800,7 @@ layout: null
         const parent = member.parentId ? currentTeam.find(m => m.id === member.parentId) : null;
         const parentName = parent ? parent.name : '<span class="text-gray-400 italic">Root</span>';
         
+        const colorDot = member.color ? `<span class="inline-block w-3 h-3 rounded-full mr-1" style="background:${member.color}"></span>` : '';
         row.innerHTML = `
           <td class="py-3 px-4">${index + 1}</td>
           <td class="py-3 px-4 font-semibold">${member.name}</td>
@@ -843,6 +844,7 @@ layout: null
       
       const photo = prompt('URL Foto (kosongkan jika tidak ada):') || '';
       const instagram = prompt('Link Instagram (opsional):') || '#';
+      const color = prompt('Warna kotak (contoh: #10b981 atau kosongkan):', '#10b981') || '#10b981';
       
       currentTeam.push({
         id: Date.now(),
@@ -850,7 +852,8 @@ layout: null
         role: role,
         photo: photo,
         instagram: instagram,
-        parentId: parentId
+        parentId: parentId,
+        color: color
       });
       
       renderTeamTable();
@@ -885,6 +888,7 @@ layout: null
       
       const newPhoto = prompt('URL Foto baru:', member.photo || '');
       const newInstagram = prompt('Link Instagram baru:', member.instagram || '#');
+      const newColor = prompt('Warna baru (contoh: #10b981):', member.color || '#10b981');
       
       currentTeam[index] = {
         ...member,
@@ -892,7 +896,8 @@ layout: null
         role: newRole,
         photo: newPhoto || member.photo,
         instagram: newInstagram || member.instagram,
-        parentId: parentId
+        parentId: parentId,
+        color: newColor || member.color || '#10b981'
       };
       
       renderTeamTable();
