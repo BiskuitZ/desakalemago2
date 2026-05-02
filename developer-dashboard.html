@@ -905,6 +905,9 @@ layout: null
       const instagram = prompt('Link Instagram (opsional):') || '#';
       const color = prompt('Warna kotak (contoh: #10b981 atau kosongkan):', '#10b981') || '#10b981';
       
+      // Urutan tampilan di bawah atasan (1 = paling kiri, 2 = berikutnya, dll)
+      const position = parseInt(prompt('Urutan tampilan di bawah atasan (1 = paling kiri, 2 = berikutnya, kosongkan = otomatis):', '1')) || 999;
+      
       currentTeam.push({
         id: Date.now(),
         name: name,
@@ -912,11 +915,13 @@ layout: null
         photo: photo,
         instagram: instagram,
         parentId: parentId,
-        color: color
+        color: color,
+        position: position
       });
       
       renderTeamTable();
       alert('✅ Anggota berhasil ditambahkan!\n\nKlik tombol "Simpan Perubahan" di atas untuk menyimpan ke server.');
+    }
     }
 
     function editTeamMember(index) {
