@@ -293,7 +293,18 @@ layout: null
               <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
             </tr>
           </thead>
-          <tbody id="teamTableBody"></tbody>
+          <tbody id="teamTableBody">
+            <!-- Skeleton while loading -->
+            <tr>
+              <td colspan="6" class="py-8">
+                <div class="animate-pulse space-y-3">
+                  <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                  <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                  <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
       
