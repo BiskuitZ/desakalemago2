@@ -996,7 +996,16 @@ layout: null
     }
 
     checkAuth();
-    setInterval(loadVisitorStats, 30000);
+    
+    // Auto-refresh every 30 seconds (visitors, users, products, population, APBDes, team)
+    setInterval(() => {
+      loadVisitorStats();
+      loadUserManagement();
+      loadProductManagement();
+      loadPopulationData();
+      loadAPBDesData();
+      loadTeamData();
+    }, 30000);
   </script>
 </body>
 </html>
