@@ -716,8 +716,8 @@
     function buildOrgTree(team, parentId = null) {
       let members = team.filter(m => (m.parentId || null) === parentId);
       
-      // Sort by position (1 = left, 2 = right, etc.)
-      members.sort((a, b) => (a.position || 999) - (b.position || 999));
+      // Sort by position (1 = left, 2 = right, etc.) - fallback to id
+      members.sort((a, b) => (a.position || a.id || 999) - (b.position || b.id || 999));
       
       if (members.length === 0) return '';
 
