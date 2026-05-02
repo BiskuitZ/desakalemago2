@@ -780,64 +780,6 @@
       container.innerHTML = buildTree(null);
     }
 
-      // CHILDREN (Direct reports to Root) - Sorted by Position (Left to Right)
-      const children = team
-        .filter(m => m.parentId === root.id)
-        .sort((a, b) => (a.position || 999) - (b.position || 999));
-
-      if (children.length > 0) {
-        html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 max-w-4xl w-full">`;
-
-        children.forEach((member, index) => {
-          const isLeft = index === 0;
-          html += `
-            <div class="${isLeft ? 'md:ml-auto' : 'md:mr-auto'}">
-              <div class="bg-white rounded-3xl p-5 shadow-xl w-72 text-center border-4 border-yellow-400">
-                <div class="w-20 h-20 mx-auto mb-3 rounded-full overflow-hidden border-4 border-yellow-300">
-                  ${member.photo ? 
-                    `<img src="${member.photo}" alt="${member.name}" class="w-full h-full object-cover">` : 
-                    `<div class="w-full h-full bg-yellow-100 flex items-center justify-center"><i class="fas fa-user text-4xl text-yellow-600"></i></div>`
-                  }
-                </div>
-                <div class="bg-yellow-500 text-white px-3 py-0.5 rounded-full inline-block mb-1 text-xs font-bold">${member.role}</div>
-                <h4 class="font-bold text-gray-800 text-lg">${member.name}</h4>
-              </div>
-            </div>
-          `;
-        });
-
-        html += `</div>`;
-      }
-
-      // GRANDCHILDREN (if any)
-      const grandchildren = team.filter(m => 
-        children.some(c => c.id === m.parentId)
-      ).sort((a, b) => (a.position || 999) - (b.position || 999));
-
-      if (grandchildren.length > 0) {
-        html += `<div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl w-full">`;
-
-        grandchildren.forEach(member => {
-          html += `
-            <div class="bg-white rounded-2xl p-4 shadow-lg text-center border-2 border-emerald-300">
-              <div class="w-16 h-16 mx-auto mb-2 rounded-full overflow-hidden border-3 border-emerald-400">
-                ${member.photo ? 
-                  `<img src="${member.photo}" alt="${member.name}" class="w-full h-full object-cover">` : 
-                  `<div class="w-full h-full bg-emerald-100 flex items-center justify-center"><i class="fas fa-user text-3xl text-emerald-600"></i></div>`
-                }
-              </div>
-              <div class="text-xs text-emerald-600 font-bold mb-0.5">${member.role}</div>
-              <div class="font-semibold text-gray-800 text-sm">${member.name}</div>
-            </div>
-          `;
-        });
-
-        html += `</div>`;
-      }
-
-      container.innerHTML = html;
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
       loadPopulationData();
       loadAPBDesData();
