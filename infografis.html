@@ -1038,10 +1038,12 @@
       if (overlay) overlay.style.display = 'none';
     });
 
-    // FINAL FORCED CHART INITIALIZATION
-    setTimeout(function() {
+    // FINAL ROBUST CHART INITIALIZATION - MULTIPLE ATTEMPTS
+    function forceInitAllCharts() {
       console.log('%c[CHART] Starting forced initialization...', 'color:#10b981');
       
+      let successCount = 0;
+
       // 1. Main Gender Chart
       const genderCanvas = document.getElementById('genderChart');
       if (genderCanvas) {
@@ -1074,7 +1076,8 @@
               }
             }
           });
-          console.log('%c[CHART] Gender chart OK', 'color:#10b981');
+          console.log('%c[CHART] ✓ Gender chart OK', 'color:#10b981');
+          successCount++;
         } catch(e) { console.error('[CHART] Gender error:', e); }
       }
 
@@ -1110,7 +1113,8 @@
               }
             }
           });
-          console.log('%c[CHART] Male detail chart OK', 'color:#10b981');
+          console.log('%c[CHART] ✓ Male detail chart OK', 'color:#10b981');
+          successCount++;
         } catch(e) { console.error('[CHART] Male error:', e); }
       }
 
@@ -1146,12 +1150,19 @@
               }
             }
           });
-          console.log('%c[CHART] Female detail chart OK', 'color:#10b981');
+          console.log('%c[CHART] ✓ Female detail chart OK', 'color:#10b981');
+          successCount++;
         } catch(e) { console.error('[CHART] Female error:', e); }
       }
       
-      console.log('%c[CHART] All charts initialized successfully!', 'color:#10b981; font-weight:bold');
-    }, 1200);
+      console.log('%c[CHART] ' + successCount + '/3 charts initialized successfully!', 'color:#10b981; font-weight:bold');
+    }
+
+    // Run multiple times with increasing delays
+    setTimeout(forceInitAllCharts, 600);
+    setTimeout(forceInitAllCharts, 1200);
+    setTimeout(forceInitAllCharts, 2000);
+    setTimeout(forceInitAllCharts, 3000);
 
   </script>
 </body>
