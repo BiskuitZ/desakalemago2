@@ -520,16 +520,6 @@ layout: null
             role: newRole 
           })
         });
-      
-      try {
-        const res = await fetch(`${API_URL}/api/admin/users/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
-          body: JSON.stringify({ username: newUsername, name: newName, password: newPassword || undefined, role: newRole })
-        });
         
         const data = await res.json();
         if (data.success) {
