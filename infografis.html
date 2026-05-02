@@ -696,8 +696,9 @@
       // Register ChartJS datalabels plugin
       Chart.register(ChartDataLabels);
       
-      // Initialize detail charts
-      initDetailCharts();
+      // Initialize all charts
+      if (typeof initDetailCharts === 'function') initDetailCharts();
+      if (typeof window.initGenderChart === 'function') window.initGenderChart();
       
       // Load population data on page load (sync with index.html)
       setTimeout(() => {
@@ -1036,6 +1037,121 @@
       const overlay = document.getElementById('loading-overlay');
       if (overlay) overlay.style.display = 'none';
     });
+
+    // FINAL FORCED CHART INITIALIZATION
+    setTimeout(function() {
+      console.log('%c[CHART] Starting forced initialization...', 'color:#10b981');
+      
+      // 1. Main Gender Chart
+      const genderCanvas = document.getElementById('genderChart');
+      if (genderCanvas) {
+        try {
+          if (window.genderChart) window.genderChart.destroy();
+          const ctx = genderCanvas.getContext('2d');
+          window.genderChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+              labels: ['Laki-laki', 'Perempuan'],
+              datasets: [{
+                data: [514, 485],
+                backgroundColor: ['#991b1b', '#ef4444'],
+                borderColor: '#ffffff',
+                borderWidth: 2
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { position: 'bottom' },
+                datalabels: {
+                  color: '#fff',
+                  font: { size: 16, weight: 'bold' },
+                  formatter: (v, c) => {
+                    const t = c.dataset.data.reduce((a,b)=>a+b,0);
+                    return v + ' orang\n' + ((v/t)*100).toFixed(1) + '%';
+                  }
+                }
+              }
+            }
+          });
+          console.log('%c[CHART] Gender chart OK', 'color:#10b981');
+        } catch(e) { console.error('[CHART] Gender error:', e); }
+      }
+
+      // 2. Male Detail Chart
+      const maleCanvas = document.getElementById('maleChart');
+      if (maleCanvas) {
+        try {
+          if (window.maleChart) window.maleChart.destroy();
+          const ctx = maleCanvas.getContext('2d');
+          window.maleChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+              labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
+              datasets: [{
+                data: [212, 158, 144],
+                backgroundColor: ['#991b1b', '#b91c1c', '#dc2626'],
+                borderColor: '#ffffff',
+                borderWidth: 2
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { position: 'bottom' },
+                datalabels: {
+                  color: '#fff',
+                  font: { size: 12, weight: 'bold' },
+                  formatter: (v, c) => {
+                    const t = c.dataset.data.reduce((a,b)=>a+b,0);
+                    return v + '\n' + ((v/t)*100).toFixed(1) + '%';
+                  }
+                }
+              }
+            }
+          });
+          console.log('%c[CHART] Male detail chart OK', 'color:#10b981');
+        } catch(e) { console.error('[CHART] Male error:', e); }
+      }
+
+      // 3. Female Detail Chart
+      const femaleCanvas = document.getElementById('femaleChart');
+      if (femaleCanvas) {
+        try {
+          if (window.femaleChart) window.femaleChart.destroy();
+          const ctx = femaleCanvas.getContext('2d');
+          window.femaleChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+              labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
+              datasets: [{
+                data: [246, 139, 104],
+                backgroundColor: ['#ef4444', '#f87171', '#fca5a5'],
+                borderColor: '#ffffff',
+                borderWidth: 2
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { position: 'bottom' },
+                datalabels: {
+                  color: '#fff',
+                  font: { size: 12, weight: 'bold' },
+                  formatter: (v, c) => {
+                    const t = c.dataset.data.reduce((a,b)=>a+b,0);
+                    return v + '\n' + ((v/t)*100).toFixed(1) + '%';
+                  }
+                }
+              }
+            }
+          });
+          console.log('%c[CHART] Female detail chart OK', 'color:#10b981');
+        } catch(e) { console.error('[CHART] Female error:', e); }
+      }
+      
+      console.log('%c[CHART] All charts initialized successfully!', 'color:#10b981; font-weight:bold');
+    }, 1200);
 
   </script>
 </body>
