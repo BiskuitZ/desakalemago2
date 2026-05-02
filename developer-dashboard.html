@@ -877,6 +877,40 @@ layout: null
       });
     }
 
+    function createNewGroup() {
+      const groupName = prompt('Nama Kelompok Baru (contoh: Kelompok Acara & Humas):');
+      if (!groupName) return;
+
+      // Pilih atasan untuk kelompok ini
+      let parentOptions = 'Pilih Atasan untuk Kelompok ini:\n0. Root (Tidak ada atasan)\n';
+      currentTeam.forEach((m, i) => {
+        parentOptions += `${i + 1}. ${m.name} (${m.role})\n`;
+      });
+      
+      const parentChoice = prompt(parentOptions, '0');
+      let parentId = null;
+      if (parentChoice && parentChoice !== '0') {
+        const parentIndex = parseInt(parentChoice) - 1;
+        if (currentTeam[parentIndex]) {
+          parentId = currentTeam[parentIndex].id;
+        }
+      }
+
+      currentTeam.push({
+        id: Date.now(),
+        name: groupName,
+        role: 'Kelompok',
+        photo: '',
+        instagram: '#',
+        parentId: parentId,
+        color: '#3b82f6',
+        position: 2
+      });
+
+      renderTeamTable();
+      alert('✅ Kelompok berhasil dibuat! Sekarang Anda bisa menjadikan anggota lain sebagai anak dari kelompok ini.');
+    }
+
     function addNewMember() {
       const name = prompt('Nama anggota baru:');
       if (!name) return;
