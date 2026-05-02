@@ -233,7 +233,7 @@
       // Initialize male detail chart (with error handling)
       try {
         const ctxMale = document.getElementById('maleChart').getContext('2d');
-        let maleChart = new Chart(ctxMale, {
+        window.maleChart = new Chart(ctxMale, {
           type: 'pie',
           data: {
             labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
@@ -293,7 +293,7 @@
 
       // Initialize female detail chart
       const ctxFemale = document.getElementById('femaleChart').getContext('2d');
-      let femaleChart = new Chart(ctxFemale, {
+      window.femaleChart = new Chart(ctxFemale, {
           type: 'pie',
           data: {
             labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
@@ -616,6 +616,26 @@
           if (window.genderChart) {
             window.genderChart.data.datasets[0].data = [data.male, data.female];
             window.genderChart.update();
+          }
+
+          // Update male age chart (Detail Laki-laki)
+          if (window.maleChart && data.maleAge) {
+            window.maleChart.data.datasets[0].data = [
+              data.maleAge['0-15'] || 0,
+              data.maleAge['16-55'] || 0,
+              data.maleAge['55+'] || 0
+            ];
+            window.maleChart.update();
+          }
+
+          // Update female age chart (Detail Perempuan)
+          if (window.femaleChart && data.femaleAge) {
+            window.femaleChart.data.datasets[0].data = [
+              data.femaleAge['0-15'] || 0,
+              data.femaleAge['16-55'] || 0,
+              data.femaleAge['55+'] || 0
+            ];
+            window.femaleChart.update();
           }
           
           // Update all Administrasi Penduduk elements (Total = Male + Female)
