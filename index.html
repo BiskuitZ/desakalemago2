@@ -432,8 +432,22 @@
       </div>
       
       <div id="orgChart" class="max-w-6xl mx-auto">
-        <!-- Will be rendered by JS to match screenshot layout -->
-        <div class="text-center text-gray-500 py-8">Memuat struktur tim...</div>
+        <!-- Skeleton Screen while loading from backend -->
+        <div class="animate-pulse">
+          <div class="flex justify-center mb-8">
+            <div class="w-80 h-48 bg-gray-200 rounded-3xl"></div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
+            <div class="h-40 bg-gray-200 rounded-3xl"></div>
+            <div class="h-40 bg-gray-200 rounded-3xl"></div>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            <div class="h-32 bg-gray-200 rounded-2xl"></div>
+            <div class="h-32 bg-gray-200 rounded-2xl"></div>
+            <div class="h-32 bg-gray-200 rounded-2xl"></div>
+            <div class="h-32 bg-gray-200 rounded-2xl"></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
