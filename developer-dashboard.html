@@ -948,6 +948,9 @@ layout: null
       // Posisi visual (1 = Kiri, 2 = Tengah, 3 = Kanan)
       const position = parseInt(prompt('Posisi visual (1 = Kiri, 2 = Tengah, 3 = Kanan):', '2')) || 2;
       
+      // Kategori / Kelompok (opsional, untuk grouping visual, bukan hierarki)
+      const category = prompt('Kategori / Kelompok (opsional, contoh: Kelompok 1 - Acara & Humas):', '') || '';
+      
       currentTeam.push({
         id: Date.now(),
         name: name,
@@ -956,7 +959,8 @@ layout: null
         instagram: instagram,
         parentId: parentId,
         color: color,
-        position: position
+        position: position,
+        category: category
       });
       
       renderTeamTable();
@@ -999,6 +1003,7 @@ layout: null
       const newInstagram = prompt('Link Instagram baru:', member.instagram || '#');
       const newColor = prompt('Warna baru (contoh: #10b981):', member.color || '#10b981');
       const newPosition = parseInt(prompt('Posisi visual (1 = Kiri, 2 = Tengah, 3 = Kanan):', member.position || '2')) || 2;
+      const newCategory = prompt('Kategori / Kelompok (opsional):', member.category || '') || '';
       
       currentTeam[index] = {
         ...member,
@@ -1008,7 +1013,8 @@ layout: null
         instagram: newInstagram || member.instagram,
         parentId: parentId,
         color: newColor || member.color || '#10b981',
-        position: newPosition
+        position: newPosition,
+        category: newCategory
       };
       
       renderTeamTable();
@@ -1058,6 +1064,117 @@ layout: null
     setInterval(() => {
       loadVisitorStats();
     }, 30000);
+    // ============================================
+    // MODAL FORM FOR ADD/EDIT MEMBER (Popup Overlay)
+    // ============================================
+    let currentEditIndex = null;
+
+    function showMemberModal(editIndex = null) {
+      currentEditIndex = editIndex;
+      const member = editIndex !== null ? currentTeam[editIndex] : null;
+
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999]';
+      modal.innerHTML = `
+        <div onclick="event.target.remove()" class="absolute inset-0"></div>
+        <div onclick="event.stopImmediatePropagation()" class="bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-4 relative max-h-[90vh] overflow-y-auto">
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-2xl font-bold text-purple-800">${member ? 'Edit Anggota / Kelompok' : 'Tambah Anggota / Kelompok Baru'}</h3>
+              <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-2xl"></i>
+              </button>
+            </div>
+
+            <form id="memberForm" onsubmit="saveMemberForm(event)">
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Lengkap</label>
+                  <input type="text" id="memberName" value="${member ? member.name : ''}" required class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1">Jabatan / Role</label>
+                  <input type="text" id="memberRole" value="${member ? member.role : ''}" required placeholder="Contoh: Sekretaris, Kelompok, Humas..." class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1">Atasan (Parent)</label>
+                  <select id="memberParent" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+                    <option value="">Root (Tidak ada atasan)</option>
+                    ${currentTeam.map((m, i) => 
+                      `<option value="${m.id}" ${member && member.parentId === m.id ? 'selected' : ''}>${m.name} (${m.role})</option>`
+                    ).join('')}
+                  </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Posisi Visual</label>
+                    <select id="memberPosition" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+                      <option value="1" ${member && member.position === 1 ? 'selected' : ''}>1 - Kiri</option>
+                      <option value="2" ${!member || member.position === 2 ? 'selected' : ''}>2 - Tengah</option>
+                      <option value="3" ${member && member.position === 3 ? 'selected' : ''}>3 - Kanan</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Kategori / Kelompok</label>
+                    <input type="text" id="memberCategory" value="${member && member.category ? member.category : ''}" placeholder="Opsional" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1">URL Foto (opsional)</label>
+                  <input type="text" id="memberPhoto" value="${member && member.photo ? member.photo : ''}" placeholder="https://..." class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1">Link Instagram (opsional)</label>
+                  <input type="text" id="memberInstagram" value="${member && member.instagram ? member.instagram : ''}" placeholder="https://instagram.com/..." class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1">Warna Kotak (opsional)</label>
+                  <input type="color" id="memberColor" value="${member && member.color ? member.color : '#10b981'}" class="w-full h-12 border border-gray-300 rounded-2xl cursor-pointer">
+                </div>
+              </div>
+
+              <div class="flex gap-3 mt-6">
+                <button type="button" onclick="this.closest('.fixed').remove()" class="flex-1 py-3 border border-gray-300 text-gray-700 rounded-2xl font-semibold hover:bg-gray-50">Batal</button>
+                <button type="submit" class="flex-1 py-3 bg-purple-600 text-white rounded-2xl font-semibold hover:bg-purple-700">${member ? 'Simpan Perubahan' : 'Tambah Sekarang'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function saveMemberForm(e) {
+      e.preventDefault();
+
+      const newData = {
+        id: currentEditIndex !== null ? currentTeam[currentEditIndex].id : Date.now(),
+        name: document.getElementById('memberName').value,
+        role: document.getElementById('memberRole').value,
+        parentId: document.getElementById('memberParent').value ? parseInt(document.getElementById('memberParent').value) : null,
+        position: parseInt(document.getElementById('memberPosition').value),
+        category: document.getElementById('memberCategory').value || '',
+        photo: document.getElementById('memberPhoto').value || '',
+        instagram: document.getElementById('memberInstagram').value || '#',
+        color: document.getElementById('memberColor').value || '#10b981'
+      };
+
+      if (currentEditIndex !== null) {
+        currentTeam[currentEditIndex] = { ...currentTeam[currentEditIndex], ...newData };
+      } else {
+        currentTeam.push(newData);
+      }
+
+      renderTeamTable();
+      e.target.closest('.fixed').remove();
+      alert('✅ Data berhasil disimpan! Jangan lupa klik "Simpan Perubahan" untuk menyimpan ke server.');
+    }
   </script>
 </body>
 </html>
