@@ -882,11 +882,14 @@ layout: null
       const role = prompt('Jabatan:');
       if (!role) return;
       
-      // Show parent options - NO LIMITATION
-      let parentOptions = 'Pilih Atasan (kosongkan jika Root / tidak ada atasan):\n0. Root (Tidak ada atasan)\n';
+      // Show parent options - STRUKTUR BERAKAR (NO LIMITATION)
+      let parentOptions = '=== STRUKTUR ORGANISASI BERAKAR ===\n\n';
+      parentOptions += 'Pilih Atasan (0 = Root / Posisi Tertinggi):\n\n';
+      parentOptions += '0. ROOT (Tidak ada atasan - Posisi Tertinggi)\n';
       currentTeam.forEach((m, i) => {
-        parentOptions += `${i + 1}. ${m.name} (${m.role})\n`;
+        parentOptions += `${i + 1}. ${m.name} - ${m.role}\n`;
       });
+      parentOptions += '\nContoh: Ketik 0 untuk Root, atau 1 untuk menjadikan anggota pertama sebagai atasan.\n';
       
       const parentChoice = prompt(parentOptions, '0');
       let parentId = null;
