@@ -716,6 +716,7 @@
     }
 
     // HIERARCHICAL ORG CHART - Grouped by Parent + Left/Right Position
+    // UNLIMITED DEPTH ORG CHART - With Connecting Lines & Unlimited Grouping
     function renderBeautifulOrgChart(team) {
       const container = document.getElementById('orgChart');
       if (!container || !team || team.length === 0) {
@@ -727,23 +728,57 @@
       const root = team.find(m => !m.parentId) || team[0];
       if (!root) return;
 
-      let html = '<div class="flex flex-col items-center">';
+      // Recursive function to build unlimited depth tree
+      function buildTree(parentId, level = 0) {
+        const children = team
+          .filter(m => (m.parentId || null) === parentId)
+          .sort((a, b) => (a.position || 999) - (b.position || 999));
 
-      // ROOT CARD
-      html += `
-        <div class="mb-10">
-          <div class="bg-white rounded-3xl p-6 shadow-2xl w-80 text-center border-4 border-emerald-500">
-            <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-emerald-400">
-              ${root.photo ? 
-                `<img src="${root.photo}" alt="${root.name}" class="w-full h-full object-cover">` : 
-                `<div class="w-full h-full bg-emerald-100 flex items-center justify-center"><i class="fas fa-user text-5xl text-emerald-600"></i></div>`
-              }
+        if (children.length === 0) return '';
+
+        let html = `<div class="flex flex-col items-center ${level > 0 ? 'mt-6' : ''}">`;
+
+        // Horizontal line for children
+        if (level > 0) {
+          html += `<div class="h-0.5 w-16 bg-emerald-400 mb-2"></div>`;
+        }
+
+        html += `<div class="flex flex-wrap justify-center gap-8">`;
+
+        children.forEach((member) => {
+          const hasChildren = team.some(m => m.parentId === member.id);
+          
+          html += `
+            <div class="flex flex-col items-center">
+              <!-- Member Card -->
+              <div class="bg-white rounded-3xl p-4 shadow-xl w-64 text-center border-4 ${level === 0 ? 'border-emerald-500' : 'border-yellow-400'} transform hover:scale-105 transition-all">
+                <div class="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden border-4 border-white shadow-md">
+                  ${member.photo ? 
+                    `<img src="${member.photo}" alt="${member.name}" class="w-full h-full object-cover">` : 
+                    `<div class="w-full h-full bg-emerald-100 flex items-center justify-center"><i class="fas fa-user text-3xl text-emerald-600"></i></div>`
+                  }
+                </div>
+                <div class="bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded-full inline-block mb-1">${member.role}</div>
+                <h4 class="font-bold text-gray-800">${member.name}</h4>
+              </div>
+
+              <!-- Vertical Connecting Line -->
+              ${hasChildren ? `
+                <div class="w-0.5 h-8 bg-emerald-400 my-1"></div>
+              ` : ''}
+              
+              <!-- Children -->
+              ${buildTree(member.id, level + 1)}
             </div>
-            <div class="bg-emerald-600 text-white px-4 py-1 rounded-full inline-block mb-2 text-sm font-bold">${root.role}</div>
-            <h3 class="text-2xl font-bold text-gray-800">${root.name}</h3>
-          </div>
-        </div>
-      `;
+          `;
+        });
+
+        html += `</div></div>`;
+        return html;
+      }
+
+      container.innerHTML = buildTree(null);
+    }
 
       // CHILDREN (Direct reports to Root) - Sorted by Position (Left to Right)
       const children = team
