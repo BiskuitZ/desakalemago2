@@ -882,14 +882,16 @@ layout: null
       const role = prompt('Jabatan:');
       if (!role) return;
       
-      // Show parent options
-      let parentOptions = 'Pilih Atasan (kosongkan jika Root):\n';
+      // Show parent options - NO LIMITATION
+      let parentOptions = 'Pilih Atasan (kosongkan jika Root / tidak ada atasan):\n0. Root (Tidak ada atasan)\n';
       currentTeam.forEach((m, i) => {
         parentOptions += `${i + 1}. ${m.name} (${m.role})\n`;
       });
-      const parentChoice = prompt(parentOptions);
+      
+      const parentChoice = prompt(parentOptions, '0');
       let parentId = null;
-      if (parentChoice) {
+      
+      if (parentChoice && parentChoice !== '0') {
         const parentIndex = parseInt(parentChoice) - 1;
         if (currentTeam[parentIndex]) {
           parentId = currentTeam[parentIndex].id;
@@ -911,6 +913,7 @@ layout: null
       });
       
       renderTeamTable();
+      alert('Anggota berhasil ditambahkan! Jangan lupa klik "Simpan Perubahan" untuk menyimpan ke server.');
     }
 
     function editTeamMember(index) {
