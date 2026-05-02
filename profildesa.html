@@ -642,6 +642,23 @@
     window.addEventListener('pageshow', () => {
       setTimeout(() => initScrollAnimations(), 100);
     });
+
+    // Scroll to Top Button
+    const scrollBtn = document.createElement('button');
+    scrollBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    scrollBtn.className = 'fixed bottom-6 right-6 bg-emerald-600 hover:bg-emerald-700 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center z-[9999] transition-all duration-300 opacity-0 pointer-events-none';
+    scrollBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.body.appendChild(scrollBtn);
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollBtn.style.opacity = '1';
+        scrollBtn.style.pointerEvents = 'all';
+      } else {
+        scrollBtn.style.opacity = '0';
+        scrollBtn.style.pointerEvents = 'none';
+      }
+    });
   </script>
 </body>
 </html>
