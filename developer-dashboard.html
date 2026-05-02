@@ -913,7 +913,29 @@ layout: null
       });
       
       renderTeamTable();
-      alert('Anggota berhasil ditambahkan! Jangan lupa klik "Simpan Perubahan" untuk menyimpan ke server.');
+      
+      // Auto-save immediately after adding (prevents data loss)
+      try {
+        const res = await fetch(`${API_URL}/api/team`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-username': JSON.parse(localStorage.getItem('user')).username
+          },
+          body: JSON.stringify(currentTeam)
+        });
+        
+        const result = await res.json();
+        
+        if (result.success) {
+          alert('✅ Anggota berhasil ditambahkan dan disimpan!');
+          await loadTeamData(); // Reload to get latest from server
+        } else {
+          alert('⚠️ Anggota ditambahkan secara lokal, tapi gagal disimpan ke server. Klik "Simpan Perubahan" manual.');
+        }
+      } catch (err) {
+        alert('⚠️ Anggota ditambahkan secara lokal. Klik "Simpan Perubahan" untuk menyimpan.');
+      }
     }
 
     function editTeamMember(index) {
