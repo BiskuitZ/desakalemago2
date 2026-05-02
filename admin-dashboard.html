@@ -157,7 +157,12 @@ layout: null
     }
 
     checkAuth();
-    setInterval(loadVisitorStats, 30000);
+    
+    // Auto-refresh every 30 seconds
+    setInterval(() => {
+      loadVisitorStats();
+      loadWeather();
+    }, 30000);
   </script>
 </body>
 </html>
