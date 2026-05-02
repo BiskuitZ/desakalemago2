@@ -845,25 +845,6 @@
     });
 
     // Load Org Chart with beautiful cards
-    async function loadOrgChart() {
-      try {
-        const res = await fetch('https://desakalemago2-backend-production.up.railway.app/api/team');
-        const data = await res.json();
-        if (data.success && data.team) {
-          renderBeautifulOrgChart(data.team);
-        }
-      } catch (err) {
-        console.log('Using fallback org chart');
-        // Fallback with sample data
-        const fallbackTeam = [
-          { id: 1, name: "Mohamad Zikron", role: "Koordinator Desa", photo: "", parentId: null, position: 1 },
-          { id: 2, name: "Aulia", role: "Sekretaris", photo: "", parentId: 1, position: 1 },
-          { id: 3, name: "Novita Risyafana Ndede", role: "Bendahara", photo: "", parentId: 1, position: 2 }
-        ];
-        renderBeautifulOrgChart(fallbackTeam);
-      }
-    }
-
     // Scroll to Top Button
     const scrollBtn = document.createElement('button');
     scrollBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
