@@ -541,6 +541,7 @@ layout: null
       } catch (err) {
         alert('❌ Error: ' + err.message);
       }
+      modal.remove();
     }
 
     async function deleteUser(id, username) {
@@ -950,6 +951,7 @@ layout: null
 
     function renderTeamTable() {
       const tbody = document.getElementById('teamTableBody');
+      if (!tbody) return;
       tbody.innerHTML = '';
       
       if (!currentTeam || currentTeam.length === 0) {
