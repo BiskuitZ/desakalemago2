@@ -230,93 +230,130 @@
       }
     });
 
-      // Initialize male detail chart (with error handling)
-      try {
-        const ctxMale = document.getElementById('maleChart').getContext('2d');
-        window.maleChart = new Chart(ctxMale, {
-          type: 'pie',
-          data: {
-            labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
-            datasets: [{
-              data: [212, 158, 144],
-              backgroundColor: [
-                '#991b1b',
-                '#b91c1c',
-                '#dc2626'
-              ],
-              borderColor: '#ffffff',
-              borderWidth: 2
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            animation: {
-              duration: 1000,
-              easing: 'easeInOutQuart',
-              animateRotate: true,
-              animateScale: true
+      // Initialize detail charts after DOM is ready
+      function initDetailCharts() {
+        try {
+          const ctxMale = document.getElementById('maleChart').getContext('2d');
+          window.maleChart = new Chart(ctxMale, {
+            type: 'pie',
+            data: {
+              labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
+              datasets: [{
+                data: [212, 158, 144],
+                backgroundColor: [
+                  '#991b1b',
+                  '#b91c1c',
+                  '#dc2626'
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 2
+              }]
             },
-            plugins: {
-              legend: {
-                position: 'bottom',
-                labels: {
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              animation: {
+                duration: 1000,
+                easing: 'easeInOutQuart',
+                animateRotate: true,
+                animateScale: true
+              },
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  labels: {
+                    font: {
+                      family: 'Inter',
+                      size: 12
+                    },
+                    padding: 10
+                  }
+                },
+                datalabels: {
+                  color: '#ffffff',
                   font: {
                     family: 'Inter',
-                    size: 12
+                    size: window.innerWidth <= 640 ? 8 : 14,
+                    weight: 'bold'
                   },
-                  padding: 10
+                  formatter: function(value, context) {
+                    const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return value + '\n' + percentage + '%';
+                  },
+                  align: 'center',
+                  anchor: 'center',
+                  offset: 0,
+                  padding: 4,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  borderRadius: 4
                 }
-              },
-              datalabels: {
-                color: '#ffffff',
-                font: {
-                  family: 'Inter',
-                  size: window.innerWidth <= 640 ? 8 : 14,
-                  weight: 'bold'
-                },
-                formatter: function(value, context) {
-                  const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
-                  const percentage = ((value / total) * 100).toFixed(1);
-                  return value + '\n' + percentage + '%';
-                },
-                align: 'center',
-                anchor: 'center',
-                offset: 0,
-                padding: 4,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                borderRadius: 4
               }
             }
-          }
-      });
+          });
 
-      // Initialize female detail chart
-      const ctxFemale = document.getElementById('femaleChart').getContext('2d');
-      window.femaleChart = new Chart(ctxFemale, {
-          type: 'pie',
-          data: {
-            labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
-            datasets: [{
-              data: [246, 139, 104],
-              backgroundColor: [
-                '#ef4444',
-                '#f87171',
-                '#fca5a5'
-              ],
-              borderColor: '#ffffff',
-              borderWidth: 2
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            animation: {
-              duration: 1000,
-              easing: 'easeInOutQuart',
-              animateRotate: true,
-              animateScale: true
+          const ctxFemale = document.getElementById('femaleChart').getContext('2d');
+          window.femaleChart = new Chart(ctxFemale, {
+            type: 'pie',
+            data: {
+              labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
+              datasets: [{
+                data: [246, 139, 104],
+                backgroundColor: [
+                  '#ef4444',
+                  '#f87171',
+                  '#fca5a5'
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 2
+              }]
             },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              animation: {
+                duration: 1000,
+                easing: 'easeInOutQuart',
+                animateRotate: true,
+                animateScale: true
+              },
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  labels: {
+                    font: {
+                      family: 'Inter',
+                      size: 12
+                    },
+                    padding: 10
+                  }
+                },
+                datalabels: {
+                  color: '#ffffff',
+                  font: {
+                    family: 'Inter',
+                    size: window.innerWidth <= 640 ? 8 : 14,
+                    weight: 'bold'
+                  },
+                  formatter: function(value, context) {
+                    const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return value + '\n' + percentage + '%';
+                  },
+                  align: 'center',
+                  anchor: 'center',
+                  offset: 0,
+                  padding: 4,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  borderRadius: 4
+                }
+              }
+            }
+          });
+        } catch (e) {
+          console.log('Chart initialization error:', e);
+        }
+      }
             plugins: {
               legend: {
                 position: 'bottom',
@@ -658,6 +695,9 @@
     document.addEventListener('DOMContentLoaded', function() {
       // Register ChartJS datalabels plugin
       Chart.register(ChartDataLabels);
+      
+      // Initialize detail charts
+      initDetailCharts();
       
       // Load population data on page load (sync with index.html)
       setTimeout(() => {
