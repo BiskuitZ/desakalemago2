@@ -799,16 +799,17 @@ layout: null
         const res = await fetch(`${API_URL}/api/team`);
         const data = await res.json();
         
-        if (data.success && data.team) {
+        if (data.success && Array.isArray(data.team)) {
           currentTeam = data.team;
+          console.log('Team data loaded:', currentTeam.length, 'members');
           renderTeamTable();
         } else {
-          console.log('No team data found');
+          console.warn('No valid team data, using empty array');
           currentTeam = [];
           renderTeamTable();
         }
       } catch (err) {
-        console.error('Error loading team:', err);
+        console.error('Error loading team data:', err);
         // Fallback data
         currentTeam = [
           {
