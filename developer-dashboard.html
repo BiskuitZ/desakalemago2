@@ -943,6 +943,7 @@ layout: null
       const tbody = document.getElementById('teamTableBody');
       if (!tbody) return;
       tbody.innerHTML = '';
+      console.log('renderTeamTable called, currentTeam length:', currentTeam ? currentTeam.length : 0);
       
       if (!currentTeam || currentTeam.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Belum ada data tim</td></tr>';
