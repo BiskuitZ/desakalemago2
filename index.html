@@ -852,6 +852,9 @@ Mohon ditindaklanjuti. Terima kasih.`;
 
       function findParentName(parentId) {
         if (!parentId) return 'Root / Koordinator';
+        if (typeof parentId === 'string' && parentId.startsWith('group_')) {
+          return `📁 Kelompok ${parentId.replace('group_', '')}`;
+        }
         const parent = team.find(m => String(m.id) === String(parentId));
         return parent ? parent.name : 'Tidak diketahui';
       }
