@@ -819,6 +819,12 @@ Mohon ditindaklanjuti. Terima kasih.`;
         return;
       }
 
+      // Normalize all ids and parentIds to string (fix type mismatch between number vs string)
+      team.forEach(m => {
+        if (m.id !== undefined && m.id !== null) m.id = String(m.id);
+        if (m.parentId !== undefined && m.parentId !== null) m.parentId = String(m.parentId);
+      });
+
       // Create virtual group nodes for any "group_X" parents that don't exist
       const groupParents = new Set();
       team.forEach(m => {
@@ -828,29 +834,30 @@ Mohon ditindaklanjuti. Terima kasih.`;
       });
 
       // Find main root first
-      const mainRoot = team.find(m => !m.parentId || m.parentId === null);
+      const mainRoot = team.find(m => !m.parentId || m.parentId === 'null');
 
       groupParents.forEach(groupId => {
-        if (!team.find(m => String(m.id) === groupId)) {
+        if (!team.find(m => m.id === groupId)) {
           const groupNum = groupId.replace('group_', '');
           team.push({
             id: groupId,
             name: `Kelompok ${groupNum}`,
             role: 'Kelompok Kerja',
             photo: '',
-            parentId: mainRoot ? mainRoot.id : null,   // Attach under main root
+            parentId: mainRoot ? mainRoot.id : null,
             color: '#3b82f6',
             isVirtualGroup: true
           });
         }
       });
 
-      // Find root (now includes groups as children)
-      let root = team.find(m => !m.parentId || m.parentId === null);
+      // Find root
+      let root = team.find(m => !m.parentId || m.parentId === 'null');
       if (!root) root = team[0];
 
       function getChildren(parentId) {
-        return team.filter(m => String(m.parentId) === String(parentId));
+        if (!parentId) return [];
+        return team.filter(m => m.parentId === String(parentId));
       }
 
       function findParentName(parentId) {
