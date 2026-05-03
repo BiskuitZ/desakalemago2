@@ -745,9 +745,11 @@ Mohon ditindaklanjuti. Terima kasih.`;
       const container = document.getElementById('orgChart');
       if (!container) return;
 
-      // Hubungkan ke backend team.json via /api/team
+      // Hubungkan ke backend: https://github.com/BiskuitZ/desakalemago2-backend.git
+      const BACKEND_URL = 'https://desakalemago2-backend-production.up.railway.app';
+
       try {
-        const res = await fetch('/api/team');
+        const res = await fetch(`${BACKEND_URL}/api/team`);
         if (res.ok) {
           const data = await res.json();
           if (data.team && data.team.length > 0) {
@@ -756,7 +758,7 @@ Mohon ditindaklanjuti. Terima kasih.`;
           }
         }
       } catch (e) {
-        console.log('Backend not running, using local fallback data');
+        console.log('Backend not reachable, using local fallback');
       }
 
       // Fallback data (same as Developer page default)
