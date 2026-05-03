@@ -500,24 +500,9 @@
     .org-children {
       display: flex;
       justify-content: center;
-      gap: 60px;
-      margin-top: 20px;
+      gap: 40px;
+      margin-top: 8px;
       position: relative;
-    }
-    .org-children::before {
-      content: '';
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 120px);
-      height: 3px;
-      background: linear-gradient(to right, transparent, #10b981, transparent);
-    }
-    .org-children > div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
   </style>
 
@@ -737,7 +722,7 @@
     }
 
     // HIERARCHICAL ORG CHART - Grouped by Parent + Left/Right Position
-    // CLEAN HIERARCHICAL TREE RENDERER - respects position (1=Kiri, 2=Tengah, 3=Kanan)
+    // PROFESSIONAL ORG CHART - Kelompok as atasan, new members directly below group
     function renderBeautifulOrgChart(team) {
       const container = document.getElementById('orgChart');
       if (!container) return;
@@ -747,60 +732,83 @@
         return;
       }
 
-      const memberMap = {};
-      team.forEach(m => memberMap[m.id] = m);
+      let html = '<div class="org-tree flex flex-col items-center">';
 
-      // Roots: no parent or parent not found in map (e.g. virtual group_1)
-      let roots = team.filter(m => !m.parentId || !memberMap[m.parentId]);
+      // === LEVEL 1: Root ===
+      const root = team.find(m => m.name === "Mohamad Zikron");
+      html += createNodeHTML(root);
+      html += `<div class="org-connector" style="height: 45px;"></div>`;
 
-      // Sort roots by position (if available)
-      roots.sort((a, b) => (a.position || 2) - (b.position || 2));
+      // === LEVEL 2: Aulia + Novita ===
+      const aulia = team.find(m => m.name === "Aulia");
+      const novita = team.find(m => m.name.includes("Novita"));
 
-      let html = '<div class="org-tree flex flex-col items-center space-y-8">';
+      html += `<div class="org-children" style="gap: 140px;">`;
+      html += createNodeHTML(aulia);
+      html += createNodeHTML(novita);
+      html += `</div>`;
 
-      roots.forEach(root => {
-        html += buildOrgNode(root, team, memberMap, 0);
-      });
+      // Connector
+      html += `<div class="org-connector" style="height: 35px;"></div>`;
 
-      html += '</div>';
+      // === LEVEL 3: Kelompok 1 + Kelompok 2 (sebagai atasan) ===
+      html += `<div class="org-children" style="gap: 140px;">`;
+      html += createVirtualGroupNode("Kelompok 1");
+      html += createVirtualGroupNode("Kelompok 2");
+      html += `</div>`;
+
+      // === LEVEL 4: Anggota di bawah Kelompok ===
+      // Kelompok 1: Feliks & Gita (side by side)
+      html += `<div class="org-connector" style="height: 28px; margin-top: 4px;"></div>`;
+      html += `<div class="org-children" style="gap: 45px;">`;
+      html += createNodeHTML(team.find(m => m.name === "Feliks Laeka"));
+      html += createNodeHTML(team.find(m => m.name === "Gita Alifya Nusi"));
+      html += `</div>`;
+
+      // Abd Razak Lelo - tepat di bawah Kelompok 1 (centered)
+      html += `<div style="display: flex; justify-content: center; margin-top: 6px;">`;
+      html += createNodeHTML(team.find(m => m.name === "Abd Razak Lelo"));
+      html += `</div>`;
+
+      // Kelompok 2: Arifin & Heldrison (side by side)
+      html += `<div class="org-connector" style="height: 28px; margin-top: 4px;"></div>`;
+      html += `<div class="org-children" style="gap: 45px;">`;
+      html += createNodeHTML(team.find(m => m.name === "Arifin"));
+      html += createNodeHTML(team.find(m => m.name === "Heldrison Karau"));
+      html += `</div>`;
+
+      // Mohammad Fadly - tepat di bawah Kelompok 2 (centered)
+      html += `<div style="display: flex; justify-content: center; margin-top: 6px;">`;
+      html += createNodeHTML(team.find(m => m.name === "Mohammad Fadly"));
+      html += `</div>`;
+
+      html += `</div>`;
       container.innerHTML = html;
     }
 
-    function buildOrgNode(member, team, memberMap, level) {
-      // Get direct children and SORT BY POSITION (1 left → 3 right)
-      let children = team.filter(m => m.parentId === member.id);
-      children.sort((a, b) => (a.position || 2) - (b.position || 2));
-
-      const hasChildren = children.length > 0;
-
-      let nodeHtml = `
-        <div class="flex flex-col items-center">
-          <div class="org-node ${level > 0 ? 'child' : ''}" style="${member.color ? `background:${member.color}` : ''}">
-            <div class="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden border-4 border-white shadow-md">
-              ${member.photo ? 
-                `<img src="${member.photo}" alt="${member.name}" class="w-full h-full object-cover">` : 
-                `<div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-3xl text-white"></i></div>`
-              }
-            </div>
-            <div class="bg-white/20 text-white text-xs font-bold px-3 py-0.5 rounded-full inline-block mb-1">${member.role || 'Anggota'}</div>
-            <h4 class="font-bold text-lg text-white">${member.name}</h4>
-            ${member.position ? `<div class="text-[10px] text-white/60 mt-0.5">Posisi: ${member.position}</div>` : ''}
+    function createNodeHTML(member) {
+      if (!member) return '';
+      return `
+        <div class="org-node" style="background: ${member.color || '#10b981'}">
+          <div class="w-11 h-11 mx-auto mb-1.5 rounded-full overflow-hidden border-2 border-white">
+            ${member.photo ? 
+              `<img src="${member.photo}" class="w-full h-full object-cover">` : 
+              `<div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-lg text-white"></i></div>`
+            }
           </div>
+          <div class="text-[10px] font-semibold opacity-90">${member.role}</div>
+          <div class="font-bold text-xs leading-tight">${member.name}</div>
+        </div>
       `;
+    }
 
-      if (hasChildren) {
-        nodeHtml += `
-          <div class="org-connector"></div>
-          <div class="flex flex-wrap justify-center gap-6 mt-1">
-        `;
-        children.forEach(child => {
-          nodeHtml += buildOrgNode(child, team, memberMap, level + 1);
-        });
-        nodeHtml += `</div>`;
-      }
-
-      nodeHtml += `</div>`;
-      return nodeHtml;
+    function createVirtualGroupNode(name) {
+      return `
+        <div class="org-node group" style="background: #059669; min-width: 148px; padding: 7px 12px; border: 2px solid #fff;">
+          <div class="font-bold text-sm">${name}</div>
+          <div class="text-[9px] opacity-80 -mt-0.5">Atasan Baru</div>
+        </div>
+      `;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
