@@ -777,32 +777,33 @@ Mohon ditindaklanjuti. Terima kasih.`;
       const root = team.find(m => !m.parentId);
       if (!root) return;
 
+      // Recursive function to build tree (no depth limit)
+      function buildTree(parentId) {
+        const children = team.filter(m => String(m.parentId) === String(parentId));
+        if (children.length === 0) return '';
+
+        let childHtml = '<div class="flex gap-4 mt-4">';
+        children.forEach(child => {
+          childHtml += createNode(child);
+          // Recursively add children of this child
+          const grandChildrenHtml = buildTree(child.id);
+          if (grandChildrenHtml) {
+            childHtml += grandChildrenHtml;
+          }
+        });
+        childHtml += '</div>';
+        return childHtml;
+      }
+
       let html = '<div class="flex flex-col items-center">';
-
-      // Root
       html += createNode(root);
-      html += '<div class="w-0.5 h-8 bg-emerald-600 mx-auto"></div>';
 
-      // Level 2 (Aulia + Novita) - compare as string to handle type mismatch
-      const rootIdStr = String(root.id);
-      const level2 = team.filter(m => String(m.parentId) === rootIdStr);
-      html += '<div class="flex gap-16">';
-      level2.forEach(m => html += createNode(m));
-      html += '</div>';
-
-      html += '<div class="w-0.5 h-6 bg-emerald-600 mx-auto"></div>';
-
-      // Level 3 (children of Aulia and Novita)
-      level2.forEach(parent => {
-        const parentIdStr = String(parent.id);
-        const children = team.filter(m => String(m.parentId) === parentIdStr);
-        if (children.length > 0) {
-          html += '<div class="flex gap-4">';
-          children.forEach(m => html += createNode(m));
-          html += '</div>';
-          html += '<div class="w-0.5 h-6 bg-emerald-600 mx-auto my-1"></div>';
-        }
-      });
+      // Build children tree (unlimited depth)
+      const childrenHtml = buildTree(root.id);
+      if (childrenHtml) {
+        html += '<div class="w-0.5 h-8 bg-emerald-600 mx-auto"></div>';
+        html += childrenHtml;
+      }
 
       html += '</div>';
       container.innerHTML = html;
