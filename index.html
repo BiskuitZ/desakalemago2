@@ -152,10 +152,10 @@
           </button>
 
           <!-- Login Button (Desktop only) -->
-          <a href="login.html" class="hidden md:flex items-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-2 rounded-2xl text-sm font-semibold transition">
+          <button onclick="window.location.href='login.html'" class="hidden md:flex items-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-2 rounded-2xl text-sm font-semibold transition">
             <i class="fas fa-user-shield"></i>
             <span>Login Admin</span>
-          </a>
+          </button>
 
           <!-- Hamburger Button (Mobile only) -->
           <button onclick="toggleSidebar()" class="md:hidden text-white focus:outline-none p-2">
@@ -188,10 +188,10 @@
         
         <div class="border-t border-white/20 my-4"></div>
         
-        <a href="login.html" class="py-4 px-4 bg-emerald-700 hover:bg-emerald-600 rounded-2xl flex items-center justify-center gap-2 font-semibold">
+        <button onclick="window.location.href='login.html'" class="py-4 px-4 bg-emerald-700 hover:bg-emerald-600 rounded-2xl flex items-center justify-center gap-2 font-semibold w-full text-left">
           <i class="fas fa-user-shield"></i> 
           <span>Login Admin</span>
-        </a>
+        </button>
       </div>
     </div>
   </div>
@@ -423,74 +423,14 @@
     </div>
   </section>
 
-  <!-- STRUKTUR ORGANISASI POSKO KKNT DESA KALEMAGO (Persis Seperti Screenshot) -->
+  <!-- Struktur Organisasi Posko KKNT Desa Kalemago (Heading Only) -->
   <section class="bg-[#f8f9fa] py-16" data-scroll="fade-up">
-    <div class="container mx-auto px-6">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-emerald-800 mb-4">Struktur Organisasi Posko KKNT Desa Kalemago</h2>
-        <p class="text-gray-600 max-w-2xl mx-auto">Tim yang solid dan terstruktur untuk membangun website Desa Kalemago</p>
-      </div>
-      
-      <div id="orgChart" class="max-w-6xl mx-auto">
-        <!-- Skeleton Screen while loading from backend -->
-        <div class="animate-pulse">
-          <div class="flex justify-center mb-8">
-            <div class="w-80 h-48 bg-gray-200 rounded-3xl"></div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
-            <div class="h-40 bg-gray-200 rounded-3xl"></div>
-            <div class="h-40 bg-gray-200 rounded-3xl"></div>
-          </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
-            <div class="h-32 bg-gray-200 rounded-2xl"></div>
-            <div class="h-32 bg-gray-200 rounded-2xl"></div>
-            <div class="h-32 bg-gray-200 rounded-2xl"></div>
-            <div class="h-32 bg-gray-200 rounded-2xl"></div>
-          </div>
-        </div>
-      </div>
+    <div class="container mx-auto px-6 text-center">
+      <h2 class="text-4xl font-bold text-emerald-800 mb-4">Struktur Organisasi Posko KKNT Desa Kalemago</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Tim yang solid dan terstruktur untuk membangun website Desa Kalemago</p>
     </div>
   </section>
-
-  <style>
-    .org-tree {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .org-node {
-      background: #10b981;
-      color: white;
-      padding: 16px 24px;
-      border-radius: 16px;
-      text-align: center;
-      min-width: 220px;
-      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-      position: relative;
-      z-index: 2;
-      transition: all 0.3s ease;
-    }
-    .org-node:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 25px 50px -12px rgb(16 185 129 / 0.4);
-    }
-    .org-node.child {
-      background: #34d399;
-      min-width: 200px;
-    }
-    .org-connector {
-      width: 3px;
-      height: 50px;
-      background: linear-gradient(to bottom, #10b981, #34d399);
-      margin: 0 auto;
-      position: relative;
-    }
-    .org-connector::after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
+  <!-- Org chart CSS removed -->
       width: 12px;
       height: 12px;
       background: #10b981;
@@ -688,133 +628,9 @@
       }
     }
 
-    async function loadOrgChart() {
-      const container = document.getElementById('orgChart');
-      if (!container) return;
-
-      try {
-        const res = await fetch(`${API_URL}/api/team`);
-        const data = await res.json();
-        
-        if (data.success && data.team && data.team.length > 0) {
-          renderBeautifulOrgChart(data.team);
-        } else {
-          renderBeautifulOrgChart(getFallbackTeam());
-        }
-      } catch (err) {
-        console.log('Backend not available, using fallback data');
-        renderBeautifulOrgChart(getFallbackTeam());
-      }
-    }
-
-    function getFallbackTeam() {
-      return [
-        { id: 1, name: "Mohamad Zikron", role: "Koordinator Desa", photo: "", parentId: null, position: 1 },
-        { id: 2, name: "Aulia", role: "Sekretaris", photo: "", parentId: 1, position: 1, category: "1" },
-        { id: 3, name: "Novita Risyafana Ndese", role: "Bendahara", photo: "", parentId: 1, position: 2, category: "2" },
-        { id: 4, name: "Feliks Laeka", role: "Humas & Website Sponsored", photo: "", parentId: "group_1", position: 1, category: "1" },
-        { id: 5, name: "Gita Alifya Nusi", role: "Acara", photo: "", parentId: "group_1", position: 3, category: "1" },
-        { id: 6, name: "Arifin", role: "Perlengkapan", photo: "", parentId: "group_2", position: 1, category: "2" },
-        { id: 7, name: "Heldrison Karau", role: "Perlengkapan", photo: "", parentId: "group_2", position: 3, category: "2" },
-        { id: 8, name: "Abd Razaq Lelo", role: "Konsumsi", photo: "", parentId: "group_1", position: 2, category: "1" },
-        { id: 9, name: "Mohammad Fadly", role: "Pdd", photo: "", parentId: "group_2", position: 2, category: "2" }
-      ];
-    }
-
-    // HIERARCHICAL ORG CHART - Grouped by Parent + Left/Right Position
-    // PROFESSIONAL ORG CHART - Kelompok as atasan, new members directly below group
-    function renderBeautifulOrgChart(team) {
-      const container = document.getElementById('orgChart');
-      if (!container) return;
-
-      if (!team || team.length === 0) {
-        container.innerHTML = '<div class="text-center text-gray-500 py-8">Belum ada data tim</div>';
-        return;
-      }
-
-      let html = '<div class="org-tree flex flex-col items-center">';
-
-      // === LEVEL 1: Root ===
-      const root = team.find(m => m.name === "Mohamad Zikron");
-      html += createNodeHTML(root);
-      html += `<div class="org-connector" style="height: 45px;"></div>`;
-
-      // === LEVEL 2: Aulia + Novita ===
-      const aulia = team.find(m => m.name === "Aulia");
-      const novita = team.find(m => m.name.includes("Novita"));
-
-      html += `<div class="org-children" style="gap: 140px;">`;
-      html += createNodeHTML(aulia);
-      html += createNodeHTML(novita);
-      html += `</div>`;
-
-      // Connector
-      html += `<div class="org-connector" style="height: 35px;"></div>`;
-
-      // === LEVEL 3: Kelompok 1 + Kelompok 2 (sebagai atasan) ===
-      html += `<div class="org-children" style="gap: 140px;">`;
-      html += createVirtualGroupNode("Kelompok 1");
-      html += createVirtualGroupNode("Kelompok 2");
-      html += `</div>`;
-
-      // === LEVEL 4: Anggota di bawah Kelompok ===
-      // Kelompok 1: Feliks & Gita (side by side)
-      html += `<div class="org-connector" style="height: 28px; margin-top: 4px;"></div>`;
-      html += `<div class="org-children" style="gap: 45px;">`;
-      html += createNodeHTML(team.find(m => m.name === "Feliks Laeka"));
-      html += createNodeHTML(team.find(m => m.name === "Gita Alifya Nusi"));
-      html += `</div>`;
-
-      // Abd Razak Lelo - tepat di bawah Kelompok 1 (centered)
-      html += `<div style="display: flex; justify-content: center; margin-top: 6px;">`;
-      html += createNodeHTML(team.find(m => m.name === "Abd Razak Lelo"));
-      html += `</div>`;
-
-      // Kelompok 2: Arifin & Heldrison (side by side)
-      html += `<div class="org-connector" style="height: 28px; margin-top: 4px;"></div>`;
-      html += `<div class="org-children" style="gap: 45px;">`;
-      html += createNodeHTML(team.find(m => m.name === "Arifin"));
-      html += createNodeHTML(team.find(m => m.name === "Heldrison Karau"));
-      html += `</div>`;
-
-      // Mohammad Fadly - tepat di bawah Kelompok 2 (centered)
-      html += `<div style="display: flex; justify-content: center; margin-top: 6px;">`;
-      html += createNodeHTML(team.find(m => m.name === "Mohammad Fadly"));
-      html += `</div>`;
-
-      html += `</div>`;
-      container.innerHTML = html;
-    }
-
-    function createNodeHTML(member) {
-      if (!member) return '';
-      return `
-        <div class="org-node" style="background: ${member.color || '#10b981'}">
-          <div class="w-11 h-11 mx-auto mb-1.5 rounded-full overflow-hidden border-2 border-white">
-            ${member.photo ? 
-              `<img src="${member.photo}" class="w-full h-full object-cover">` : 
-              `<div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-lg text-white"></i></div>`
-            }
-          </div>
-          <div class="text-[10px] font-semibold opacity-90">${member.role}</div>
-          <div class="font-bold text-xs leading-tight">${member.name}</div>
-        </div>
-      `;
-    }
-
-    function createVirtualGroupNode(name) {
-      return `
-        <div class="org-node group" style="background: #059669; min-width: 148px; padding: 7px 12px; border: 2px solid #fff;">
-          <div class="font-bold text-sm">${name}</div>
-          <div class="text-[9px] opacity-80 -mt-0.5">Atasan Baru</div>
-        </div>
-      `;
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
       loadPopulationData();
       loadAPBDesData();
-      loadOrgChart();
     });
 
     // Scroll to Top Button
