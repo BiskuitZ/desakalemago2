@@ -745,6 +745,7 @@ Mohon ditindaklanjuti. Terima kasih.`;
       const container = document.getElementById('orgChart');
       if (!container) return;
 
+      // Hubungkan ke backend team.json via /api/team
       try {
         const res = await fetch('/api/team');
         if (res.ok) {
@@ -755,7 +756,7 @@ Mohon ditindaklanjuti. Terima kasih.`;
           }
         }
       } catch (e) {
-        console.log('Backend not available, using fallback');
+        console.log('Backend not running, using local fallback data');
       }
 
       // Fallback data (same as Developer page default)
@@ -794,17 +795,12 @@ Mohon ditindaklanjuti. Terima kasih.`;
 
       html += '<div class="w-0.5 h-6 bg-emerald-600 mx-auto"></div>';
 
-      // Groups (Kelompok 1 & 2)
+      // Level 3 (children of Aulia and Novita)
       level2.forEach(parent => {
-        const groupMembers = team.filter(m => 
-          (m.category && m.category === parent.category) || 
-          (m.parentId && typeof m.parentId === 'string' && m.parentId.startsWith('group_'))
-        );
-
-        if (groupMembers.length > 0) {
-          html += `<div class="px-4 py-1 bg-emerald-700 text-white text-sm rounded-full mb-2">Kelompok ${parent.category} - Atasan Baru</div>`;
+        const children = team.filter(m => m.parentId === parent.id);
+        if (children.length > 0) {
           html += '<div class="flex gap-4">';
-          groupMembers.forEach(m => html += createNode(m));
+          children.forEach(m => html += createNode(m));
           html += '</div>';
           html += '<div class="w-0.5 h-6 bg-emerald-600 mx-auto my-1"></div>';
         }
