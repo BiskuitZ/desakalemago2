@@ -761,17 +761,11 @@ Mohon ditindaklanjuti. Terima kasih.`;
         console.log('Backend not reachable, using local fallback');
       }
 
-      // Fallback data (same as Developer page default)
+      // Fallback data (matches current backend/team.json)
       const fallback = [
-        { id: 1, name: "Mohamad Zikron", role: "Koordinator Desa", photo: "", parentId: null, position: 1 },
-        { id: 2, name: "Aulia", role: "Sekretaris", photo: "", parentId: 1, position: 1, category: "1" },
-        { id: 3, name: "Novita Risyafana Ndese", role: "Bendahara", photo: "", parentId: 1, position: 2, category: "2" },
-        { id: 4, name: "Feliks Laeka", role: "Humas & Website Sponsored", photo: "", parentId: "group_1", position: 1, category: "1" },
-        { id: 5, name: "Gita Alifya Nusi", role: "Acara", photo: "", parentId: "group_1", position: 3, category: "1" },
-        { id: 6, name: "Arifin", role: "Perlengkapan", photo: "", parentId: "group_2", position: 1, category: "2" },
-        { id: 7, name: "Heldrison Karau", role: "Perlengkapan", photo: "", parentId: "group_2", position: 3, category: "2" },
-        { id: 8, name: "Abd Razaq Lelo", role: "Konsumsi", photo: "", parentId: "group_1", position: 2, category: "1" },
-        { id: 9, name: "Mohammad Fadly", role: "Pdd", photo: "", parentId: "group_2", position: 2, category: "2" }
+        { id: 1777729859432, name: "Mohamad Zikron", role: "Koordinator Desa", photo: "", parentId: null, color: "#10b981" },
+        { id: 1777731514683, name: "Aulia", role: "Sekertaris", photo: "", parentId: 1777729859432, color: "#10b981" },
+        { id: 1777731548035, name: "Novita Risyafana Ndese", role: "Bendahara", photo: "", parentId: 1777729859432, color: "#10b981" }
       ];
       renderOrgChart(fallback);
     }
