@@ -777,45 +777,38 @@ Mohon ditindaklanjuti. Terima kasih.`;
       const root = team.find(m => !m.parentId);
       if (!root) return;
 
-      // Recursive function to build tree (no depth limit)
-      function buildTree(parentId) {
-        const children = team.filter(m => String(m.parentId) === String(parentId));
-        if (children.length === 0) return '';
-
-        let childHtml = '<div class="flex gap-4 mt-4">';
-        children.forEach(child => {
-          childHtml += createNode(child);
-          // Recursively add children of this child
-          const grandChildrenHtml = buildTree(child.id);
-          if (grandChildrenHtml) {
-            childHtml += grandChildrenHtml;
-          }
-        });
-        childHtml += '</div>';
-        return childHtml;
+      // Build hierarchical structure (recursive, unlimited depth)
+      function getChildren(parentId) {
+        return team.filter(m => String(m.parentId) === String(parentId));
       }
 
-      let html = '<div class="flex flex-col items-center">';
-      html += createNode(root);
+      function buildHTML(node) {
+        const children = getChildren(node.id);
+        let html = '<div class="flex flex-col items-center">';
 
-      // Build children tree (unlimited depth)
-      const childrenHtml = buildTree(root.id);
-      if (childrenHtml) {
-        html += '<div class="w-0.5 h-8 bg-emerald-600 mx-auto"></div>';
-        html += childrenHtml;
+        // Node box
+        html += `
+          <div class="bg-emerald-600 hover:bg-emerald-700 transition-all text-white px-6 py-4 rounded-2xl text-center min-w-[180px] shadow-xl border-2 border-emerald-400 cursor-pointer">
+            <div class="font-bold text-lg">${node.name}</div>
+            <div class="text-sm opacity-90 mt-1">${node.role}</div>
+          </div>
+        `;
+
+        // Children (recursive)
+        if (children.length > 0) {
+          html += '<div class="w-0.5 h-6 bg-emerald-600 mx-auto"></div>';
+          html += '<div class="flex gap-6">';
+          children.forEach(child => {
+            html += buildHTML(child);
+          });
+          html += '</div>';
+        }
+
+        html += '</div>';
+        return html;
       }
 
-      html += '</div>';
-      container.innerHTML = html;
-    }
-
-    function createNode(member) {
-      return `
-        <div class="bg-emerald-600 text-white px-5 py-3 rounded-2xl text-center min-w-[160px] shadow-lg">
-          <div class="font-bold">${member.name}</div>
-          <div class="text-xs opacity-80">${member.role}</div>
-        </div>
-      `;
+      container.innerHTML = buildHTML(root);
     }
 
     // Load org chart when page is ready
