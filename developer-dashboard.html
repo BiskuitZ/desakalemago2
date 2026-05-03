@@ -275,10 +275,7 @@ layout: null
           <i class="fas fa-plus"></i>
           <span>Tambah Anggota</span>
         </button>
-          <button onclick="createNewGroup()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
-            <i class="fas fa-layer-group"></i>
-            <span>Buat Kelompok Baru</span>
-          </button>
+          <!-- Tombol Buat Kelompok dihapus sesuai permintaan -->
       </div>
       
       <div class="overflow-x-auto">
@@ -1104,17 +1101,25 @@ layout: null
                   <label class="block text-sm font-semibold text-gray-700 mb-1">Atasan (Parent)</label>
                   <select id="memberParent" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
                     <option value="">Root (Tidak ada atasan)</option>
-                    ${currentTeam
-                      .filter(m => m.role === 'Kelompok')
-                      .map(m => `<option value="${m.id}" ${member && member.parentId === m.id ? 'selected' : ''}>📁 ${m.name}</option>`)
-                      .join('')}
+                    
+                    <!-- Kelompok otomatis dari Kategori -->
+                    ${(() => {
+                      const categories = [...new Set(currentTeam.filter(m => m.category).map(m => m.category))];
+                      return categories.map(cat => {
+                        const groupName = `Kelompok ${cat}`;
+                        return `<option value="group_${cat}" ${member && member.parentId === `group_${cat}` ? 'selected' : ''}>📁 ${groupName}</option>`;
+                      }).join('');
+                    })()}
+                    
                     <option disabled>────────────</option>
+                    
+                    <!-- Anggota biasa -->
                     ${currentTeam
-                      .filter(m => m.role !== 'Kelompok')
+                      .filter(m => !m.category || m.role !== 'Kelompok')
                       .map(m => `<option value="${m.id}" ${member && member.parentId === m.id ? 'selected' : ''}>${m.name} (${m.role})</option>`)
                       .join('')}
                   </select>
-                  <p class="text-xs text-gray-500 mt-1">Pilih 📁 Kelompok jika ingin anggota ini masuk ke dalam kelompok</p>
+                  <p class="text-xs text-gray-500 mt-1">Isi "Kategori / Kelompok" dengan angka (1, 2, 3...) agar otomatis jadi Kelompok</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -1216,7 +1221,7 @@ layout: null
         id: currentEditIndex !== null ? currentTeam[currentEditIndex].id : Date.now(),
         name: document.getElementById('memberName').value,
         role: document.getElementById('memberRole').value,
-        parentId: document.getElementById('memberParent').value ? parseInt(document.getElementById('memberParent').value) : null,
+        parentId: document.getElementById('memberParent').value ? document.getElementById('memberParent').value : null,
         position: parseInt(document.getElementById('memberPosition').value),
         category: document.getElementById('memberCategory').value || '',
         photo: finalPhoto || '',
