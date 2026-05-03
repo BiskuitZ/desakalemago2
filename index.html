@@ -733,41 +733,45 @@
     // UNLIMITED DEPTH ORG CHART - With Connecting Lines & Unlimited Grouping
     function renderBeautifulOrgChart(team) {
       const container = document.getElementById('orgChart');
-      if (!container || !team || team.length === 0) {
-        container.innerHTML = '<div class="text-center text-white/70 py-8">Belum ada data tim</div>';
+      if (!container) return;
+
+      if (!team || team.length === 0) {
+        container.innerHTML = '<div class="text-center text-gray-500 py-8">Belum ada data tim</div>';
         return;
       }
 
-      // Simple grid layout - always works
       let html = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">';
-      
+
       team.forEach(member => {
-        const parent = member.parentId ? team.find(m => m.id === member.parentId) : null;
-        const parentName = parent ? parent.name : (member.parentId && member.parentId.startsWith('group_') ? '📁 Kelompok ' + member.parentId.replace('group_', '') : 'Root');
+        // Handle parent display (support group_1, group_2, etc.)
+        let parentDisplay = 'Root';
+        if (member.parentId) {
+          if (typeof member.parentId === 'string' && member.parentId.startsWith('group_')) {
+            parentDisplay = '📁 Kelompok ' + member.parentId.replace('group_', '');
+          } else {
+            const parentMember = team.find(m => m.id === member.parentId);
+            if (parentMember) parentDisplay = parentMember.name;
+          }
+        }
 
         html += `
-          <div class="bg-white rounded-3xl p-5 shadow-xl text-center transform hover:scale-[1.02] transition-all duration-300">
-            <div class="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-4 border-emerald-500 shadow-lg">
+          <div class="bg-white rounded-3xl p-5 shadow-xl text-center border border-gray-100 hover:border-emerald-200 transition-all">
+            <div class="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-4 border-emerald-500">
               ${member.photo ? 
                 `<img src="${member.photo}" alt="${member.name}" class="w-full h-full object-cover">` : 
                 `<div class="w-full h-full bg-emerald-100 flex items-center justify-center"><i class="fas fa-user text-5xl text-emerald-600"></i></div>`
               }
             </div>
             
-            <div class="mb-3">
-              <div class="inline-block bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-2">${member.role}</div>
+            <div class="mb-2">
+              <span class="inline-block bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">${member.role}</span>
             </div>
             
-            <h3 class="font-bold text-xl text-gray-800 mb-1">${member.name}</h3>
+            <h3 class="font-bold text-lg text-gray-800 mb-1">${member.name}</h3>
             
-            <div class="text-sm text-gray-500 mb-3">
-              Atasan: <span class="font-semibold text-emerald-600">${parentName}</span>
+            <div class="text-sm text-gray-500">
+              Atasan: <span class="font-semibold text-emerald-600">${parentDisplay}</span>
             </div>
-            
-            ${member.instagram && member.instagram !== '#' ? 
-              `<a href="${member.instagram}" target="_blank" class="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700 text-sm font-medium">
-                <i class="fab fa-instagram"></i> Instagram
-              </a>` : ''}
           </div>
         `;
       });
