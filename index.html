@@ -738,49 +738,43 @@
         return;
       }
 
-      // Buat virtual groups dari category (support "group_1", "group_2", etc.)
-      const virtualGroups = {};
+      // Simple grid layout - always works
+      let html = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">';
+      
       team.forEach(member => {
-        if (member.category) {
-          const groupKey = `group_${member.category}`;
-          if (!virtualGroups[groupKey]) {
-            virtualGroups[groupKey] = {
-              id: groupKey,
-              name: `Kelompok ${member.category}`,
-              role: 'Kelompok',
-              parentId: null,
-              position: 2
-            };
-          }
-        }
+        const parent = member.parentId ? team.find(m => m.id === member.parentId) : null;
+        const parentName = parent ? parent.name : (member.parentId && member.parentId.startsWith('group_') ? '📁 Kelompok ' + member.parentId.replace('group_', '') : 'Root');
+
+        html += `
+          <div class="bg-white rounded-3xl p-5 shadow-xl text-center transform hover:scale-[1.02] transition-all duration-300">
+            <div class="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-4 border-emerald-500 shadow-lg">
+              ${member.photo ? 
+                `<img src="${member.photo}" alt="${member.name}" class="w-full h-full object-cover">` : 
+                `<div class="w-full h-full bg-emerald-100 flex items-center justify-center"><i class="fas fa-user text-5xl text-emerald-600"></i></div>`
+              }
+            </div>
+            
+            <div class="mb-3">
+              <div class="inline-block bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-2">${member.role}</div>
+            </div>
+            
+            <h3 class="font-bold text-xl text-gray-800 mb-1">${member.name}</h3>
+            
+            <div class="text-sm text-gray-500 mb-3">
+              Atasan: <span class="font-semibold text-emerald-600">${parentName}</span>
+            </div>
+            
+            ${member.instagram && member.instagram !== '#' ? 
+              `<a href="${member.instagram}" target="_blank" class="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700 text-sm font-medium">
+                <i class="fab fa-instagram"></i> Instagram
+              </a>` : ''}
+          </div>
+        `;
       });
 
-      // Gabungkan data asli + virtual groups
-      const allNodes = [...team, ...Object.values(virtualGroups)];
-
-      // Find root
-      const root = allNodes.find(m => !m.parentId) || allNodes[0];
-      if (!root) return;
-
-      // Recursive function to build unlimited depth tree (support virtual groups)
-      function buildTree(parentId, level = 0) {
-        const children = allNodes
-          .filter(m => (m.parentId || null) === parentId)
-          .sort((a, b) => (a.position || 999) - (b.position || 999));
-
-        if (children.length === 0) return '';
-
-        let html = `<div class="flex flex-col items-center ${level > 0 ? 'mt-6' : ''}">`;
-
-        // Horizontal line for children
-        if (level > 0) {
-          html += `<div class="h-0.5 w-16 bg-emerald-400 mb-2"></div>`;
-        }
-
-        html += `<div class="flex flex-wrap justify-center gap-8">`;
-
-        children.forEach((member) => {
-          const hasChildren = allNodes.some(m => m.parentId === member.id);
+      html += '</div>';
+      container.innerHTML = html;
+    }
           
           html += `
             <div class="flex flex-col items-center">
