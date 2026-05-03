@@ -722,7 +722,9 @@
     }
 
     // HIERARCHICAL ORG CHART - Grouped by Parent + Left/Right Position
-    // DYNAMIC ORG CHART - Kelompok auto-created from category field
+    // CLEAN ORG CHART - Kelompok invisible (only logical grouping)
+    // Feliks + Gita = Kelompok 1 (invisible), Abd Razak Lelo centered below
+    // Arifin + Heldrison = Kelompok 2 (invisible), Mohammad Fadly centered below
     function renderBeautifulOrgChart(team) {
       const container = document.getElementById('orgChart');
       if (!container) return;
@@ -731,25 +733,6 @@
         container.innerHTML = '<div class="text-center text-gray-500 py-8">Belum ada data tim</div>';
         return;
       }
-
-      // Group members by category (1, 2, etc.)
-      const groups = {};
-      team.forEach(m => {
-        if (m.category && m.category !== "") {
-          if (!groups[m.category]) groups[m.category] = [];
-          groups[m.category].push(m);
-        }
-      });
-
-      // Members with parentId "group_X" (new members under groups)
-      const groupChildren = {};
-      team.forEach(m => {
-        if (m.parentId && typeof m.parentId === 'string' && m.parentId.startsWith('group_')) {
-          const cat = m.parentId.replace('group_', '');
-          if (!groupChildren[cat]) groupChildren[cat] = [];
-          groupChildren[cat].push(m);
-        }
-      });
 
       let html = '<div class="org-tree flex flex-col items-center" style="font-family: Inter, sans-serif; padding: 20px 0;">';
 
@@ -767,44 +750,31 @@
       html += createNodeHTML(novita);
       html += `</div>`;
 
-      html += `<div class="org-connector" style="height:20px;"></div>`;
+      html += `<div class="org-connector" style="height:22px;"></div>`;
 
-      // LEVEL 3: Kelompok boxes (auto from category)
-      html += `<div class="flex gap-14">`;
-      Object.keys(groups).sort().forEach(cat => {
-        html += `
-          <div class="px-5 py-1.5 rounded-2xl text-sm font-bold text-white text-center" style="background:#059669;">
-            Kelompok ${cat}<br><span class="text-xs opacity-80">Atasan Baru</span>
-          </div>
-        `;
-      });
+      // LEVEL 3: Feliks + Gita (Kelompok 1 - invisible group)
+      html += `<div class="flex gap-10">`;
+      html += createNodeHTML(team.find(m => m.name === "Feliks Laeka"));
+      html += createNodeHTML(team.find(m => m.name === "Gita Alifya Nusi"));
       html += `</div>`;
 
-      html += `<div class="org-connector" style="height:16px;"></div>`;
+      // Abd Razak Lelo - centered below the group
+      html += `<div style="display: flex; justify-content: center; margin-top: 8px;">`;
+      html += createNodeHTML(team.find(m => m.name === "Abd Razak Lelo"));
+      html += `</div>`;
 
-      // LEVEL 4: Members in each group + children below
-      Object.keys(groups).sort().forEach(cat => {
-        const members = groups[cat];
-        
-        // Members side by side
-        html += `<div class="flex gap-8">`;
-        members.forEach(m => {
-          html += createNodeHTML(m);
-        });
-        html += `</div>`;
+      html += `<div class="org-connector" style="height:22px;"></div>`;
 
-        // New members centered below this group
-        if (groupChildren[cat] && groupChildren[cat].length > 0) {
-          html += `<div class="org-connector" style="height:14px;"></div>`;
-          html += `<div style="display:flex; justify-content:center;">`;
-          groupChildren[cat].forEach(m => {
-            html += createNodeHTML(m);
-          });
-          html += `</div>`;
-        }
+      // LEVEL 3: Arifin + Heldrison (Kelompok 2 - invisible group)
+      html += `<div class="flex gap-10">`;
+      html += createNodeHTML(team.find(m => m.name === "Arifin"));
+      html += createNodeHTML(team.find(m => m.name === "Heldrison Karau"));
+      html += `</div>`;
 
-        html += `<div class="org-connector" style="height:18px;"></div>`;
-      });
+      // Mohammad Fadly - centered below the group
+      html += `<div style="display: flex; justify-content: center; margin-top: 8px;">`;
+      html += createNodeHTML(team.find(m => m.name === "Mohammad Fadly"));
+      html += `</div>`;
 
       html += `</div>`;
       container.innerHTML = html;
@@ -814,14 +784,14 @@
       if (!member || !member.name) return '';
       return `
         <div class="org-node" style="background: ${member.color || '#10b981'}">
-          <div class="w-10 h-10 mx-auto mb-1.5 rounded-full overflow-hidden border-2 border-white">
+          <div class="w-11 h-11 mx-auto mb-1.5 rounded-full overflow-hidden border-2 border-white">
             ${member.photo ? 
               `<img src="${member.photo}" class="w-full h-full object-cover">` : 
-              `<div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-base text-white"></i></div>`
+              `<div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-lg text-white"></i></div>`
             }
           </div>
-          <div class="text-[10px] font-semibold opacity-90">${member.role}</div>
-          <div class="font-bold text-xs">${member.name}</div>
+          <div class="text-xs font-semibold opacity-90">${member.role}</div>
+          <div class="font-bold text-sm">${member.name}</div>
         </div>
       `;
     }
