@@ -1021,42 +1021,6 @@ layout: null
     function editTeamMember(index) {
       showMemberModal(index);
     }
-      currentTeam.forEach((m, i) => {
-        if (i !== index) { // Can't be own parent
-          parentOptions += `${i + 1}. ${m.name} (${m.role})\n`;
-        }
-      });
-      const parentChoice = prompt(parentOptions, member.parentId ? 
-        (currentTeam.findIndex(m => m.id === member.parentId) + 1) : '0');
-      
-      let parentId = null;
-      if (parentChoice && parentChoice !== '0') {
-        const parentIndex = parseInt(parentChoice) - 1;
-        if (currentTeam[parentIndex] && parentIndex !== index) {
-          parentId = currentTeam[parentIndex].id;
-        }
-      }
-      
-      const newPhoto = prompt('URL Foto baru:', member.photo || '');
-      const newInstagram = prompt('Link Instagram baru:', member.instagram || '#');
-      const newColor = prompt('Warna baru (contoh: #10b981):', member.color || '#10b981');
-      const newPosition = parseInt(prompt('Posisi visual (1 = Kiri, 2 = Tengah, 3 = Kanan):', member.position || '2')) || 2;
-      const newCategory = prompt('Kategori / Kelompok (opsional):', member.category || '') || '';
-      
-      currentTeam[index] = {
-        ...member,
-        name: newName,
-        role: newRole,
-        photo: newPhoto || member.photo,
-        instagram: newInstagram || member.instagram,
-        parentId: parentId,
-        color: newColor || member.color || '#10b981',
-        position: newPosition,
-        category: newCategory
-      };
-      
-      renderTeamTable();
-    }
 
     function deleteTeamMember(index) {
       if (!confirm(`Yakin ingin menghapus ${currentTeam[index].name}?`)) return;
