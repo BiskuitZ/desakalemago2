@@ -827,6 +827,9 @@ Mohon ditindaklanjuti. Terima kasih.`;
         }
       });
 
+      // Find main root first
+      const mainRoot = team.find(m => !m.parentId || m.parentId === null);
+
       groupParents.forEach(groupId => {
         if (!team.find(m => String(m.id) === groupId)) {
           const groupNum = groupId.replace('group_', '');
@@ -835,15 +838,16 @@ Mohon ditindaklanjuti. Terima kasih.`;
             name: `Kelompok ${groupNum}`,
             role: 'Kelompok Kerja',
             photo: '',
-            parentId: null,           // Top-level group
+            parentId: mainRoot ? mainRoot.id : null,   // Attach under main root
             color: '#3b82f6',
             isVirtualGroup: true
           });
         }
       });
 
-      // Get ALL top-level items (real root + virtual groups)
-      const topLevelItems = team.filter(m => !m.parentId || m.parentId === null);
+      // Find root (now includes groups as children)
+      let root = team.find(m => !m.parentId || m.parentId === null);
+      if (!root) root = team[0];
 
       function getChildren(parentId) {
         return team.filter(m => String(m.parentId) === String(parentId));
@@ -947,12 +951,6 @@ Mohon ditindaklanjuti. Terima kasih.`;
         return html;
       }
 
-      // Build HTML for all top-level items (real root + all virtual groups)
-      let treesHTML = '';
-      topLevelItems.forEach(item => {
-        treesHTML += `<div class="mb-8">${buildHTML(item)}</div>`;
-      });
-
       container.innerHTML = `
         <div class="text-center mb-8">
           <div class="inline-flex items-center gap-3 bg-white shadow px-5 py-2 rounded-2xl border border-emerald-100">
@@ -966,8 +964,8 @@ Mohon ditindaklanjuti. Terima kasih.`;
           </div>
         </div>
         
-        <div class="flex flex-wrap justify-center gap-8 overflow-x-auto pb-4">
-          ${treesHTML}
+        <div class="flex justify-center overflow-x-auto pb-4">
+          ${buildHTML(root)}
         </div>
         
         <div class="text-center mt-6 text-xs text-gray-500">
