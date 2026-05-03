@@ -903,9 +903,17 @@ layout: null
         const row = document.createElement('tr');
         row.className = 'border-b border-gray-100 hover:bg-gray-50';
         
-        // Find parent name
-        const parent = member.parentId ? currentTeam.find(m => m.id === member.parentId) : null;
-        const parentName = parent ? parent.name : '<span class="text-gray-400 italic">Root</span>';
+        // Find parent name (support virtual groups from Kategori)
+        let parentName = '<span class="text-gray-400 italic">Root</span>';
+        if (member.parentId) {
+          if (typeof member.parentId === 'string' && member.parentId.startsWith('group_')) {
+            const cat = member.parentId.replace('group_', '');
+            parentName = `<span class="text-blue-600 font-semibold">📁 Kelompok ${cat}</span>`;
+          } else {
+            const parent = currentTeam.find(m => m.id === member.parentId);
+            if (parent) parentName = parent.name;
+          }
+        }
         
         const positionBadge = member.position ? `<span class="text-xs bg-gray-200 px-1.5 py-0.5 rounded">${member.position}</span>` : '';
         const colorDot = member.color ? `<span class="inline-block w-3 h-3 rounded-full mr-1" style="background:${member.color}"></span>` : '';
