@@ -423,20 +423,20 @@
     </div>
   </section>
 
-  <!-- Struktur Organisasi Posko KKNT Desa Kalemago (Heading Only) -->
+  <!-- Struktur Organisasi Posko KKNT Desa Kalemago (Sinkron dengan Developer Page) -->
   <section class="bg-[#f8f9fa] py-16" data-scroll="fade-up">
-    <div class="container mx-auto px-6 text-center">
-      <h2 class="text-4xl font-bold text-emerald-800 mb-4">Struktur Organisasi Posko KKNT Desa Kalemago</h2>
-      <p class="text-gray-600 max-w-2xl mx-auto">Tim yang solid dan terstruktur untuk membangun website Desa Kalemago</p>
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-emerald-800 mb-4">Struktur Organisasi Posko KKNT Desa Kalemago</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Perubahan di halaman Developer otomatis muncul di sini</p>
+      </div>
+      
+      <div id="orgChart" class="max-w-6xl mx-auto">
+        <!-- Dynamic org chart will be rendered here by JavaScript -->
+        <div class="text-center py-8 text-gray-500">Memuat struktur organisasi...</div>
+      </div>
     </div>
   </section>
-  <!-- Org chart CSS removed -->
-      width: 12px;
-      height: 12px;
-      background: #10b981;
-      border-radius: 50%;
-      border: 3px solid #fff;
-    }
     .org-children {
       display: flex;
       justify-content: center;
@@ -737,6 +737,98 @@ Mohon ditindaklanjuti. Terima kasih.`;
       }, 500);
     }
     */
+  </script>
+
+  <!-- Dynamic Org Chart (Sinkron dengan Developer Page) -->
+  <script>
+    async function loadOrgChart() {
+      const container = document.getElementById('orgChart');
+      if (!container) return;
+
+      try {
+        const res = await fetch('/api/team');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.team && data.team.length > 0) {
+            renderOrgChart(data.team);
+            return;
+          }
+        }
+      } catch (e) {
+        console.log('Backend not available, using fallback');
+      }
+
+      // Fallback data (same as Developer page default)
+      const fallback = [
+        { id: 1, name: "Mohamad Zikron", role: "Koordinator Desa", photo: "", parentId: null, position: 1 },
+        { id: 2, name: "Aulia", role: "Sekretaris", photo: "", parentId: 1, position: 1, category: "1" },
+        { id: 3, name: "Novita Risyafana Ndese", role: "Bendahara", photo: "", parentId: 1, position: 2, category: "2" },
+        { id: 4, name: "Feliks Laeka", role: "Humas & Website Sponsored", photo: "", parentId: "group_1", position: 1, category: "1" },
+        { id: 5, name: "Gita Alifya Nusi", role: "Acara", photo: "", parentId: "group_1", position: 3, category: "1" },
+        { id: 6, name: "Arifin", role: "Perlengkapan", photo: "", parentId: "group_2", position: 1, category: "2" },
+        { id: 7, name: "Heldrison Karau", role: "Perlengkapan", photo: "", parentId: "group_2", position: 3, category: "2" },
+        { id: 8, name: "Abd Razaq Lelo", role: "Konsumsi", photo: "", parentId: "group_1", position: 2, category: "1" },
+        { id: 9, name: "Mohammad Fadly", role: "Pdd", photo: "", parentId: "group_2", position: 2, category: "2" }
+      ];
+      renderOrgChart(fallback);
+    }
+
+    function renderOrgChart(team) {
+      const container = document.getElementById('orgChart');
+      if (!container) return;
+
+      const root = team.find(m => !m.parentId);
+      if (!root) return;
+
+      let html = '<div class="flex flex-col items-center">';
+
+      // Root
+      html += createNode(root);
+      html += '<div class="w-0.5 h-8 bg-emerald-600 mx-auto"></div>';
+
+      // Level 2 (Aulia + Novita)
+      const level2 = team.filter(m => m.parentId === root.id);
+      html += '<div class="flex gap-16">';
+      level2.forEach(m => html += createNode(m));
+      html += '</div>';
+
+      html += '<div class="w-0.5 h-6 bg-emerald-600 mx-auto"></div>';
+
+      // Groups (Kelompok 1 & 2)
+      level2.forEach(parent => {
+        const groupMembers = team.filter(m => 
+          (m.category && m.category === parent.category) || 
+          (m.parentId && typeof m.parentId === 'string' && m.parentId.startsWith('group_'))
+        );
+
+        if (groupMembers.length > 0) {
+          html += `<div class="px-4 py-1 bg-emerald-700 text-white text-sm rounded-full mb-2">Kelompok ${parent.category} - Atasan Baru</div>`;
+          html += '<div class="flex gap-4">';
+          groupMembers.forEach(m => html += createNode(m));
+          html += '</div>';
+          html += '<div class="w-0.5 h-6 bg-emerald-600 mx-auto my-1"></div>';
+        }
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    function createNode(member) {
+      return `
+        <div class="bg-emerald-600 text-white px-5 py-3 rounded-2xl text-center min-w-[160px] shadow-lg">
+          <div class="font-bold">${member.name}</div>
+          <div class="text-xs opacity-80">${member.role}</div>
+        </div>
+      `;
+    }
+
+    // Load org chart when page is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('orgChart')) {
+        loadOrgChart();
+      }
+    });
   </script>
 </body>
 </html>
