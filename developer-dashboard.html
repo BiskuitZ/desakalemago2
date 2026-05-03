@@ -1,1184 +1,873 @@
----
-layout: null
----
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Developer Dashboard - Desa Kalemago</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Website Resmi Desa Kalemago</title>
+  <link rel="icon" type="image/png" href="fotokkn/faviconkabposo.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html {
+      touch-action: manipulation;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    
+    /* Animated Loading Text */
+    #loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(16, 185, 129, 0.15);
+      backdrop-filter: blur(12px);
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .loading-text {
+      font-size: 4.5rem;
+      font-weight: 800;
+      letter-spacing: 12px;
+    }
+    
+    .loading-text span {
+      display: inline-block;
+      animation: loading-wave 1.4s infinite ease-in-out;
+      color: #fff;
+    }
+    
+    .let1 { animation-delay: 0.1s; }
+    .let2 { animation-delay: 0.2s; }
+    .let3 { animation-delay: 0.3s; }
+    .let4 { animation-delay: 0.4s; }
+    .let5 { animation-delay: 0.5s; }
+    .let6 { animation-delay: 0.6s; }
+    .let7 { animation-delay: 0.7s; }
+    
+    @keyframes loading-wave {
+      0%, 100% { 
+        transform: translateY(0) scale(1); 
+        color: #fff;
+      }
+      50% { 
+        transform: translateY(-18px) scale(1.15); 
+        color: #34d399;
+      }
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      min-width: 320px;
+      width: 100%;
+      overflow-x: hidden;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    @media screen and (max-width: 640px) {
+      * {
+        -webkit-tap-highlight-color: transparent;
+      }
+      input, textarea {
+        font-size: 16px !important;
+      }
+      body {
+        touch-action: pan-y pinch-zoom;
+        height: 100%;
+        position: fixed;
+        width: 100%;
+      }
+      #root {
+        height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+      }
+      .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto;
+      }
+    }
+
+    body {
+      overscroll-behavior-y: none;
+    }
+  </style>
 </head>
-<body class="bg-gray-100">
-  <nav class="bg-purple-800 text-white shadow-lg sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4">
+<body class="bg-gray-50 text-gray-800 h-full">
+  <!-- Animated Loading Text -->
+  <div id="loading-overlay" class="fixed inset-0 bg-emerald-950/90 backdrop-blur-xl flex items-center justify-center z-[99999]" style="display: none;">
+    <div class="text-center">
+      <h1 class="loading-text text-6xl font-bold text-white tracking-[8px]">
+        <span class="let1">l</span>
+        <span class="let2">o</span>
+        <span class="let3">a</span>
+        <span class="let4">d</span>
+        <span class="let5">i</span>
+        <span class="let6">n</span>
+        <span class="let7">g</span>
+      </h1>
+      <p class="text-emerald-400 text-sm mt-4 tracking-widest">PLEASE WAIT</p>
+    </div>
+  </div>
+
+  <div id="root" class="min-h-full">
+
+  <!-- Header -->
+  <header class="bg-emerald-950/90 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4">
       <div class="flex items-center justify-between">
+        <!-- Logo and Title -->
         <div class="flex items-center gap-4">
-          <img src="fotokkn/logokabposo.png" alt="Logo" class="w-14 h-14 object-contain">
-          <div>
-            <h1 class="font-bold text-2xl">Developer Dashboard</h1>
-            <p class="text-purple-300 text-sm">Desa Kalemago • Full Access</p>
+          <img src="fotokkn/logokabposo.png" alt="Logo Kabupaten Poso" class="h-[64px] w-[45px] object-contain" />
+          <div class="text-white">
+            <h1 class="text-2xl md:text-3xl font-bold">Desa Kalemago</h1>
+            <p class="text-base md:text-lg">Kabupaten Poso</p>
           </div>
         </div>
-        
-        <div class="flex items-center gap-4">
-          <div class="text-right hidden md:block">
-            <p class="font-semibold" id="userName">Loading...</p>
-            <p class="text-purple-300 text-xs" id="userRole">DEVELOPER</p>
-          </div>
-          <button onclick="logout()" class="bg-purple-700 hover:bg-red-600 px-5 py-2.5 rounded-2xl text-sm font-medium transition flex items-center gap-2">
-            <i class="fas fa-sign-out-alt"></i>
-            <span class="hidden md:inline">Logout</span>
+
+        <!-- Desktop Navigation (Hanya di Desktop) -->
+        <nav class="hidden md:flex items-center gap-3 text-white font-medium ml-8">
+          <a href="/" class="hover:text-yellow-300 transition border-b-2 border-white px-2 py-1 text-sm">Home</a>
+          <a href="profildesa.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Profil Desa</a>
+          <a href="infografis.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Infografis</a>
+          <a href="apbdes.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">APB Desa</a>
+          <a href="listing.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Listing</a>
+          <a href="belanja.html" class="hover:text-yellow-300 hover:border-b-2 hover:border-yellow-300 transition px-2 py-1 text-sm">Belanja</a>
+        </nav>
+
+        <!-- Hamburger Button (Hanya di Mobile) + Login di Desktop -->
+        <div class="flex items-center gap-3">
+          <!-- Pengaduan Warga Button -->
+          <button onclick="showPengaduanModal()" class="hidden md:flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-emerald-950 px-5 py-2 rounded-2xl text-sm font-semibold transition">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Pengaduan Warga</span>
+          </button>
+
+          <!-- Login Button (Desktop only) -->
+          <a href="login.html" class="hidden md:flex items-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-2 rounded-2xl text-sm font-semibold transition">
+            <i class="fas fa-user-shield"></i>
+            <span>Login Admin</span>
+          </a>
+
+          <!-- Hamburger Button (Mobile only) -->
+          <button onclick="toggleSidebar()" class="md:hidden text-white focus:outline-none p-2">
+            <i class="fas fa-bars text-2xl"></i>
           </button>
         </div>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <div class="max-w-7xl mx-auto px-6 py-8">
-    <div class="bg-gradient-to-r from-purple-700 to-purple-600 rounded-3xl p-8 text-white mb-8 shadow-xl">
-      <h2 class="text-4xl font-bold mb-2">Developer Panel 👨‍💻</h2>
-      <p class="text-purple-200 text-lg" id="welcomeMessage">Memuat...</p>
-    </div>
-
-    <!-- VISITOR STATS -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
-      <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
-        <i class="fas fa-chart-line text-purple-600"></i>
-        Statistik Pengunjung
-      </h3>
-      
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="bg-purple-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-purple-800" id="totalVisitors">0</p>
-          <p class="text-purple-600 font-semibold mt-2">Total Pengunjung</p>
+  <!-- SIDEBAR MOBILE (Hanya muncul di HP) -->
+  <div id="sidebar" class="fixed inset-0 bg-black bg-opacity-50 z-[999] hidden md:hidden" onclick="toggleSidebar()">
+    <div onclick="event.stopImmediatePropagation()" class="absolute right-0 top-0 h-full w-72 bg-emerald-900 shadow-2xl transform transition-transform duration-300">
+      <!-- Sidebar Header -->
+      <div class="flex justify-between items-center p-4 border-b border-white/20">
+        <div class="text-white">
+          <h2 class="text-xl font-bold">Menu</h2>
         </div>
+        <button onclick="toggleSidebar()" class="text-white text-3xl leading-none">&times;</button>
+      </div>
+      
+      <!-- Sidebar Links -->
+      <div class="flex flex-col p-4 text-white text-lg">
+        <a href="/" class="py-4 px-4 hover:bg-white/10 rounded-lg flex items-center gap-3"><i class="fas fa-home w-6"></i> Home</a>
+        <a href="profildesa.html" class="py-4 px-4 hover:bg-white/10 rounded-lg flex items-center gap-3"><i class="fas fa-building w-6"></i> Profil Desa</a>
+        <a href="infografis.html" class="py-4 px-4 hover:bg-white/10 rounded-lg flex items-center gap-3"><i class="fas fa-chart-pie w-6"></i> Infografis</a>
+        <a href="apbdes.html" class="py-4 px-4 hover:bg-white/10 rounded-lg flex items-center gap-3"><i class="fas fa-file-invoice-dollar w-6"></i> APB Desa</a>
+        <a href="listing.html" class="py-4 px-4 hover:bg-white/10 rounded-lg flex items-center gap-3"><i class="fas fa-list w-6"></i> Listing</a>
+        <a href="belanja.html" class="py-4 px-4 hover:bg-white/10 rounded-lg flex items-center gap-3"><i class="fas fa-shopping-cart w-6"></i> Belanja</a>
         
-        <div class="bg-blue-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-blue-800" id="todayVisitors">0</p>
-          <p class="text-blue-600 font-semibold mt-2">Pengunjung Hari Ini</p>
-        </div>
+        <div class="border-t border-white/20 my-4"></div>
         
-        <div class="bg-emerald-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-emerald-800" id="onlineVisitors">12</p>
-          <p class="text-emerald-600 font-semibold mt-2">Sedang Online</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- WEATHER -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
-      <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
-        <i class="fas fa-cloud-sun text-purple-600"></i>
-        Cuaca Desa Kalemago
-      </h3>
-      
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-8 text-white">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-7xl font-extrabold" id="dashTemp">28°C</p>
-              <p class="text-xl" id="dashWeather">Cerah Berawan</p>
-            </div>
-            <i class="fas fa-cloud-sun text-8xl opacity-50"></i>
-          </div>
-        </div>
-        
-        <div class="space-y-4">
-          <div class="flex items-center gap-4 bg-gray-50 rounded-xl p-4">
-            <i class="fas fa-wind text-2xl text-purple-600 w-8"></i>
-            <div><p class="text-sm text-gray-500">Kecepatan Angin</p><p class="font-semibold" id="dashWind">5 km/j</p></div>
-          </div>
-          <div class="flex items-center gap-4 bg-gray-50 rounded-xl p-4">
-            <i class="fas fa-tint text-2xl text-purple-600 w-8"></i>
-            <div><p class="text-sm text-gray-500">Kelembaban</p><p class="font-semibold" id="dashHumidity">85%</p></div>
-          </div>
-          <div class="flex items-center gap-4 bg-gray-50 rounded-xl p-4">
-            <i class="fas fa-eye text-2xl text-purple-600 w-8"></i>
-            <div><p class="text-sm text-gray-500">Jarak Pandang</p><p class="font-semibold" id="dashVisibility">10 km</p></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- USER MANAGEMENT -->
-    <div class="bg-white rounded-3xl shadow-lg p-8">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
-          <i class="fas fa-users-cog text-purple-600"></i>
-          Manajemen Pengguna
-        </h3>
-        <button onclick="loadUserManagement()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
-          <i class="fas fa-sync"></i>
-          <span>Refresh</span>
-        </button>
-      </div>
-      
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead>
-            <tr class="border-b border-gray-200">
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">ID</th>
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">Username</th>
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">Nama</th>
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">Role</th>
-              <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="userTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- PRODUCT MANAGEMENT -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
-          <i class="fas fa-box text-purple-600"></i>
-          Manajemen Produk (Belanja)
-        </h3>
-        <button onclick="showAddProductModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
-          <i class="fas fa-plus"></i>
-          <span>Tambah Produk</span>
-        </button>
-      </div>
-      
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead>
-            <tr class="border-b border-gray-200">
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">ID</th>
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">Nama Produk</th>
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">Harga</th>
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">Stok</th>
-              <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="productTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- POPULATION MANAGEMENT -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
-      <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
-        <i class="fas fa-users text-purple-600"></i>
-        Edit Data Administrasi Penduduk
-      </h3>
-      
-      <div class="grid md:grid-cols-2 gap-6">
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Laki-laki</label>
-          <input type="number" id="popMale" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Perempuan</label>
-          <input type="number" id="popFemale" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Jumlah Keluarga</label>
-          <input type="number" id="popFamilies" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Jumlah RT</label>
-          <input type="number" id="popRT" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Jumlah RW</label>
-          <input type="number" id="popRW" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-      </div>
-
-      <h4 class="text-lg font-semibold text-purple-700 mt-8 mb-4">Detail Umur Laki-laki</h4>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1">0-15 Tahun</label>
-          <input type="number" id="popMale0_15" class="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1">16-55 Tahun</label>
-          <input type="number" id="popMale16_55" class="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1">Diatas 55 Tahun</label>
-          <input type="number" id="popMale55" class="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-      </div>
-
-      <h4 class="text-lg font-semibold text-purple-700 mt-6 mb-4">Detail Umur Perempuan</h4>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1">0-15 Tahun</label>
-          <input type="number" id="popFemale0_15" class="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1">16-55 Tahun</label>
-          <input type="number" id="popFemale16_55" class="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1">Diatas 55 Tahun</label>
-          <input type="number" id="popFemale55" class="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-      </div>
-      
-      <button onclick="savePopulationData()" class="mt-6 bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-2xl font-semibold flex items-center gap-2">
-        <i class="fas fa-save"></i>
-        <span>Simpan Perubahan</span>
-      </button>
-    </div>
-
-    <!-- APBDES MANAGEMENT -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
-      <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
-        <i class="fas fa-wallet text-purple-600"></i>
-        Edit Data APB Desa
-      </h3>
-      
-      <div class="grid md:grid-cols-2 gap-6">
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Total Pendapatan (Rp)</label>
-          <input type="number" id="apbPendapatan" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Total Belanja (Rp)</label>
-          <input type="number" id="apbBelanja" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Belanja Pegawai (Rp)</label>
-          <input type="number" id="apbPegawai" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Belanja Barang/Jasa (Rp)</label>
-          <input type="number" id="apbBarang" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Belanja Modal (Rp)</label>
-          <input type="number" id="apbModal" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-      </div>
-      
-      <button onclick="saveAPBDesData()" class="mt-6 bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-2xl font-semibold flex items-center gap-2">
-        <i class="fas fa-save"></i>
-        <span>Simpan Perubahan</span>
-      </button>
-    </div>
-
-    <!-- WEB DESIGNER / TEAM MANAGEMENT -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
-          <i class="fas fa-users text-purple-600"></i>
-          Edit Tim Web Designer (Index.html)
-        </h3>
-        <button onclick="showMemberModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
-          <i class="fas fa-plus"></i>
-          <span>Tambah Anggota</span>
-        </button>
-          <!-- Tombol Buat Kelompok dihapus sesuai permintaan -->
-      </div>
-      
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead>
-            <tr class="border-b border-gray-200">
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">No</th>
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">Nama</th>
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">Jabatan</th>
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">Atasan</th>
-              <th class="text-left py-3 px-4 font-semibold text-gray-600">Foto</th>
-              <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="teamTableBody">
-            <!-- Skeleton while loading -->
-            <tr>
-              <td colspan="6" class="py-8">
-                <div class="animate-pulse space-y-3">
-                  <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-                  <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-                  <div class="h-4 bg-gray-200 rounded w-5/6"></div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      
-      <button onclick="saveTeamData()" class="mt-6 bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-2xl font-semibold flex items-center gap-2">
-        <i class="fas fa-save"></i>
-        <span>Simpan Perubahan</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- ADD PRODUCT MODAL -->
-  <div id="addProductModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-3xl p-8 w-full max-w-md mx-4">
-      <h3 class="text-2xl font-bold text-purple-800 mb-6">Tambah Produk Baru</h3>
-      
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Produk</label>
-          <input type="text" id="productName" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Harga (Rp)</label>
-          <input type="number" id="productPrice" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-        
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Gambar Produk</label>
-          <div class="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center hover:border-purple-500 transition">
-            <input type="file" id="productImageFile" accept="image/*" class="hidden" onchange="previewImage(this)">
-            <label for="productImageFile" class="cursor-pointer">
-              <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
-              <p class="text-gray-600 font-medium">Klik untuk upload gambar</p>
-              <p class="text-xs text-gray-400 mt-1">PNG, JPG (Maks. 2MB)</p>
-            </label>
-            <div id="imagePreview" class="hidden mt-4">
-              <img id="previewImg" class="max-h-32 mx-auto rounded-xl shadow-md">
-              <button onclick="removeImagePreview()" class="mt-2 text-red-500 text-sm hover:underline">Hapus Gambar</button>
-            </div>
-          </div>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi</label>
-          <textarea id="productDescription" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500"></textarea>
-        </div>
-        
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Stok</label>
-          <input type="number" id="productStock" value="50" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-        </div>
-      </div>
-      
-      <div class="flex gap-4 mt-6">
-        <button onclick="hideAddProductModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-2xl font-semibold">Batal</button>
-        <button onclick="addProduct()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-2xl font-semibold">Tambah Produk</button>
+        <a href="login.html" class="py-4 px-4 bg-emerald-700 hover:bg-emerald-600 rounded-2xl flex items-center justify-center gap-2 font-semibold">
+          <i class="fas fa-user-shield"></i> 
+          <span>Login Admin</span>
+        </a>
       </div>
     </div>
   </div>
 
   <script>
-    const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
-
-    async function checkAuth() {
-      const userStr = localStorage.getItem('user');
-      if (!userStr) { window.location.href = 'login.html'; return; }
-      
-      const user = JSON.parse(userStr);
-      
-      if (user.role === 'user') { window.location.href = 'user-dashboard.html'; return; }
-      if (user.role === 'admin') { window.location.href = 'admin-dashboard.html'; return; }
-      
-      document.getElementById('userName').textContent = user.name || user.username;
-      document.getElementById('welcomeMessage').textContent = `Halo Developer, ${user.name || user.username}!`;
-      
-      await loadVisitorStats();
-      await loadWeather();
-      await loadUserManagement();
-      await loadProductManagement();
-      await loadPopulationData();
-      await loadAPBDesData();
-      await loadTeamData();
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('hidden');
+      sidebar.classList.toggle('flex');
     }
 
-    async function loadVisitorStats() {
-      try {
-        const res = await fetch(`${API_URL}/api/stats`);
-        const data = await res.json();
-        if (data.success) {
-          document.getElementById('totalVisitors').textContent = data.totalVisitors || 1247;
-          document.getElementById('todayVisitors').textContent = Math.floor((data.totalVisitors || 1247) * 0.3);
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href]');
+      if (link && link.href && !link.href.includes('#') && !link.href.startsWith('javascript:')) {
+        if (link.href !== window.location.href) {
+          const overlay = document.getElementById('loading-overlay');
+          if (overlay) overlay.style.display = 'flex';
         }
-      } catch (err) {
-        document.getElementById('totalVisitors').textContent = '1,247';
-        document.getElementById('todayVisitors').textContent = '89';
       }
-    }
+    });
 
-    async function loadWeather() {
-      try {
-        const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-1.5123&longitude=120.4300&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,visibility');
-        const data = await response.json();
-        const current = data.current;
-        
-        document.getElementById('dashTemp').textContent = Math.round(current.temperature_2m) + '°C';
-        const weatherCodes = { 0: 'Cerah', 1: 'Cerah Berawan', 2: 'Berawan Sebagian', 3: 'Berawan', 45: 'Berkabut', 61: 'Hujan Ringan', 63: 'Hujan Sedang', 80: 'Hujan Ringan' };
-        document.getElementById('dashWeather').textContent = weatherCodes[current.weather_code] || 'Berawan';
-        document.getElementById('dashWind').textContent = Math.round(current.wind_speed_10m) + ' km/j';
-        document.getElementById('dashHumidity').textContent = current.relative_humidity_2m + '%';
-        document.getElementById('dashVisibility').textContent = Math.round((current.visibility || 10000) / 1000) + ' km';
-      } catch (err) {}
-    }
-
-    // USER MANAGEMENT
-    async function loadUserManagement() {
-      try {
-        const res = await fetch(`${API_URL}/api/admin/users`, {
-          headers: { 'x-username': JSON.parse(localStorage.getItem('user')).username }
-        });
-        
-        const data = await res.json();
-        if (data.success) {
-          const tbody = document.getElementById('userTableBody');
-          tbody.innerHTML = '';
-          
-          data.users.forEach(user => {
-            const row = document.createElement('tr');
-            row.className = 'border-b border-gray-100 hover:bg-gray-50';
-            row.innerHTML = `
-              <td class="py-3 px-4 font-mono text-sm">${user.id}</td>
-              <td class="py-3 px-4 font-semibold">${user.username}</td>
-              <td class="py-3 px-4">${user.name}</td>
-              <td class="py-3 px-4">
-                <span class="px-3 py-1 rounded-full text-xs font-semibold ${user.role === 'developer' ? 'bg-purple-100 text-purple-700' : user.role === 'admin' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}">
-                  ${user.role}
-                </span>
-              </td>
-              <td class="py-3 px-4 text-center">
-                <button onclick="editUser(${user.id}, '${user.username}', '${user.name}', '${user.role}')" class="text-blue-600 hover:text-blue-800 mx-1"><i class="fas fa-edit"></i></button>
-                ${user.role !== 'developer' ? `<button onclick="deleteUser(${user.id}, '${user.username}')" class="text-red-600 hover:text-red-800 mx-1"><i class="fas fa-trash"></i></button>` : ''}
-              </td>
-            `;
-            tbody.appendChild(row);
-          });
-        }
-      } catch (err) {}
-    }
-
-    async function editUser(id, username, name, role) {
-      const newUsername = prompt('Username baru:', username);
-      if (!newUsername) return;
-      
-      const newName = prompt('Nama baru:', name);
-      if (!newName) return;
-      
-      const newPassword = prompt('Password baru (kosongkan jika tidak diubah):');
-      const newRole = prompt('Role baru (user/admin/developer):', role);
-      if (!newRole) return;
-      
-      try {
-        const res = await fetch(`${API_URL}/api/admin/users/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
-          body: JSON.stringify({ username: newUsername, name: newName, password: newPassword || undefined, role: newRole })
-        });
-        
-        const data = await res.json();
-        if (data.success) {
-          alert('✅ User berhasil diupdate!');
-          loadUserManagement();
-        } else {
-          alert('❌ Gagal: ' + (data.message || 'Unknown error'));
-        }
-      } catch (err) {
-        alert('❌ Error: ' + err.message);
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        hideLoading();
       }
-    }
+    });
+  </script>
 
-    async function deleteUser(id, username) {
-      if (!confirm(`Yakin ingin menghapus user "${username}"?`)) return;
-      
-      try {
-        const res = await fetch(`${API_URL}/api/admin/users/${id}`, {
-          method: 'DELETE',
-          headers: { 'x-username': JSON.parse(localStorage.getItem('user')).username }
-        });
-        
-        const data = await res.json();
-        if (data.success) {
-          alert('✅ User berhasil dihapus!');
-          loadUserManagement();
-        } else {
-          alert('❌ Gagal: ' + (data.message || 'Unknown error'));
-        }
-      } catch (err) {
-        alert('❌ Error: ' + err.message);
-      }
-    }
-
-    // PRODUCT MANAGEMENT
-    async function loadProductManagement() {
-      try {
-        const res = await fetch(`${API_URL}/api/products`);
-        const data = await res.json();
-        
-        if (data.success) {
-          const tbody = document.getElementById('productTableBody');
-          tbody.innerHTML = '';
-          
-          data.products.forEach(product => {
-            const row = document.createElement('tr');
-            row.className = 'border-b border-gray-100 hover:bg-gray-50';
-            row.innerHTML = `
-              <td class="py-3 px-4 font-mono text-sm">${product.id}</td>
-              <td class="py-3 px-4 font-semibold">${product.name}</td>
-              <td class="py-3 px-4">Rp ${product.price.toLocaleString('id-ID')}</td>
-              <td class="py-3 px-4">${product.stock}</td>
-              <td class="py-3 px-4 text-center">
-                <button onclick="editProduct(${product.id}, '${product.name}', ${product.price}, '${product.image}', '${product.description}', ${product.stock})" class="text-blue-600 hover:text-blue-800 mx-1"><i class="fas fa-edit"></i></button>
-                <button onclick="deleteProduct(${product.id}, '${product.name}')" class="text-red-600 hover:text-red-800 mx-1"><i class="fas fa-trash"></i></button>
-              </td>
-            `;
-            tbody.appendChild(row);
-          });
-        }
-      } catch (err) {
-        console.error('Error loading products:', err);
-      }
-    }
-
-    function showAddProductModal() {
-      document.getElementById('addProductModal').classList.remove('hidden');
-      document.getElementById('addProductModal').classList.add('flex');
-    }
-
-    function hideAddProductModal() {
-      document.getElementById('addProductModal').classList.remove('flex');
-      document.getElementById('addProductModal').classList.add('hidden');
-    }
-
-    function previewImage(input) {
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('previewImg').src = e.target.result;
-          document.getElementById('imagePreview').classList.remove('hidden');
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
-
-    function removeImagePreview() {
-      document.getElementById('productImageFile').value = '';
-      document.getElementById('imagePreview').classList.add('hidden');
-      document.getElementById('previewImg').src = '';
-    }
-
-    async function addProduct() {
-      const name = document.getElementById('productName').value;
-      const price = document.getElementById('productPrice').value;
-      const description = document.getElementById('productDescription').value;
-      const stock = document.getElementById('productStock').value;
-      const imageFile = document.getElementById('productImageFile').files[0];
-      
-      if (!name || !price || !description || !imageFile) {
-        alert('Semua field wajib diisi termasuk gambar!');
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        const base64Image = e.target.result;
-        
-        try {
-          const res = await fetch(`${API_URL}/api/products`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-username': JSON.parse(localStorage.getItem('user')).username
-            },
-            body: JSON.stringify({
-              name,
-              price: parseInt(price),
-              image: base64Image,
-              description,
-              stock: parseInt(stock) || 0
-            })
-          });
-          
-          const data = await res.json();
-          
-          if (data.success) {
-            alert('✅ Produk berhasil ditambahkan dengan gambar!');
-            hideAddProductModal();
-            loadProductManagement();
-            
-            document.getElementById('productName').value = '';
-            document.getElementById('productPrice').value = '';
-            document.getElementById('productDescription').value = '';
-            document.getElementById('productStock').value = '50';
-            document.getElementById('productImageFile').value = '';
-            document.getElementById('imagePreview').classList.add('hidden');
-          } else {
-            alert('❌ Gagal: ' + (data.message || 'Unknown error'));
-          }
-        } catch (err) {
-          alert('❌ Error: ' + err.message);
-        }
-      };
-      reader.readAsDataURL(imageFile);
-    }
-
-    async function editProduct(id, name, price, image, description, stock) {
-      const modal = document.createElement('div');
-      modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999]';
-      modal.innerHTML = `
-        <div onclick="event.target.remove()" class="absolute inset-0"></div>
-        <div onclick="event.stopImmediatePropagation()" class="bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 p-6">
-          <h3 class="text-xl font-bold text-purple-800 mb-4">Edit Produk</h3>
-          
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Produk</label>
-              <input type="text" id="editProductName" value="${name}" class="w-full px-4 py-3 border border-gray-300 rounded-2xl">
-            </div>
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">Harga</label>
-              <input type="number" id="editProductPrice" value="${price}" class="w-full px-4 py-3 border border-gray-300 rounded-2xl">
-            </div>
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">Deskripsi</label>
-              <textarea id="editProductDescription" class="w-full px-4 py-3 border border-gray-300 rounded-2xl h-20">${description}</textarea>
-            </div>
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">Stok</label>
-              <input type="number" id="editProductStock" value="${stock}" class="w-full px-4 py-3 border border-gray-300 rounded-2xl">
-            </div>
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">URL Gambar (kosongkan jika tidak diubah)</label>
-              <input type="text" id="editProductImage" value="${image || ''}" placeholder="https://..." class="w-full px-4 py-3 border border-gray-300 rounded-2xl">
-            </div>
-          </div>
-          
-          <div class="flex gap-3 mt-6">
-            <button onclick="this.closest('.fixed').remove()" class="flex-1 py-3 border border-gray-300 rounded-2xl font-semibold">Batal</button>
-            <button onclick="saveProductEdit(${id}, this)" class="flex-1 py-3 bg-purple-600 text-white rounded-2xl font-semibold">Simpan</button>
+  <!-- Hero Video dengan teks tengah -->
+  <section class="hero-video relative h-[620px] flex items-center text-white overflow-hidden">
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0">
+      <source src="SAVANA PADANG NAPU POSO - Rumah Katu Production.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay absolute inset-0 bg-gradient-to-b from-black/25 via-black/20 to-black/30 z-10"></div>
+    <div class="relative z-20 max-w-5xl mx-auto px-6 text-center">
+      <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-4 drop-shadow-2xl">Website Resmi</h1>
+      <h2 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 drop-shadow-2xl">Desa Kalemago</h2>
+      <p class="text-xl md:text-2xl text-white/90 mb-12 drop-shadow-md max-w-3xl mx-auto">
+        Kecamatan Lore Timur, Kabupaten Poso, Sulawesi Tengah
+      </p>
+      <div class="inline-flex items-center gap-4 bg-white/10 backdrop-blur-xl px-8 py-4 rounded-3xl border border-white/30 shadow-2xl hover:scale-[1.02] transition-transform duration-300">
+        <div class="flex items-center gap-3">
+          <i class="fas fa-cloud-sun text-3xl text-yellow-300"></i>
+          <div>
+            <p class="text-3xl font-bold" id="temperature">32 °C</p>
+            <p class="text-sm -mt-1" id="weather">Berawan</p>
           </div>
         </div>
-      `;
-      document.body.appendChild(modal);
-    }
-
-    async function saveProductEdit(id, btn) {
-      const modal = btn.closest('.fixed');
-      const newName = document.getElementById('editProductName').value;
-      const newPrice = parseInt(document.getElementById('editProductPrice').value);
-      const newDescription = document.getElementById('editProductDescription').value;
-      const newStock = parseInt(document.getElementById('editProductStock').value);
-      const newImage = document.getElementById('editProductImage').value;
-
-      if (!newName || !newPrice) {
-        alert('Nama dan Harga wajib diisi!');
-        return;
-      }
-      
-      try {
-        const res = await fetch(`${API_URL}/api/products/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
-          body: JSON.stringify({
-            name: newName,
-            price: parseInt(newPrice),
-            image: newImage || image,
-            description: newDescription,
-            stock: parseInt(newStock)
-          })
-        });
-        
-        const data = await res.json();
-        
-        if (data.success) {
-          alert('✅ Produk berhasil diupdate!');
-          loadProductManagement();
-        } else {
-          alert('❌ Gagal: ' + (data.message || 'Unknown error'));
+        <div class="h-8 w-px bg-white/30"></div>
+        <div class="text-left text-sm">
+          <p id="location" class="font-medium">Balai Desa Kalemago, Kec. Lore Timur</p>
+          <p><i class="fas fa-wind mr-1 text-yellow-300"></i> <span id="wind-info">Utara (5 km/j)</span></p>
+          <p><i class="fas fa-tint mr-1 text-yellow-300"></i> <span id="humidity-info">85%</span></p>
+          <p><i class="fas fa-eye mr-1 text-yellow-300"></i> <span id="visibility-info">10 km</span></p>
+        </div>
+      </div>
+    </div>
+    <script>
+      const BMKG_ADM4 = '72.02.24.2005';
+      const LOCATION_TEXT = 'Balai Desa Kalemago, Kec. Lore Timur';
+      async function updateWeather() {
+        try {
+          const tempEl = document.getElementById('temperature');
+          const weatherEl = document.getElementById('weather');
+          tempEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+          weatherEl.textContent = 'Memuat...';
+          const response = await fetch(`https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=${BMKG_ADM4}`);
+          if (!response.ok) throw new Error('Network error');
+          const result = await response.json();
+          if (result && result.data && result.data.length > 0) {
+            const current = result.data[0].cuaca[0][0];
+            const temp = Math.round(current.t);
+            tempEl.textContent = `${temp} °C`;
+            weatherEl.textContent = current.weather_desc || 'Berawan';
+            document.getElementById('location').textContent = LOCATION_TEXT;
+            document.getElementById('wind-info').innerHTML = `${current.wd || 'Utara'} (${Math.round(current.ws || 5)} km/j)`;
+            document.getElementById('humidity-info').innerHTML = `${current.hu || 85}%`;
+            document.getElementById('visibility-info').innerHTML = `${Math.round((current.vs || 10000) / 1000)} km`;
+          }
+        } catch (error) {
+          console.error('Weather error:', error);
+          document.getElementById('temperature').textContent = '22 °C';
+          document.getElementById('weather').textContent = 'Berawan';
         }
-      } catch (err) {
-        alert('❌ Error: ' + err.message);
       }
-    }
+      updateWeather();
+      setInterval(updateWeather, 10 * 60 * 1000);
+    </script>
+  </section>
 
-    async function deleteProduct(id, name) {
-      if (!confirm(`Yakin ingin menghapus produk "${name}"?`)) return;
+  <!-- Quick Links Section -->
+  <section class="bg-emerald-800 py-10 shadow-lg" data-scroll="fade-up">
+    <div class="container mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
+        <a href="profildesa.html" class="flex flex-col items-center space-y-3 text-white hover:text-yellow-300 transition group">
+          <div class="w-16 h-16 flex items-center justify-center bg-white/10 rounded-lg group-hover:bg-white/20 transition">
+            <i class="fas fa-building text-2xl"></i>
+          </div>
+          <span class="font-medium text-center">Profil Desa</span>
+        </a>
+        <a href="infografis.html" class="flex flex-col items-center space-y-3 text-white hover:text-yellow-300 transition group">
+          <div class="w-16 h-16 flex items-center justify-center bg-white/10 rounded-lg group-hover:bg-white/20 transition">
+            <i class="fas fa-chart-pie text-2xl"></i>
+          </div>
+          <span class="font-medium text-center">Infografis</span>
+        </a>
+        <a href="listing.html" class="flex flex-col items-center space-y-3 text-white hover:text-yellow-300 transition group">
+          <div class="w-16 h-16 flex items-center justify-center bg-white/10 rounded-lg group-hover:bg-white/20 transition">
+            <i class="fas fa-list text-2xl"></i>
+          </div>
+          <span class="font-medium text-center">Listing</span>
+        </a>
+        <a href="belanja.html" class="flex flex-col items-center space-y-3 text-white hover:text-yellow-300 transition group">
+          <div class="w-16 h-16 flex items-center justify-center bg-white/10 rounded-lg group-hover:bg-white/20 transition">
+            <i class="fas fa-shopping-cart text-2xl"></i>
+          </div>
+          <span class="font-medium text-center">Belanja</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Jelajahi Desa Section -->
+  <section class="container mx-auto px-6 py-12" data-scroll="fade-up">
+    <h2 class="text-3xl font-bold text-emerald-800 mb-6">JELAJAHI Desa</h2>
+    <p class="text-gray-700 mb-8 text-lg leading-relaxed max-w-4xl">
+      Melalui website ini Anda dapat menjelajahi segala hal yang terkait dengan Desa. Aspek pemerintahan, penduduk, demografi, potensi Desa, dan juga berita tentang Desa.
+    </p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-12">
+      <a href="profildesa.html" class="flex flex-col items-center space-y-3 text-gray-700 hover:text-emerald-800 transition">
+        <div class="w-16 h-16 flex items-center justify-center bg-emerald-800/10 rounded-lg group-hover:bg-emerald-800/20 transition">
+          <i class="fas fa-building text-2xl text-emerald-800"></i>
+        </div>
+        <span class="font-semibold text-lg">Profil Desa</span>
+      </a>
+      <a href="infografis.html" class="flex flex-col items-center space-y-3 text-gray-700 hover:text-emerald-800 transition">
+        <div class="w-16 h-16 flex items-center justify-center bg-emerald-800/10 rounded-lg group-hover:bg-emerald-800/20 transition">
+          <i class="fas fa-chart-pie text-2xl text-emerald-800"></i>
+        </div>
+        <span class="font-semibold text-lg">Infografis</span>
+      </a>
+      <a href="infografis.html" class="flex flex-col items-center space-y-3 text-gray-700 hover:text-emerald-800 transition">
+        <div class="w-16 h-16 flex items-center justify-center bg-emerald-800/10 rounded-lg group-hover:bg-emerald-800/20 transition">
+          <i class="fas fa-chart-line text-2xl text-emerald-800"></i>
+        </div>
+        <span class="font-semibold text-lg">IDM</span>
+      </a>
+      <a href="/ppid" class="flex flex-col items-center space-y-3 text-gray-700 hover:text-emerald-800 transition">
+        <div class="w-16 h-16 flex items-center justify-center bg-emerald-800/10 rounded-lg group-hover:bg-emerald-800/20 transition">
+          <i class="fas fa-info-circle text-2xl text-emerald-800"></i>
+        </div>
+        <span class="font-semibold text-lg">PPID</span>
+      </a>
+    </div>
+    <div class="bg-emerald-800 rounded-lg shadow-lg p-6 text-white">
+      <h3 class="text-xl font-bold mb-6">Peta Desa</h3>
+      <img src="fotokkn/PETA.jpg" alt="Peta Desa Kalemago" class="w-full h-[600px] object-contain rounded-lg shadow-lg">
+      <p class="mt-4 text-sm leading-relaxed opacity-90">Menampilkan Peta Desa Dengan <em>Interest Point</em> Desa Kalemago</p>
+    </div>
+  </section>
+
+  <!-- Sambutan Kepala Desa Section -->
+  <section class="bg-gradient-to-br from-emerald-900 to-emerald-800 py-16 md:py-20 shadow-lg text-white" data-scroll="fade-up">
+    <div class="container mx-auto px-6 flex flex-col md:flex-row items-center md:items-start gap-12">
+      <div class="w-full md:w-auto flex justify-center">
+        <div class="bg-gradient-to-b from-white/20 to-white/5 rounded-xl p-10 shadow-lg backdrop-blur-sm ring-1 ring-white/10">
+          <img src="fotokkn/logokabposo.png" alt="Logo Kabupaten Poso" class="w-52 md:w-72 h-[360px] md:h-[520px] object-contain drop-shadow-2xl" />
+        </div>
+      </div>
+      <div class="flex-1 max-w-2xl">
+        <h2 class="text-3xl font-bold mb-4 text-yellow-300">Sambutan Kepala Desa</h2>
+        <h3 class="text-4xl font-extrabold mb-3">Jemi Samels Purapande</h3>
+        <h4 class="text-2xl font-semibold mb-6 text-white/90">Kepala Desa Kalemago</h4>
+        <p class="max-w-xl text-lg leading-relaxed text-white/90">
+          <strong>Assalamu Alaikum Warohmatullahi Wabarakatu.</strong><br />
+          Website ini hadir sebagai wujud transformasi desa Kalemago menjadi desa yang mampu memanfaatkan teknologi informasi dan komunikasi, terintegrasi kedalam sistem online. Keterbukaan informasi publik, pelayanan publik dan kegiatan perekonomian di desa, guna mewujudukan desa Kalemago sebagai desa wisata yang berkelanjutan, adaptasi dan mitigasi terhadap perubahan iklim serta menjadi desa yang mandiri.<br /><br />
+          Terima kasih kepada semua pihak yang telah banyak memberi dukungan dan kontribusi baik berupa tenaga, pikiran dan semangat, terkhusus kepada Kelompok Kuliah Kerja Nyata (KKNT) Unsimar 2025 dengan bantuan Program Kerjanya sehingga website ini dapat terealisasi.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Administrasi Penduduk Section -->
+  <section class="container mx-auto px-6 py-12">
+    <h2 class="text-3xl font-bold text-emerald-800 mb-6 text-center">Administrasi Penduduk</h2>
+    <p class="max-w-4xl text-gray-700 mb-8 mx-auto text-center">
+      Sistem digital yang berfungsi mempermudah pengelolaan data dan informasi terkait dengan kependudukan dan pendayagunaannya untuk pelayanan publik yang efektif dan efisien.
+    </p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center max-w-4xl mx-auto">
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+        <p class="text-4xl font-extrabold text-emerald-800" id="popTotal">1,045</p>
+        <p class="font-semibold text-gray-700">Penduduk</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+        <p class="text-4xl font-extrabold text-emerald-800" id="popMale">524</p>
+        <p class="font-semibold text-gray-700">Laki-laki</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+        <p class="text-4xl font-extrabold text-emerald-800" id="popFemale">521</p>
+        <p class="font-semibold text-gray-700">Perempuan</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+        <p class="text-4xl font-extrabold text-emerald-800" id="popFamilies">285</p>
+        <p class="font-semibold text-gray-700">Kepala Keluarga</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- APB Desa Section -->
+  <section class="bg-gradient-to-br from-emerald-900 to-emerald-800 py-12 shadow-lg text-white">
+    <div class="container mx-auto px-6 max-w-4xl">
+      <h2 class="text-3xl font-bold mb-6 text-center">APB Desa 2024</h2>
+      <p class="text-white/90 mb-8 text-center max-w-2xl mx-auto">
+        Akses cepat dan transparan terhadap APB Desa serta proyek pembangunan.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center max-w-3xl mx-auto">
+        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 shadow">
+          <p class="text-xl font-semibold text-white/80">Pendapatan Desa</p>
+          <p class="text-2xl font-extrabold text-yellow-300">Rp <span id="apbPendapatan">1.236.022.433</span></p>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 shadow">
+          <p class="text-xl font-semibold text-white/80">Belanja Desa</p>
+          <p class="text-2xl font-extrabold text-yellow-300">Rp <span id="apbBelanja">1.236.022.433</span></p>
+        </div>
+      </div>
+      <div class="text-center mt-4">
+        <a href="apbdes.html" class="inline-block bg-yellow-300 text-emerald-900 px-6 py-2 rounded hover:bg-yellow-400 transition font-semibold">Lihat Detail</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRUKTUR ORGANISASI POSKO KKNT DESA KALEMAGO (Persis Seperti Screenshot) -->
+  <section class="bg-[#f8f9fa] py-16" data-scroll="fade-up">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-emerald-800 mb-4">Struktur Organisasi Posko KKNT Desa Kalemago</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Tim yang solid dan terstruktur untuk membangun website Desa Kalemago</p>
+      </div>
       
-      try {
-        const res = await fetch(`${API_URL}/api/products/${id}`, {
-          method: 'DELETE',
-          headers: { 'x-username': JSON.parse(localStorage.getItem('user')).username }
+      <div id="orgChart" class="max-w-6xl mx-auto">
+        <!-- Skeleton Screen while loading from backend -->
+        <div class="animate-pulse">
+          <div class="flex justify-center mb-8">
+            <div class="w-80 h-48 bg-gray-200 rounded-3xl"></div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
+            <div class="h-40 bg-gray-200 rounded-3xl"></div>
+            <div class="h-40 bg-gray-200 rounded-3xl"></div>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            <div class="h-32 bg-gray-200 rounded-2xl"></div>
+            <div class="h-32 bg-gray-200 rounded-2xl"></div>
+            <div class="h-32 bg-gray-200 rounded-2xl"></div>
+            <div class="h-32 bg-gray-200 rounded-2xl"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .org-tree {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .org-node {
+      background: #10b981;
+      color: white;
+      padding: 16px 24px;
+      border-radius: 16px;
+      text-align: center;
+      min-width: 220px;
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      position: relative;
+      z-index: 2;
+      transition: all 0.3s ease;
+    }
+    .org-node:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 25px 50px -12px rgb(16 185 129 / 0.4);
+    }
+    .org-node.child {
+      background: #34d399;
+      min-width: 200px;
+    }
+    .org-connector {
+      width: 3px;
+      height: 50px;
+      background: linear-gradient(to bottom, #10b981, #34d399);
+      margin: 0 auto;
+      position: relative;
+    }
+    .org-connector::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 12px;
+      background: #10b981;
+      border-radius: 50%;
+      border: 3px solid #fff;
+    }
+    .org-children {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 8px;
+      position: relative;
+    }
+  </style>
+
+  <!-- Sambutan KKNT Section -->
+  <section class="bg-gradient-to-br from-emerald-900 to-emerald-800 py-16 md:py-20 shadow-lg text-white">
+    <div class="container mx-auto px-6 flex flex-col md:flex-row items-center md:items-start gap-12">
+      <div class="w-full md:w-auto flex justify-center">
+          <img src="fotokkn/logoposko.jpg" alt="Logo KKNT 2025" class="w-64 md:w-80 aspect-square object-contain drop-shadow-2xl" />
+      </div>
+      <div class="flex-1 max-w-3xl">
+        <h2 class="text-3xl font-bold mb-4 text-yellow-300">Sambutan KKNT</h2>
+        <h3 class="text-4xl font-extrabold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-yellow-200">KKNT Unsimar 2025</h3>
+        <h4 class="text-2xl font-semibold mb-8 text-white/90">Posko 08 Desa Kalemago</h4>
+        <p class="text-lg leading-relaxed text-white/90 space-y-6">
+          Posko Kuliah Kerja Nyata Tematik (KKNT) Tahun 2025 diresmikan oleh Rektor Universitas Sintuwu Maroso, Panitia KKNT beserta perangkat LLPM lainnya di Universitas Sintuwu Maroso Pada tanggal 14 April 2025 yang di peruntukkan untuk Mahasiswa agar bisa melakukan tugas Tri Dharma Perguruan Tinggi pada point ke tiga yaitu Pengabdian Kepada Masyarakat.<br /><br />
+          Hal itu juga agar Mahasiswa bisa menambah pengetahuan luas di lapangan khususnya di Desa Kalemago ini agar bisa membangun, memajukan, mensejahterakan Desa Kalemago pada tahun yang akan mendatang.<br /><br />
+          Dengan adanya Website ini, Pemerintah Desa Kalemago, Masyarakat Desa Kalemago, dan siapa saja yang akan mengunjungi Desa Kalemago bisa mengetahui apa yang ada di Desa Kalemago ini.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Struktur Organisasi Section -->
+  <section class="bg-gradient-to-br from-blue-900 to-blue-800 py-16 text-white" data-scroll="fade-up">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-4">Supporter</h2>
+      <p class="text-white/90 text-center mb-12 max-w-3xl mx-auto">Berikut adalah nama-nama supporter yang telah berkontribusi dalam pengembangan dan pengelolaan website Desa Kalemago.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 flex items-center space-x-4 shadow-lg hover:scale-105 transition transform duration-300">
+          <img src="fotokkn/yumi.jpg" alt="Ahmad Fadli" class="w-16 h-16 rounded-full object-cover" />
+          <p class="text-xl font-semibold">Dwi Oktaviani M.</p>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 flex items-center space-x-4 shadow-lg hover:scale-105 transition transform duration-300">
+          <img src="fotokkn/kia.jpg" alt="Siti Aminah" class="w-16 h-16 rounded-full object-cover" />
+          <p class="text-xl font-semibold">Alkia Djaniba</p>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 flex items-center space-x-4 shadow-lg hover:scale-105 transition transform duration-300">
+          <img src="fotokkn/melkris.jpg" alt="Budi Santoso" class="w-16 h-16 rounded-full object-cover" />
+          <p class="text-xl font-semibold">Melkris Nofker Perabu</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-emerald-800 py-8 text-center text-white">
+    <div class="container mx-auto px-6 flex justify-center space-x-6 mb-4">
+      <a href="#" aria-label="Facebook" class="text-white hover:text-yellow-300 transition text-2xl"><i class="fab fa-facebook"></i></a>
+      <a href="#" aria-label="Twitter" class="text-white hover:text-yellow-300 transition text-2xl"><i class="fab fa-twitter"></i></a>
+      <a href="#" aria-label="Instagram" class="text-white hover:text-yellow-300 transition text-2xl"><i class="fab fa-instagram"></i></a>
+      <a href="#" aria-label="LinkedIn" class="text-white hover:text-yellow-300 transition text-2xl"><i class="fab fa-linkedin"></i></a>
+    </div>
+    <p class="text-white/80">&copy; 2025 Asindu Engineering Consultant. All rights reserved.</p>
+  </footer>
+
+  </div><!-- end of root div -->
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const links = document.querySelectorAll('a[href]');
+      links.forEach(link => {
+        link.addEventListener('click', function(e) {
+          if (this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
+            showLoading();
+          }
         });
-        
-        const data = await res.json();
-        
-        if (data.success) {
-          alert('✅ Produk berhasil dihapus!');
-          loadProductManagement();
-        } else {
-          alert('❌ Gagal: ' + (data.message || 'Unknown error'));
-        }
-      } catch (err) {
-        alert('❌ Error: ' + err.message);
+      });
+    });
+
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        hideLoading();
       }
+    });
+  </script>
+
+  <!-- Advanced Scroll Animations (Framer-like) -->
+  <script>
+    function initScrollAnimations() {
+      const animatedElements = document.querySelectorAll('[data-scroll]');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const animation = el.dataset.scroll || 'fade-up';
+            const delay = parseInt(el.dataset.delay) || (index * 80);
+            
+            setTimeout(() => {
+              el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+              el.style.transitionDelay = `${delay}ms`;
+              
+              if (animation === 'fade-up') {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+              } else if (animation === 'fade-left') {
+                el.style.opacity = '1';
+                el.style.transform = 'translateX(0)';
+              } else if (animation === 'fade-right') {
+                el.style.opacity = '1';
+                el.style.transform = 'translateX(0)';
+              } else if (animation === 'scale') {
+                el.style.opacity = '1';
+                el.style.transform = 'scale(1)';
+              }
+              
+              if (el.dataset.stagger) {
+                const children = el.children;
+                Array.from(children).forEach((child, i) => {
+                  child.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                  child.style.transitionDelay = `${i * 120}ms`;
+                  child.style.opacity = '1';
+                  child.style.transform = 'translateY(0)';
+                });
+              }
+            }, 50);
+            
+            observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
+
+      animatedElements.forEach(el => {
+        const animation = el.dataset.scroll || 'fade-up';
+        if (animation === 'fade-up') { el.style.opacity = '0'; el.style.transform = 'translateY(60px)'; }
+        else if (animation === 'fade-left') { el.style.opacity = '0'; el.style.transform = 'translateX(-60px)'; }
+        else if (animation === 'fade-right') { el.style.opacity = '0'; el.style.transform = 'translateX(60px)'; }
+        else if (animation === 'scale') { el.style.opacity = '0'; el.style.transform = 'scale(0.85)'; }
+        observer.observe(el);
+      });
     }
 
-    // POPULATION MANAGEMENT
+    function initParallax() {
+      const video = document.querySelector('.hero-video video');
+      if (!video) return;
+      window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * 0.3;
+        video.style.transform = `translateY(${rate}px)`;
+      }, { passive: true });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initScrollAnimations();
+      initParallax();
+    });
+
+    window.addEventListener('pageshow', () => {
+      setTimeout(() => initScrollAnimations(), 100);
+    });
+  </script>
+
+  <!-- SCRIPT UNTUK LOAD DATA DARI BACKEND -->
+  <script>
+    const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
+
     async function loadPopulationData() {
       try {
         const res = await fetch(`${API_URL}/api/population`);
         const data = await res.json();
-        
         if (data.success) {
-          document.getElementById('popMale').value = data.data.male;
-          document.getElementById('popFemale').value = data.data.female;
-          document.getElementById('popFamilies').value = data.data.families;
-          document.getElementById('popRT').value = data.data.rt;
-          document.getElementById('popRW').value = data.data.rw;
-
-          // Age groups
-          if (data.data.maleAge) {
-            document.getElementById('popMale0_15').value = data.data.maleAge['0-15'] || 0;
-            document.getElementById('popMale16_55').value = data.data.maleAge['16-55'] || 0;
-            document.getElementById('popMale55').value = data.data.maleAge['55+'] || 0;
-          }
-          if (data.data.femaleAge) {
-            document.getElementById('popFemale0_15').value = data.data.femaleAge['0-15'] || 0;
-            document.getElementById('popFemale16_55').value = data.data.femaleAge['16-55'] || 0;
-            document.getElementById('popFemale55').value = data.data.femaleAge['55+'] || 0;
-          }
+          // Total Penduduk = Laki-laki + Perempuan (auto-calculated)
+          const total = data.data.male + data.data.female;
+          document.getElementById('popTotal').textContent = total.toLocaleString('id-ID');
+          document.getElementById('popMale').textContent = data.data.male.toLocaleString('id-ID');
+          document.getElementById('popFemale').textContent = data.data.female.toLocaleString('id-ID');
+          document.getElementById('popFamilies').textContent = data.data.families.toLocaleString('id-ID');
         }
       } catch (err) {
-        console.error('Error loading population:', err);
+        console.log('Using default population data');
       }
     }
 
-    async function savePopulationData() {
-      const data = {
-        male: parseInt(document.getElementById('popMale').value),
-        female: parseInt(document.getElementById('popFemale').value),
-        families: parseInt(document.getElementById('popFamilies').value),
-        rt: parseInt(document.getElementById('popRT').value),
-        rw: parseInt(document.getElementById('popRW').value),
-        maleAge: {
-          "0-15": parseInt(document.getElementById('popMale0_15').value) || 0,
-          "16-55": parseInt(document.getElementById('popMale16_55').value) || 0,
-          "55+": parseInt(document.getElementById('popMale55').value) || 0
-        },
-        femaleAge: {
-          "0-15": parseInt(document.getElementById('popFemale0_15').value) || 0,
-          "16-55": parseInt(document.getElementById('popFemale16_55').value) || 0,
-          "55+": parseInt(document.getElementById('popFemale55').value) || 0
-        }
-      };
-      
-      try {
-        const res = await fetch(`${API_URL}/api/population`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
-          body: JSON.stringify(data)
-        });
-        
-        const result = await res.json();
-        
-        if (result.success) {
-          alert('✅ Data penduduk berhasil disimpan dan tersinkron ke GitHub!');
-        } else {
-          alert('❌ Gagal: ' + (result.message || 'Unknown error'));
-        }
-      } catch (err) {
-        alert('❌ Error: ' + err.message);
-      }
-    }
-
-    // APBDES MANAGEMENT
     async function loadAPBDesData() {
       try {
         const res = await fetch(`${API_URL}/api/apbdes`);
         const data = await res.json();
-        
         if (data.success) {
-          document.getElementById('apbPendapatan').value = data.data.pendapatan;
-          document.getElementById('apbBelanja').value = data.data.belanja;
-          document.getElementById('apbPegawai').value = data.data.belanjaPegawai;
-          document.getElementById('apbBarang').value = data.data.belanjaBarang;
-          document.getElementById('apbModal').value = data.data.belanjaModal;
+          document.getElementById('apbPendapatan').textContent = data.data.pendapatan.toLocaleString('id-ID');
+          document.getElementById('apbBelanja').textContent = data.data.belanja.toLocaleString('id-ID');
         }
       } catch (err) {
-        console.error('Error loading APBDes:', err);
+        console.log('Using default APBDes data');
       }
     }
 
-    async function saveAPBDesData() {
-      const data = {
-        pendapatan: parseInt(document.getElementById('apbPendapatan').value),
-        belanja: parseInt(document.getElementById('apbBelanja').value),
-        belanjaPegawai: parseInt(document.getElementById('apbPegawai').value),
-        belanjaBarang: parseInt(document.getElementById('apbBarang').value),
-        belanjaModal: parseInt(document.getElementById('apbModal').value)
-      };
-      
-      try {
-        const res = await fetch(`${API_URL}/api/apbdes`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
-          body: JSON.stringify(data)
-        });
-        
-        const result = await res.json();
-        
-        if (result.success) {
-          alert('✅ Data APBDes berhasil disimpan dan tersinkron ke GitHub!');
-        } else {
-          alert('❌ Gagal: ' + (result.message || 'Unknown error'));
-        }
-      } catch (err) {
-        alert('❌ Error: ' + err.message);
-      }
-    }
+    async function loadOrgChart() {
+      const container = document.getElementById('orgChart');
+      if (!container) return;
 
-    // TEAM / WEB DESIGNER MANAGEMENT
-    let currentTeam = [];
-
-    async function loadTeamData() {
       try {
         const res = await fetch(`${API_URL}/api/team`);
         const data = await res.json();
         
-        if (data.success && Array.isArray(data.team)) {
-          currentTeam = data.team;
-          console.log('Team data loaded:', currentTeam.length, 'members');
-          renderTeamTable();
+        if (data.success && data.team && data.team.length > 0) {
+          renderBeautifulOrgChart(data.team);
         } else {
-          console.warn('No valid team data, using empty array');
-          currentTeam = [];
-          renderTeamTable();
+          renderBeautifulOrgChart(getFallbackTeam());
         }
       } catch (err) {
-        console.error('Error loading team data:', err);
-        // Fallback data
-        currentTeam = [
-          {
-            id: 1,
-            name: "Muh. Rizky Ramadhan",
-            role: "Koordinator Desa & Founder Website",
-            photo: "fotokkn/rama.png",
-            instagram: "#"
-          },
-          {
-            id: 2,
-            name: "Sri Wulandari",
-            role: "Wakil Koordinator Desa",
-            photo: "",
-            instagram: "#"
-          },
-          {
-            id: 3,
-            name: "Nurul Yumni",
-            role: "Sekretaris",
-            photo: "",
-            instagram: "#"
-          }
-        ];
-        renderTeamTable();
+        console.log('Backend not available, using fallback data');
+        renderBeautifulOrgChart(getFallbackTeam());
       }
     }
 
-    function renderTeamTable() {
-      const tbody = document.getElementById('teamTableBody');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-      console.log('renderTeamTable called, currentTeam length:', currentTeam ? currentTeam.length : 0);
-      
-      if (!currentTeam || currentTeam.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Belum ada data tim</td></tr>';
+    function getFallbackTeam() {
+      return [
+        { id: 1, name: "Mohamad Zikron", role: "Koordinator Desa", photo: "", parentId: null, position: 1 },
+        { id: 2, name: "Aulia", role: "Sekretaris", photo: "", parentId: 1, position: 1, category: "1" },
+        { id: 3, name: "Novita Risyafana Ndese", role: "Bendahara", photo: "", parentId: 1, position: 2, category: "2" },
+        { id: 4, name: "Feliks Laeka", role: "Humas & Website Sponsored", photo: "", parentId: "group_1", position: 1, category: "1" },
+        { id: 5, name: "Gita Alifya Nusi", role: "Acara", photo: "", parentId: "group_1", position: 3, category: "1" },
+        { id: 6, name: "Arifin", role: "Perlengkapan", photo: "", parentId: "group_2", position: 1, category: "2" },
+        { id: 7, name: "Heldrison Karau", role: "Perlengkapan", photo: "", parentId: "group_2", position: 3, category: "2" },
+        { id: 8, name: "Abd Razaq Lelo", role: "Konsumsi", photo: "", parentId: "group_1", position: 2, category: "1" },
+        { id: 9, name: "Mohammad Fadly", role: "Pdd", photo: "", parentId: "group_2", position: 2, category: "2" }
+      ];
+    }
+
+    // HIERARCHICAL ORG CHART - Grouped by Parent + Left/Right Position
+    // CLEAN ORG CHART - Kelompok invisible (only for grouping), new members centered below
+    function renderBeautifulOrgChart(team) {
+      const container = document.getElementById('orgChart');
+      if (!container) return;
+
+      if (!team || team.length === 0) {
+        container.innerHTML = '<div class="text-center text-gray-500 py-8">Belum ada data tim</div>';
         return;
       }
-      
-      currentTeam.forEach((member, index) => {
-        const row = document.createElement('tr');
-        row.className = 'border-b border-gray-100 hover:bg-gray-50';
-        
-        // Find parent name (support virtual groups from Kategori)
-        let parentName = '<span class="text-gray-400 italic">Root</span>';
-        if (member.parentId) {
-          if (typeof member.parentId === 'string' && member.parentId.startsWith('group_')) {
-            const cat = member.parentId.replace('group_', '');
-            parentName = `<span class="text-blue-600 font-semibold">📁 Kelompok ${cat}</span>`;
-          } else {
-            const parent = currentTeam.find(m => m.id === member.parentId);
-            if (parent) parentName = parent.name;
-          }
-        }
-        
-        const positionBadge = member.position ? `<span class="text-xs bg-gray-200 px-1.5 py-0.5 rounded">${member.position}</span>` : '';
-        const colorDot = member.color ? `<span class="inline-block w-3 h-3 rounded-full mr-1" style="background:${member.color}"></span>` : '';
-        row.innerHTML = `
-          <td class="py-3 px-4">${index + 1}</td>
-          <td class="py-3 px-4 font-semibold">${member.name}</td>
-          <td class="py-3 px-4">${member.role}</td>
-          <td class="py-3 px-4">${parentName} ${positionBadge}</td>
-          <td class="py-3 px-4">
+
+      let html = '<div class="org-tree flex flex-col items-center">';
+
+      // === ROOT ===
+      const root = team.find(m => m.name === "Mohamad Zikron");
+      html += createNodeHTML(root);
+      html += `<div class="org-connector" style="height: 40px;"></div>`;
+
+      // === Aulia + Novita ===
+      const aulia = team.find(m => m.name === "Aulia");
+      const novita = team.find(m => m.name.includes("Novita"));
+
+      html += `<div class="org-children" style="gap: 120px;">`;
+      html += createNodeHTML(aulia);
+      html += createNodeHTML(novita);
+      html += `</div>`;
+
+      // Connector
+      html += `<div class="org-connector" style="height: 30px;"></div>`;
+
+      // === Feliks + Gita (Kelompok 1 group) ===
+      html += `<div class="org-children" style="gap: 45px;">`;
+      html += createNodeHTML(team.find(m => m.name === "Feliks Laeka"));
+      html += createNodeHTML(team.find(m => m.name === "Gita Alifya Nusi"));
+      html += `</div>`;
+
+      // Abd Razak Lelo - centered below the group
+      html += `<div style="display: flex; justify-content: center; margin-top: 6px;">`;
+      html += createNodeHTML(team.find(m => m.name === "Abd Razak Lelo"));
+      html += `</div>`;
+
+      // Connector
+      html += `<div class="org-connector" style="height: 30px;"></div>`;
+
+      // === Arifin + Heldrison (Kelompok 2 group) ===
+      html += `<div class="org-children" style="gap: 45px;">`;
+      html += createNodeHTML(team.find(m => m.name === "Arifin"));
+      html += createNodeHTML(team.find(m => m.name === "Heldrison Karau"));
+      html += `</div>`;
+
+      // Mohammad Fadly - centered below the group
+      html += `<div style="display: flex; justify-content: center; margin-top: 6px;">`;
+      html += createNodeHTML(team.find(m => m.name === "Mohammad Fadly"));
+      html += `</div>`;
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    function createNodeHTML(member) {
+      if (!member) return '';
+      return `
+        <div class="org-node" style="background: ${member.color || '#10b981'}">
+          <div class="w-12 h-12 mx-auto mb-2 rounded-full overflow-hidden border-2 border-white">
             ${member.photo ? 
-              `<img src="${member.photo}" class="w-10 h-10 rounded-full object-cover border">` : 
-              '<span class="text-gray-400 italic">No photo</span>'
+              `<img src="${member.photo}" class="w-full h-full object-cover">` : 
+              `<div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-xl text-white"></i></div>`
             }
-          </td>
-          <td class="py-3 px-4 text-center">
-            <button onclick="editTeamMember(${index})" class="text-blue-600 hover:text-blue-800 mx-1"><i class="fas fa-edit"></i></button>
-            <button onclick="deleteTeamMember(${index})" class="text-red-600 hover:text-red-800 mx-1"><i class="fas fa-trash"></i></button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
+          </div>
+          <div class="text-xs font-semibold opacity-90">${member.role}</div>
+          <div class="font-bold text-sm">${member.name}</div>
+        </div>
+      `;
     }
 
-    function createNewGroup() {
-      const groupName = prompt('Nama Kelompok Baru (contoh: Kelompok Acara & Humas):');
-      if (!groupName) return;
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPopulationData();
+      loadAPBDesData();
+      loadOrgChart();
+    });
 
-      // Pilih atasan untuk kelompok ini
-      let parentOptions = 'Pilih Atasan untuk Kelompok ini:\n0. Root (Tidak ada atasan)\n';
-      currentTeam.forEach((m, i) => {
-        parentOptions += `${i + 1}. ${m.name} (${m.role})\n`;
-      });
-      
-      const parentChoice = prompt(parentOptions, '0');
-      let parentId = null;
-      if (parentChoice && parentChoice !== '0') {
-        const parentIndex = parseInt(parentChoice) - 1;
-        if (currentTeam[parentIndex]) {
-          parentId = currentTeam[parentIndex].id;
-        }
+    // Scroll to Top Button
+    const scrollBtn = document.createElement('button');
+    scrollBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    scrollBtn.className = 'fixed bottom-6 right-6 bg-emerald-600 hover:bg-emerald-700 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center z-[9999] transition-all duration-300 opacity-0 pointer-events-none';
+    scrollBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.body.appendChild(scrollBtn);
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollBtn.style.opacity = '1';
+        scrollBtn.style.pointerEvents = 'all';
+      } else {
+        scrollBtn.style.opacity = '0';
+        scrollBtn.style.pointerEvents = 'none';
       }
+    });
 
-      currentTeam.push({
-        id: Date.now(),
-        name: groupName,
-        role: 'Kelompok',
-        photo: '',
-        instagram: '#',
-        parentId: parentId,
-        color: '#3b82f6',
-        position: 2
-      });
-
-      renderTeamTable();
-      alert('✅ Kelompok berhasil dibuat! Sekarang Anda bisa menjadikan anggota lain sebagai anak dari kelompok ini.');
-    }
-
-    function addNewMember() {
-      const name = prompt('Nama anggota baru:');
-      if (!name) return;
-      
-      const role = prompt('Jabatan:');
-      if (!role) return;
-      
-      // Show parent options - STRUKTUR BERAKAR (NO LIMITATION)
-      let parentOptions = '=== STRUKTUR ORGANISASI BERAKAR ===\n\n';
-      parentOptions += 'Pilih Atasan (0 = Root / Posisi Tertinggi):\n\n';
-      parentOptions += '0. ROOT (Tidak ada atasan - Posisi Tertinggi)\n';
-      currentTeam.forEach((m, i) => {
-        parentOptions += `${i + 1}. ${m.name} - ${m.role}\n`;
-      });
-      parentOptions += '\nContoh: Ketik 0 untuk Root, atau 1 untuk menjadikan anggota pertama sebagai atasan.\n';
-      
-      const parentChoice = prompt(parentOptions, '0');
-      let parentId = null;
-      
-      if (parentChoice && parentChoice !== '0') {
-        const parentIndex = parseInt(parentChoice) - 1;
-        if (currentTeam[parentIndex]) {
-          parentId = currentTeam[parentIndex].id;
-        }
-      }
-      
-      const photo = prompt('URL Foto (kosongkan jika tidak ada):') || '';
-      const instagram = prompt('Link Instagram (opsional):') || '#';
-      const color = prompt('Warna kotak (contoh: #10b981 atau kosongkan):', '#10b981') || '#10b981';
-      
-      // Posisi visual (1 = Kiri, 2 = Tengah, 3 = Kanan)
-      const position = parseInt(prompt('Posisi visual (1 = Kiri, 2 = Tengah, 3 = Kanan):', '2')) || 2;
-      
-      // Kategori / Kelompok (opsional, untuk grouping visual, bukan hierarki)
-      const category = prompt('Kategori / Kelompok (opsional, contoh: Kelompok 1 - Acara & Humas):', '') || '';
-      
-      currentTeam.push({
-        id: Date.now(),
-        name: name,
-        role: role,
-        photo: photo,
-        instagram: instagram,
-        parentId: parentId,
-        color: color,
-        position: position,
-        category: category
-      });
-      
-      renderTeamTable();
-      alert('✅ Anggota berhasil ditambahkan!\n\nKlik tombol "Simpan Perubahan" di atas untuk menyimpan ke server.');
-    }
-
-    function editTeamMember(index) {
-      showMemberModal(index);
-    }
-
-    function deleteTeamMember(index) {
-      if (!confirm(`Yakin ingin menghapus ${currentTeam[index].name}?`)) return;
-      
-      currentTeam.splice(index, 1);
-      renderTeamTable();
-    }
-
-    async function saveTeamData() {
-      try {
-        const res = await fetch(`${API_URL}/api/team`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
-          body: JSON.stringify(currentTeam)
-        });
-        
-        const result = await res.json();
-        
-        if (result.success) {
-          alert('✅ Data tim Web Designer berhasil disimpan dan tersinkron ke GitHub!');
-          await loadTeamData();
-        } else {
-          alert('❌ Gagal: ' + (result.message || 'Unknown error'));
-        }
-      } catch (err) {
-        alert('❌ Error: ' + err.message);
-      }
-    }
-
-    function logout() {
-      if (confirm('Yakin ingin logout?')) {
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      }
-    }
-
-    checkAuth();
-    
-    // Auto-refresh visitor stats only (safe, doesn't interfere with editing)
-    setInterval(() => {
-      loadVisitorStats();
-    }, 30000);
-    // ============================================
-    // MODAL FORM FOR ADD/EDIT MEMBER (Popup Overlay)
-    // ============================================
-    let currentEditIndex = null;
-
-    function showMemberModal(editIndex = null) {
-      currentEditIndex = editIndex;
-      const member = editIndex !== null ? currentTeam[editIndex] : null;
-
+    // Pengaduan Warga dihapus total untuk fix error
+    /* function showPengaduanModal() {
       const modal = document.createElement('div');
       modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999]';
       modal.innerHTML = `
-        <div onclick="event.target.remove()" class="absolute inset-0"></div>
-        <div onclick="event.stopImmediatePropagation()" class="bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-4 relative max-h-[90vh] overflow-y-auto">
+        <div class="absolute inset-0" style="background: rgba(0,0,0,0.5);"></div>
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 relative">
           <div class="p-6">
             <div class="flex justify-between items-center mb-6">
-              <h3 class="text-2xl font-bold text-purple-800">${member ? 'Edit Anggota / Kelompok' : 'Tambah Anggota / Kelompok Baru'}</h3>
+              <h3 class="text-2xl font-bold text-emerald-800">Form Pengaduan Warga</h3>
               <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600">
                 <i class="fas fa-times text-2xl"></i>
               </button>
             </div>
-
-            <form id="memberForm" onsubmit="saveMemberForm(event)">
+            
+            <form id="pengaduanForm" onsubmit="submitPengaduan(event)">
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Lengkap</label>
-                  <input type="text" id="memberName" value="${member ? member.name : ''}" required class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+                  <input type="text" id="pengaduanNama" required class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-emerald-500">
                 </div>
-
+                
                 <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-1">Jabatan / Role</label>
-                  <input type="text" id="memberRole" value="${member ? member.role : ''}" required placeholder="Contoh: Sekretaris, Kelompok, Humas..." class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+                  <label class="block text-sm font-semibold text-gray-700 mb-1">Nomor WhatsApp</label>
+                  <input type="tel" id="pengaduanWA" required placeholder="081234567890" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-emerald-500">
                 </div>
-
+                
                 <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-1">Atasan (Parent)</label>
-                  <select id="memberParent" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-                    <option value="">Root (Tidak ada atasan)</option>
-                    
-                    <!-- Kelompok otomatis dari Kategori -->
-                    ${(() => {
-                      const categories = [...new Set(currentTeam.filter(m => m.category).map(m => m.category))];
-                      return categories.map(cat => {
-                        const groupName = `Kelompok ${cat}`;
-                        return `<option value="group_${cat}" ${member && member.parentId === `group_${cat}` ? 'selected' : ''}>📁 ${groupName}</option>`;
-                      }).join('');
-                    })()}
-                    
-                    <option disabled>────────────</option>
-                    
-                    <!-- Anggota biasa -->
-                    ${currentTeam
-                      .filter(m => !m.category || m.role !== 'Kelompok')
-                      .map(m => `<option value="${m.id}" ${member && member.parentId === m.id ? 'selected' : ''}>${m.name} (${m.role})</option>`)
-                      .join('')}
+                  <label class="block text-sm font-semibold text-gray-700 mb-1">Jenis Pengaduan</label>
+                  <select id="pengaduanJenis" required class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-emerald-500">
+                    <option value="">Pilih Jenis Pengaduan</option>
+                    <option value="Infrastruktur">Infrastruktur (Jalan, Jembatan, dll)</option>
+                    <option value="Keamanan">Keamanan & Ketertiban</option>
+                    <option value="Lingkungan">Lingkungan & Kebersihan</option>
+                    <option value="Pelayanan">Pelayanan Publik</option>
+                    <option value="Lainnya">Lainnya</option>
                   </select>
-                  <p class="text-xs text-gray-500 mt-1">Isi "Kategori / Kelompok" dengan angka (1, 2, 3...) agar otomatis jadi Kelompok</p>
                 </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Posisi Visual</label>
-                    <select id="memberPosition" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-                      <option value="1" ${member && member.position === 1 ? 'selected' : ''}>1 - Kiri</option>
-                      <option value="2" ${!member || member.position === 2 ? 'selected' : ''}>2 - Tengah</option>
-                      <option value="3" ${member && member.position === 3 ? 'selected' : ''}>3 - Kanan</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Kategori / Kelompok</label>
-                    <input type="text" id="memberCategory" value="${member && member.category ? member.category : ''}" placeholder="Opsional" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-                  </div>
-                </div>
-
+                
                 <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-1">URL Foto (opsional)</label>
-                  <div class="flex gap-3 items-start">
-                    <div>
-                      <input type="file" id="memberPhotoFile" accept="image/*" class="hidden" onchange="previewPhoto(this)">
-                      <button type="button" onclick="document.getElementById('memberPhotoFile').click()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl text-sm font-semibold flex items-center gap-2">
-                        <i class="fas fa-upload"></i> Pilih File
-                      </button>
-                      <div id="photoPreview" class="mt-2 w-20 h-20 border rounded-2xl overflow-hidden ${member && member.photo ? '' : 'hidden'}">
-                        <img src="${member && member.photo ? member.photo : ''}" class="w-full h-full object-cover" id="previewImg">
-                      </div>
-                    </div>
-                    <div class="flex-1">
-                      <input type="text" id="memberPhotoUrl" value="${member && member.photo ? member.photo : ''}" placeholder="Atau paste URL foto..." class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 text-sm">
-                      <p class="text-xs text-gray-500 mt-1">File akan otomatis diupload ke backend</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-1">Link Instagram (opsional)</label>
-                  <input type="text" id="memberInstagram" value="${member && member.instagram ? member.instagram : ''}" placeholder="https://instagram.com/..." class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
-                </div>
-
-                <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-1">Warna Kotak (opsional)</label>
-                  <input type="color" id="memberColor" value="${member && member.color ? member.color : '#10b981'}" class="w-full h-12 border border-gray-300 rounded-2xl cursor-pointer">
+                  <label class="block text-sm font-semibold text-gray-700 mb-1">Isi Pengaduan</label>
+                  <textarea id="pengaduanIsi" required rows="4" placeholder="Jelaskan pengaduan Anda secara singkat..." class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-emerald-500 resize-y"></textarea>
                 </div>
               </div>
-
-              <div class="flex gap-3 mt-6">
-                <button type="button" onclick="this.closest('.fixed').remove()" class="flex-1 py-3 border border-gray-300 text-gray-700 rounded-2xl font-semibold hover:bg-gray-50">Batal</button>
-                <button type="submit" class="flex-1 py-3 bg-purple-600 text-white rounded-2xl font-semibold hover:bg-purple-700">${member ? 'Simpan Perubahan' : 'Tambah Sekarang'}</button>
-              </div>
+              
+              <button type="submit" class="mt-6 w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2">
+                <i class="fab fa-whatsapp"></i>
+                <span>Kirim via WhatsApp</span>
+              </button>
             </form>
           </div>
         </div>
@@ -1186,67 +875,37 @@ layout: null
       document.body.appendChild(modal);
     }
 
-    function previewPhoto(input) {
-      const preview = document.getElementById('photoPreview');
-      const previewImg = document.getElementById('previewImg');
-      const urlInput = document.getElementById('memberPhotoUrl');
-      
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          previewImg.src = e.target.result;
-          preview.classList.remove('hidden');
-          urlInput.value = e.target.result; // Store base64 temporarily
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
-
-    function saveMemberForm(e) {
+    function submitPengaduan(e) {
       e.preventDefault();
+      
+      const nama = document.getElementById('pengaduanNama').value;
+      const wa = document.getElementById('pengaduanWA').value;
+      const jenis = document.getElementById('pengaduanJenis').value;
+      const isi = document.getElementById('pengaduanIsi').value;
+      
+      const message = `PENGADUAN WARGA DESA KALEMAGO
 
-      const photoUrl = document.getElementById('memberPhotoUrl').value || '';
-      const photoFile = document.getElementById('memberPhotoFile').files[0];
+Nama: ${nama}
+No. WA: ${wa}
+Jenis: ${jenis}
 
-      let finalPhoto = photoUrl;
+Isi Pengaduan:
+${isi}
 
-      // If file selected, convert to base64 (temporary solution until backend upload is ready)
-      if (photoFile) {
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-          finalPhoto = ev.target.result;
-          saveMemberData(finalPhoto);
-        };
-        reader.readAsDataURL(photoFile);
-        return; // Wait for file read
-      }
+Mohon ditindaklanjuti. Terima kasih.`;
 
-      saveMemberData(finalPhoto);
+      const whatsappUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+      
+      // Close modal
+      e.target.closest('.fixed').remove();
+      
+      // Show success message
+      setTimeout(() => {
+        alert('Terima kasih! Pengaduan Anda telah dikirim ke WhatsApp admin.');
+      }, 500);
     }
-
-    function saveMemberData(finalPhoto) {
-      const newData = {
-        id: currentEditIndex !== null ? currentTeam[currentEditIndex].id : Date.now(),
-        name: document.getElementById('memberName').value,
-        role: document.getElementById('memberRole').value,
-        parentId: document.getElementById('memberParent').value ? document.getElementById('memberParent').value : null,
-        position: parseInt(document.getElementById('memberPosition').value),
-        category: document.getElementById('memberCategory').value || '',
-        photo: finalPhoto || '',
-        instagram: document.getElementById('memberInstagram').value || '#',
-        color: document.getElementById('memberColor').value || '#10b981'
-      };
-
-      if (currentEditIndex !== null) {
-        currentTeam[currentEditIndex] = { ...currentTeam[currentEditIndex], ...newData };
-      } else {
-        currentTeam.push(newData);
-      }
-
-      renderTeamTable();
-      document.querySelector('.fixed').remove();
-      alert('✅ Data berhasil disimpan! (Foto disimpan sebagai base64 untuk sementara)\n\nUntuk production, backend upload perlu ditambahkan.');
-    }
+    */
   </script>
 </body>
 </html>
