@@ -797,19 +797,6 @@
               <!-- Vertical Connecting Line -->
               ${hasChildren ? `
                 <div class="w-0.5 h-8 bg-emerald-400 my-1"></div>
-              ` : ''}
-              
-              <!-- Children -->
-              ${buildTree(member.id, level + 1)}
-            </div>
-          `;
-        });
-
-        html += `</div></div>`;
-        return html;
-      }
-
-      container.innerHTML = buildTree(null);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
