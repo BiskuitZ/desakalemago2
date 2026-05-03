@@ -835,16 +835,15 @@ Mohon ditindaklanjuti. Terima kasih.`;
             name: `Kelompok ${groupNum}`,
             role: 'Kelompok Kerja',
             photo: '',
-            parentId: null,
+            parentId: null,           // Top-level group
             color: '#3b82f6',
             isVirtualGroup: true
           });
         }
       });
 
-      // Find root
-      let root = team.find(m => !m.parentId || m.parentId === null);
-      if (!root) root = team[0];
+      // Get ALL top-level items (real root + virtual groups)
+      const topLevelItems = team.filter(m => !m.parentId || m.parentId === null);
 
       function getChildren(parentId) {
         return team.filter(m => String(m.parentId) === String(parentId));
@@ -948,6 +947,12 @@ Mohon ditindaklanjuti. Terima kasih.`;
         return html;
       }
 
+      // Build HTML for all top-level items (real root + all virtual groups)
+      let treesHTML = '';
+      topLevelItems.forEach(item => {
+        treesHTML += `<div class="mb-8">${buildHTML(item)}</div>`;
+      });
+
       container.innerHTML = `
         <div class="text-center mb-8">
           <div class="inline-flex items-center gap-3 bg-white shadow px-5 py-2 rounded-2xl border border-emerald-100">
@@ -961,8 +966,8 @@ Mohon ditindaklanjuti. Terima kasih.`;
           </div>
         </div>
         
-        <div class="flex justify-center overflow-x-auto pb-4">
-          ${buildHTML(root)}
+        <div class="flex flex-wrap justify-center gap-8 overflow-x-auto pb-4">
+          ${treesHTML}
         </div>
         
         <div class="text-center mt-6 text-xs text-gray-500">
