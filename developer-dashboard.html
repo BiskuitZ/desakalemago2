@@ -722,78 +722,124 @@
     }
 
     // HIERARCHICAL ORG CHART - Grouped by Parent + Left/Right Position
-    // CLEAN ORG CHART - Kelompok invisible (only logical grouping)
-    // Feliks + Gita = Kelompok 1 (invisible), Abd Razak Lelo centered below
-    // Arifin + Heldrison = Kelompok 2 (invisible), Mohammad Fadly centered below
+    // EXACT MATCH to the latest screenshot (with visible Kelompok boxes)
     function renderBeautifulOrgChart(team) {
       const container = document.getElementById('orgChart');
       if (!container) return;
 
-      if (!team || team.length === 0) {
-        container.innerHTML = '<div class="text-center text-gray-500 py-8">Belum ada data tim</div>';
-        return;
-      }
+      let html = `
+        <div class="org-tree flex flex-col items-center" style="font-family: Inter, sans-serif; padding: 20px 0;">
 
-      let html = '<div class="org-tree flex flex-col items-center" style="font-family: Inter, sans-serif; padding: 20px 0;">';
-
-      // ROOT
-      const root = team.find(m => m.name === "Mohamad Zikron");
-      html += createNodeHTML(root);
-      html += `<div class="org-connector" style="height:30px;"></div>`;
-
-      // LEVEL 2: Aulia + Novita
-      const aulia = team.find(m => m.name === "Aulia");
-      const novita = team.find(m => m.name.includes("Novita"));
-
-      html += `<div class="flex gap-14">`;
-      html += createNodeHTML(aulia);
-      html += createNodeHTML(novita);
-      html += `</div>`;
-
-      html += `<div class="org-connector" style="height:22px;"></div>`;
-
-      // LEVEL 3: Feliks + Gita (Kelompok 1 - invisible group)
-      html += `<div class="flex gap-10">`;
-      html += createNodeHTML(team.find(m => m.name === "Feliks Laeka"));
-      html += createNodeHTML(team.find(m => m.name === "Gita Alifya Nusi"));
-      html += `</div>`;
-
-      // Abd Razak Lelo - centered below the group
-      html += `<div style="display: flex; justify-content: center; margin-top: 8px;">`;
-      html += createNodeHTML(team.find(m => m.name === "Abd Razak Lelo"));
-      html += `</div>`;
-
-      html += `<div class="org-connector" style="height:22px;"></div>`;
-
-      // LEVEL 3: Arifin + Heldrison (Kelompok 2 - invisible group)
-      html += `<div class="flex gap-10">`;
-      html += createNodeHTML(team.find(m => m.name === "Arifin"));
-      html += createNodeHTML(team.find(m => m.name === "Heldrison Karau"));
-      html += `</div>`;
-
-      // Mohammad Fadly - centered below the group
-      html += `<div style="display: flex; justify-content: center; margin-top: 8px;">`;
-      html += createNodeHTML(team.find(m => m.name === "Mohammad Fadly"));
-      html += `</div>`;
-
-      html += `</div>`;
-      container.innerHTML = html;
-    }
-
-    function createNodeHTML(member) {
-      if (!member || !member.name) return '';
-      return `
-        <div class="org-node" style="background: ${member.color || '#10b981'}">
-          <div class="w-11 h-11 mx-auto mb-1.5 rounded-full overflow-hidden border-2 border-white">
-            ${member.photo ? 
-              `<img src="${member.photo}" class="w-full h-full object-cover">` : 
-              `<div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-lg text-white"></i></div>`
-            }
+          <!-- ROOT: Mohamad Zikron -->
+          <div class="org-node" style="background:#10b981; min-width:230px; padding:14px 20px;">
+            <div class="w-12 h-12 mx-auto mb-2 rounded-full overflow-hidden border-2 border-white">
+              <div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-xl text-white"></i></div>
+            </div>
+            <div class="text-xs font-semibold opacity-90">Koordinator Desa</div>
+            <div class="font-bold text-base">Mohamad Zikron</div>
           </div>
-          <div class="text-xs font-semibold opacity-90">${member.role}</div>
-          <div class="font-bold text-sm">${member.name}</div>
+
+          <div class="org-connector" style="height:32px;"></div>
+
+          <!-- LEVEL 2: Aulia + Novita -->
+          <div class="flex gap-14">
+            <div class="org-node" style="background:#10b981; min-width:200px; padding:12px 16px;">
+              <div class="w-11 h-11 mx-auto mb-1.5 rounded-full overflow-hidden border-2 border-white">
+                <div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-lg text-white"></i></div>
+              </div>
+              <div class="text-xs font-semibold opacity-90">Sekertaris</div>
+              <div class="font-bold text-sm">Aulia</div>
+            </div>
+
+            <div class="org-node" style="background:#10b981; min-width:200px; padding:12px 16px;">
+              <div class="w-11 h-11 mx-auto mb-1.5 rounded-full overflow-hidden border-2 border-white">
+                <div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-lg text-white"></i></div>
+              </div>
+              <div class="text-xs font-semibold opacity-90">Bendahara</div>
+              <div class="font-bold text-sm">Novita Risyafana Ndese</div>
+            </div>
+          </div>
+
+          <div class="org-connector" style="height:22px;"></div>
+
+          <!-- LEVEL 3: Kelompok 1 + Kelompok 2 (small boxes) -->
+          <div class="flex gap-14">
+            <div class="px-5 py-1.5 rounded-2xl text-sm font-bold text-white text-center" style="background:#059669; box-shadow:0 4px 6px -1px rgb(5 150 105 / 0.3);">
+              Kelompok 1<br><span class="text-xs opacity-80">Atasan Baru</span>
+            </div>
+            <div class="px-5 py-1.5 rounded-2xl text-sm font-bold text-white text-center" style="background:#059669; box-shadow:0 4px 6px -1px rgb(5 150 105 / 0.3);">
+              Kelompok 2<br><span class="text-xs opacity-80">Atasan Baru</span>
+            </div>
+          </div>
+
+          <div class="org-connector" style="height:18px;"></div>
+
+          <!-- LEVEL 4: Under Kelompok 1 -->
+          <div class="flex gap-8">
+            <div class="org-node" style="background:#10b981; min-width:170px; padding:8px 10px;">
+              <div class="w-8 h-8 mx-auto mb-1 rounded-full overflow-hidden border-2 border-white">
+                <div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-xs text-white"></i></div>
+              </div>
+              <div class="text-[9px] font-semibold opacity-90">Humas & Website Sponsored</div>
+              <div class="font-bold text-xs">Feliks Laeka</div>
+            </div>
+
+            <div class="org-node" style="background:#10b981; min-width:170px; padding:8px 10px;">
+              <div class="w-8 h-8 mx-auto mb-1 rounded-full overflow-hidden border-2 border-white">
+                <div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-xs text-white"></i></div>
+              </div>
+              <div class="text-[9px] font-semibold opacity-90">Acara</div>
+              <div class="font-bold text-xs">Gita Alifya Nusi</div>
+            </div>
+          </div>
+
+          <!-- Abd Razak Lelo - inside/under Kelompok 1 -->
+          <div style="display: flex; justify-content: center; margin-top: 6px;">
+            <div class="org-node" style="background:#10b981; min-width:180px; padding:8px 10px;">
+              <div class="w-8 h-8 mx-auto mb-1 rounded-full overflow-hidden border-2 border-white">
+                <div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-xs text-white"></i></div>
+              </div>
+              <div class="text-[9px] font-semibold opacity-90">Konsumsi</div>
+              <div class="font-bold text-xs">Abd Razak Lelo</div>
+            </div>
+          </div>
+
+          <div class="org-connector" style="height:16px;"></div>
+
+          <!-- LEVEL 4: Under Kelompok 2 -->
+          <div class="flex gap-8">
+            <div class="org-node" style="background:#10b981; min-width:170px; padding:8px 10px;">
+              <div class="w-8 h-8 mx-auto mb-1 rounded-full overflow-hidden border-2 border-white">
+                <div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-xs text-white"></i></div>
+              </div>
+              <div class="text-[9px] font-semibold opacity-90">Perlengkapan</div>
+              <div class="font-bold text-xs">Arifin</div>
+            </div>
+
+            <div class="org-node" style="background:#10b981; min-width:170px; padding:8px 10px;">
+              <div class="w-8 h-8 mx-auto mb-1 rounded-full overflow-hidden border-2 border-white">
+                <div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-xs text-white"></i></div>
+              </div>
+              <div class="text-[9px] font-semibold opacity-90">Perlengkapan</div>
+              <div class="font-bold text-xs">Heldrison Karau</div>
+            </div>
+          </div>
+
+          <!-- Mohammad Fadly - inside/under Kelompok 2 -->
+          <div style="display: flex; justify-content: center; margin-top: 6px;">
+            <div class="org-node" style="background:#10b981; min-width:180px; padding:8px 10px;">
+              <div class="w-8 h-8 mx-auto mb-1 rounded-full overflow-hidden border-2 border-white">
+                <div class="w-full h-full bg-white/20 flex items-center justify-center"><i class="fas fa-user text-xs text-white"></i></div>
+              </div>
+              <div class="text-[9px] font-semibold opacity-90">PDD</div>
+              <div class="font-bold text-xs">Mohammad Fadly</div>
+            </div>
+          </div>
+
         </div>
       `;
+
+      container.innerHTML = html;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
