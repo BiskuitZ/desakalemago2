@@ -1,4 +1,4 @@
---
+---
 layout: null
 ---
 <!DOCTYPE html>
@@ -1104,10 +1104,17 @@ layout: null
                   <label class="block text-sm font-semibold text-gray-700 mb-1">Atasan (Parent)</label>
                   <select id="memberParent" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
                     <option value="">Root (Tidak ada atasan)</option>
-                    ${currentTeam.map((m, i) => 
-                      `<option value="${m.id}" ${member && member.parentId === m.id ? 'selected' : ''}>${m.name} (${m.role})</option>`
-                    ).join('')}
+                    ${currentTeam
+                      .filter(m => m.role === 'Kelompok')
+                      .map(m => `<option value="${m.id}" ${member && member.parentId === m.id ? 'selected' : ''}>📁 ${m.name}</option>`)
+                      .join('')}
+                    <option disabled>────────────</option>
+                    ${currentTeam
+                      .filter(m => m.role !== 'Kelompok')
+                      .map(m => `<option value="${m.id}" ${member && member.parentId === m.id ? 'selected' : ''}>${m.name} (${m.role})</option>`)
+                      .join('')}
                   </select>
+                  <p class="text-xs text-gray-500 mt-1">Pilih 📁 Kelompok jika ingin anggota ini masuk ke dalam kelompok</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
