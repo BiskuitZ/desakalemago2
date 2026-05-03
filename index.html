@@ -783,8 +783,9 @@ Mohon ditindaklanjuti. Terima kasih.`;
       html += createNode(root);
       html += '<div class="w-0.5 h-8 bg-emerald-600 mx-auto"></div>';
 
-      // Level 2 (Aulia + Novita)
-      const level2 = team.filter(m => m.parentId === root.id);
+      // Level 2 (Aulia + Novita) - compare as string to handle type mismatch
+      const rootIdStr = String(root.id);
+      const level2 = team.filter(m => String(m.parentId) === rootIdStr);
       html += '<div class="flex gap-16">';
       level2.forEach(m => html += createNode(m));
       html += '</div>';
@@ -793,7 +794,8 @@ Mohon ditindaklanjuti. Terima kasih.`;
 
       // Level 3 (children of Aulia and Novita)
       level2.forEach(parent => {
-        const children = team.filter(m => m.parentId === parent.id);
+        const parentIdStr = String(parent.id);
+        const children = team.filter(m => String(m.parentId) === parentIdStr);
         if (children.length > 0) {
           html += '<div class="flex gap-4">';
           children.forEach(m => html += createNode(m));
