@@ -1069,12 +1069,6 @@ layout: null
       // Use the beautiful modal instead of prompt
       showMemberModal(index);
     }
-      
-      const newRole = prompt('Jabatan baru:', member.role);
-      if (!newRole) return;
-      
-      // Parent selection
-      let parentOptions = 'Pilih Atasan (kosongkan jika Root):\n0. Root (Tidak ada atasan)\n';
       currentTeam.forEach((m, i) => {
         if (i !== index) { // Can't be own parent
           parentOptions += `${i + 1}. ${m.name} (${m.role})\n`;
