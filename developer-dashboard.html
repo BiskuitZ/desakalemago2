@@ -1066,15 +1066,9 @@ layout: null
     }
 
     function editTeamMember(index) {
-      const member = currentTeam[index];
-      const isGroup = member.role === 'Kelompok';
-      
-      if (isGroup) {
-        alert('📌 Ini adalah KELOMPOK. Anggota lain bisa dijadikan "anak" dari kelompok ini dengan memilih Atasan = ' + member.name + '\n\nContoh: Gita, Feliks, dan Abd Razaq bisa memilih Atasan = ' + member.name);
-      }
-      
-      const newName = prompt('Nama baru:', member.name);
-      if (!newName) return;
+      // Use the beautiful modal instead of prompt
+      showMemberModal(index);
+    }
       
       const newRole = prompt('Jabatan baru:', member.role);
       if (!newRole) return;
