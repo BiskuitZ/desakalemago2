@@ -1,4 +1,4 @@
----
+--
 layout: null
 ---
 <!DOCTYPE html>
@@ -1127,7 +1127,21 @@ layout: null
 
                 <div>
                   <label class="block text-sm font-semibold text-gray-700 mb-1">URL Foto (opsional)</label>
-                  <input type="text" id="memberPhoto" value="${member && member.photo ? member.photo : ''}" placeholder="https://..." class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+                  <div class="flex gap-3 items-start">
+                    <div>
+                      <input type="file" id="memberPhotoFile" accept="image/*" class="hidden" onchange="previewPhoto(this)">
+                      <button type="button" onclick="document.getElementById('memberPhotoFile').click()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl text-sm font-semibold flex items-center gap-2">
+                        <i class="fas fa-upload"></i> Pilih File
+                      </button>
+                      <div id="photoPreview" class="mt-2 w-20 h-20 border rounded-2xl overflow-hidden ${member && member.photo ? '' : 'hidden'}">
+                        <img src="${member && member.photo ? member.photo : ''}" class="w-full h-full object-cover" id="previewImg">
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <input type="text" id="memberPhotoUrl" value="${member && member.photo ? member.photo : ''}" placeholder="Atau paste URL foto..." class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 text-sm">
+                      <p class="text-xs text-gray-500 mt-1">File akan otomatis diupload ke backend</p>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -1152,9 +1166,45 @@ layout: null
       document.body.appendChild(modal);
     }
 
+    function previewPhoto(input) {
+      const preview = document.getElementById('photoPreview');
+      const previewImg = document.getElementById('previewImg');
+      const urlInput = document.getElementById('memberPhotoUrl');
+      
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImg.src = e.target.result;
+          preview.classList.remove('hidden');
+          urlInput.value = e.target.result; // Store base64 temporarily
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
     function saveMemberForm(e) {
       e.preventDefault();
 
+      const photoUrl = document.getElementById('memberPhotoUrl').value || '';
+      const photoFile = document.getElementById('memberPhotoFile').files[0];
+
+      let finalPhoto = photoUrl;
+
+      // If file selected, convert to base64 (temporary solution until backend upload is ready)
+      if (photoFile) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          finalPhoto = ev.target.result;
+          saveMemberData(finalPhoto);
+        };
+        reader.readAsDataURL(photoFile);
+        return; // Wait for file read
+      }
+
+      saveMemberData(finalPhoto);
+    }
+
+    function saveMemberData(finalPhoto) {
       const newData = {
         id: currentEditIndex !== null ? currentTeam[currentEditIndex].id : Date.now(),
         name: document.getElementById('memberName').value,
@@ -1162,7 +1212,7 @@ layout: null
         parentId: document.getElementById('memberParent').value ? parseInt(document.getElementById('memberParent').value) : null,
         position: parseInt(document.getElementById('memberPosition').value),
         category: document.getElementById('memberCategory').value || '',
-        photo: document.getElementById('memberPhoto').value || '',
+        photo: finalPhoto || '',
         instagram: document.getElementById('memberInstagram').value || '#',
         color: document.getElementById('memberColor').value || '#10b981'
       };
@@ -1174,8 +1224,8 @@ layout: null
       }
 
       renderTeamTable();
-      e.target.closest('.fixed').remove();
-      alert('✅ Data berhasil disimpan! Jangan lupa klik "Simpan Perubahan" untuk menyimpan ke server.');
+      document.querySelector('.fixed').remove();
+      alert('✅ Data berhasil disimpan! (Foto disimpan sebagai base64 untuk sementara)\n\nUntuk production, backend upload perlu ditambahkan.');
     }
   </script>
 </body>
