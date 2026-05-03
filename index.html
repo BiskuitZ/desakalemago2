@@ -819,34 +819,25 @@ Mohon ditindaklanjuti. Terima kasih.`;
         return;
       }
 
-      // Normalize all ids and parentIds to string (important for matching)
+      // Normalize all ids and parentIds to string
       team.forEach(m => {
         if (m.id !== undefined && m.id !== null) m.id = String(m.id);
         if (m.parentId !== undefined && m.parentId !== null) m.parentId = String(m.parentId);
       });
 
-      // Create virtual group nodes if they don't exist yet
-      const groupParents = new Set();
+      // Build map: groupId → real parentId
+      const groupToRealParent = {};
       team.forEach(m => {
-        if (typeof m.parentId === 'string' && m.parentId.startsWith('group_')) {
-          groupParents.add(m.parentId);
+        if (m.isVirtualGroup && String(m.id).startsWith('group_')) {
+          groupToRealParent[m.id] = m.parentId;
         }
       });
 
-      const mainRoot = team.find(m => !m.parentId || m.parentId === 'null');
-
-      groupParents.forEach(groupId => {
-        if (!team.find(m => m.id === groupId)) {
-          const groupNum = groupId.replace('group_', '');
-          team.push({
-            id: groupId,
-            name: `Kelompok ${groupNum}`,
-            role: 'Kelompok Kerja',
-            photo: '',
-            parentId: mainRoot ? mainRoot.id : null,
-            color: '#3b82f6',
-            isVirtualGroup: true
-          });
+      // Resolve group parentId to real parent (so no group box appears in public chart)
+      team.forEach(m => {
+        if (m.parentId && String(m.parentId).startsWith('group_') && groupToRealParent[m.parentId]) {
+          m._originalParentId = m.parentId;
+          m.parentId = groupToRealParent[m.parentId];
         }
       });
 
@@ -856,14 +847,14 @@ Mohon ditindaklanjuti. Terima kasih.`;
 
       function getChildren(parentId) {
         if (!parentId) return [];
-        return team.filter(m => m.parentId === String(parentId));
+        return team.filter(m => m.parentId === String(parentId) && !m.isVirtualGroup);
       }
 
-      function findParentName(parentId) {
-        if (!parentId) return 'Root / Koordinator';
-        if (typeof parentId === 'string' && parentId.startsWith('group_')) {
-          return `📁 Kelompok ${parentId.replace('group_', '')}`;
+      function findParentName(parentId, originalParentId) {
+        if (originalParentId && String(originalParentId).startsWith('group_')) {
+          return `📁 Kelompok ${originalParentId.replace('group_', '')}`;
         }
+        if (!parentId) return 'Root / Koordinator';
         const parent = team.find(m => m.id === String(parentId));
         return parent ? parent.name : 'Tidak diketahui';
       }
@@ -889,7 +880,7 @@ Mohon ditindaklanjuti. Terima kasih.`;
 
         // Parent info
         document.getElementById('modalParent').innerHTML = `
-          <span class="font-semibold">Atasan:</span> ${findParentName(member.parentId)}
+          <span class="font-semibold">Atasan:</span> ${findParentName(member.parentId, member._originalParentId)}
         `;
 
         // Instagram
