@@ -88,8 +88,8 @@ layout: null
     <!-- MAIN CONTENT -->
     <div class="flex-1 min-w-0">
       
-      <!-- STATUS WEBSITE SECTION (Default shown) -->
-      <div id="status-section" class="section">
+      <!-- STATUS WEBSITE SECTION -->
+      <div id="status-section" class="section hidden">
         <div class="mb-8">
           <h2 class="text-3xl font-bold text-purple-800 mb-2">Status Website</h2>
           <p class="text-gray-600">Ringkasan performa website Desa Kalemago</p>
@@ -1521,7 +1521,9 @@ layout: null
       });
       
       // Show Status Website by default
-      showSection('status-section');
+      setTimeout(() => {
+        showSection('status-section');
+      }, 100);
     });
 
     // Show only one section at a time (SPA behavior)
