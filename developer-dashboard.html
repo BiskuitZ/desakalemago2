@@ -36,7 +36,49 @@ layout: null
     </div>
   </nav>
 
-  <div class="max-w-7xl mx-auto px-6 py-8">
+  <div class="max-w-7xl mx-auto px-6 py-8 flex gap-8">
+    
+    <!-- LEFT SIDEBAR -->
+    <div class="w-72 flex-shrink-0">
+      <div class="bg-white rounded-3xl shadow-lg p-6 sticky top-6">
+        <h4 class="font-bold text-purple-800 mb-4 flex items-center gap-2">
+          <i class="fas fa-edit"></i> 
+          <span>Menu Pengeditan</span>
+        </h4>
+        
+        <div class="space-y-1 text-sm">
+          <a href="#user-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+            <i class="fas fa-users-cog w-5"></i> 
+            <span>Manajemen Pengguna</span>
+          </a>
+          <a href="#product-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+            <i class="fas fa-box w-5"></i> 
+            <span>Manajemen Produk</span>
+          </a>
+          <a href="#population-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+            <i class="fas fa-users w-5"></i> 
+            <span>Data Penduduk</span>
+          </a>
+          <a href="#apbdes-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+            <i class="fas fa-wallet w-5"></i> 
+            <span>APB Desa</span>
+          </a>
+          <a href="#team-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+            <i class="fas fa-users text-purple-600 w-5"></i> 
+            <span>Tim Web Designer</span>
+          </a>
+        </div>
+        
+        <div class="mt-8 pt-6 border-t border-gray-200">
+          <div class="text-xs text-gray-500 px-4">
+            Tip: Klik menu di sebelah kiri untuk langsung ke bagian pengeditan.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 min-w-0">
     <div class="bg-gradient-to-r from-purple-700 to-purple-600 rounded-3xl p-8 text-white mb-8 shadow-xl">
       <h2 class="text-4xl font-bold mb-2">Developer Panel 👨‍💻</h2>
       <p class="text-purple-200 text-lg" id="welcomeMessage">Memuat...</p>
@@ -103,7 +145,7 @@ layout: null
     </div>
 
     <!-- USER MANAGEMENT -->
-    <div class="bg-white rounded-3xl shadow-lg p-8">
+    <div id="user-management" class="bg-white rounded-3xl shadow-lg p-8">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
           <i class="fas fa-users-cog text-purple-600"></i>
@@ -132,7 +174,7 @@ layout: null
     </div>
 
     <!-- PRODUCT MANAGEMENT -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="product-management" class="bg-white rounded-3xl shadow-lg p-8 mt-8">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
           <i class="fas fa-box text-purple-600"></i>
@@ -161,7 +203,7 @@ layout: null
     </div>
 
     <!-- POPULATION MANAGEMENT -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="population-management" class="bg-white rounded-3xl shadow-lg p-8 mt-8">
       <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
         <i class="fas fa-users text-purple-600"></i>
         Edit Data Administrasi Penduduk
@@ -229,7 +271,7 @@ layout: null
     </div>
 
     <!-- APBDES MANAGEMENT -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="apbdes-management" class="bg-white rounded-3xl shadow-lg p-8 mt-8">
       <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
         <i class="fas fa-wallet text-purple-600"></i>
         Edit Data APB Desa
@@ -265,7 +307,7 @@ layout: null
     </div>
 
     <!-- WEB DESIGNER / TEAM MANAGEMENT -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="team-management" class="bg-white rounded-3xl shadow-lg p-8 mt-8">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
           <i class="fas fa-users text-purple-600"></i>
@@ -328,6 +370,8 @@ layout: null
       </div>
     </div>
   </div>
+
+    </div> <!-- end of main content -->
 
   <!-- ADD PRODUCT MODAL -->
   <div id="addProductModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -1373,6 +1417,29 @@ layout: null
       document.querySelector('.fixed').remove();
       alert('✅ Data berhasil disimpan! (Foto disimpan sebagai base64 untuk sementara)\n\nUntuk production, backend upload perlu ditambahkan.');
     }
+
+    // Active sidebar link highlighting
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidebarLinks = document.querySelectorAll('.sidebar-link');
+      
+      window.addEventListener('scroll', () => {
+        let current = '';
+        
+        document.querySelectorAll('div[id$="-management"]').forEach(section => {
+          const sectionTop = section.offsetTop;
+          if (scrollY >= sectionTop - 200) {
+            current = section.getAttribute('id');
+          }
+        });
+        
+        sidebarLinks.forEach(link => {
+          link.classList.remove('bg-purple-100', 'font-semibold');
+          if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('bg-purple-100', 'font-semibold');
+          }
+        });
+      });
+    });
   </script>
 </body>
 </html>
