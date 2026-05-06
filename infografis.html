@@ -230,130 +230,7 @@
       }
     });
 
-      // Initialize detail charts after DOM is ready
-      function initDetailCharts() {
-        try {
-          const ctxMale = document.getElementById('maleChart').getContext('2d');
-          window.maleChart = new Chart(ctxMale, {
-            type: 'pie',
-            data: {
-              labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
-              datasets: [{
-                data: [212, 158, 144],
-                backgroundColor: [
-                  '#991b1b',
-                  '#b91c1c',
-                  '#dc2626'
-                ],
-                borderColor: '#ffffff',
-                borderWidth: 2
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: true,
-              animation: {
-                duration: 1000,
-                easing: 'easeInOutQuart',
-                animateRotate: true,
-                animateScale: true
-              },
-              plugins: {
-                legend: {
-                  position: 'bottom',
-                  labels: {
-                    font: {
-                      family: 'Inter',
-                      size: 12
-                    },
-                    padding: 10
-                  }
-                },
-                datalabels: {
-                  color: '#ffffff',
-                  font: {
-                    family: 'Inter',
-                    size: window.innerWidth <= 640 ? 8 : 14,
-                    weight: 'bold'
-                  },
-                  formatter: function(value, context) {
-                    const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
-                    const percentage = ((value / total) * 100).toFixed(1);
-                    return value + '\n' + percentage + '%';
-                  },
-                  align: 'center',
-                  anchor: 'center',
-                  offset: 0,
-                  padding: 4,
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  borderRadius: 4
-                }
-              }
-            }
-          });
-
-          const ctxFemale = document.getElementById('femaleChart').getContext('2d');
-          window.femaleChart = new Chart(ctxFemale, {
-            type: 'pie',
-            data: {
-              labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
-              datasets: [{
-                data: [246, 139, 104],
-                backgroundColor: [
-                  '#ef4444',
-                  '#f87171',
-                  '#fca5a5'
-                ],
-                borderColor: '#ffffff',
-                borderWidth: 2
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: true,
-              animation: {
-                duration: 1000,
-                easing: 'easeInOutQuart',
-                animateRotate: true,
-                animateScale: true
-              },
-              plugins: {
-                legend: {
-                  position: 'bottom',
-                  labels: {
-                    font: {
-                      family: 'Inter',
-                      size: 12
-                    },
-                    padding: 10
-                  }
-                },
-                datalabels: {
-                  color: '#ffffff',
-                  font: {
-                    family: 'Inter',
-                    size: window.innerWidth <= 640 ? 8 : 14,
-                    weight: 'bold'
-                  },
-                  formatter: function(value, context) {
-                    const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
-                    const percentage = ((value / total) * 100).toFixed(1);
-                    return value + '\n' + percentage + '%';
-                  },
-                  align: 'center',
-                  anchor: 'center',
-                  offset: 0,
-                  padding: 4,
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  borderRadius: 4
-                }
-              }
-            }
-          });
-        } catch (e) {
-          console.log('Chart initialization error:', e);
-        }
-      }
+      // initDetailCharts removed - using modern window.init*Chart functions instead
             plugins: {
               legend: {
                 position: 'bottom',
@@ -605,22 +482,31 @@
 
     <div id="pertanian-content" class="content-section hidden">
       <div class="bg-white rounded-lg shadow-lg p-6 mb-12 max-w-3xl mx-auto">
-        <h3 class="text-xl font-bold text-emerald-800 mb-6 text-center">Data Pertanian</h3>
-        <p class="text-center text-gray-600">Data pertanian akan ditampilkan di sini</p>
+        <h3 class="text-xl font-bold text-emerald-800 mb-6 text-center">Data Pertanian Desa Kalemago</h3>
+        <div class="text-center py-8">
+          <i class="fas fa-tractor text-6xl text-emerald-300 mb-4"></i>
+          <p class="text-gray-600">Data pertanian sedang dikumpulkan.<br>Data akan tersedia dalam update berikutnya.</p>
+        </div>
       </div>
     </div>
 
     <div id="industri-content" class="content-section hidden">
       <div class="bg-white rounded-lg shadow-lg p-6 mb-12 max-w-3xl mx-auto">
-        <h3 class="text-xl font-bold text-emerald-800 mb-6 text-center">Data Industri</h3>
-        <p class="text-center text-gray-600">Data industri akan ditampilkan di sini</p>
+        <h3 class="text-xl font-bold text-emerald-800 mb-6 text-center">Data Industri Desa Kalemago</h3>
+        <div class="text-center py-8">
+          <i class="fas fa-industry text-6xl text-emerald-300 mb-4"></i>
+          <p class="text-gray-600">Data industri sedang dikumpulkan.<br>Data akan tersedia dalam update berikutnya.</p>
+        </div>
       </div>
     </div>
 
     <div id="perdagangan-content" class="content-section hidden">
       <div class="bg-white rounded-lg shadow-lg p-6 mb-12 max-w-3xl mx-auto">
-        <h3 class="text-xl font-bold text-emerald-800 mb-6 text-center">Data Perdagangan</h3>
-        <p class="text-center text-gray-600">Data perdagangan akan ditampilkan di sini</p>
+        <h3 class="text-xl font-bold text-emerald-800 mb-6 text-center">Data Perdagangan Desa Kalemago</h3>
+        <div class="text-center py-8">
+          <i class="fas fa-store text-6xl text-emerald-300 mb-4"></i>
+          <p class="text-gray-600">Data perdagangan sedang dikumpulkan.<br>Data akan tersedia dalam update berikutnya.</p>
+        </div>
       </div>
     </div>
   </main>
@@ -696,9 +582,10 @@
       // Register ChartJS datalabels plugin
       Chart.register(ChartDataLabels);
       
-      // Initialize all charts
-      if (typeof initDetailCharts === 'function') initDetailCharts();
-      if (typeof window.initGenderChart === 'function') window.initGenderChart();
+      // Initialize all charts on page load
+      setTimeout(() => {
+        if (window.initGenderChart) window.initGenderChart();
+      }, 300);
       
       // Load population data on page load (sync with index.html)
       setTimeout(() => {
@@ -734,16 +621,16 @@
               section.classList.remove('hidden');
               if (category === 'penduduk') {
                 setTimeout(() => {
-                  initGenderChart();
+                  if (window.initGenderChart) window.initGenderChart();
                   loadPopulationData(); // Sync with index.html
                 }, 50);
               } else if (category === 'cuaca') {
                 setTimeout(() => {
-                  initWeatherChart();
+                  if (window.initWeatherChart) window.initWeatherChart();
                 }, 50);
               } else if (category === 'sosial') {
                 setTimeout(() => {
-                  initSocialWelfareChart();
+                  if (window.initSocialWelfareChart) window.initSocialWelfareChart();
                 }, 50);
               }
             } else {
@@ -1038,131 +925,7 @@
       if (overlay) overlay.style.display = 'none';
     });
 
-    // FINAL ROBUST CHART INITIALIZATION - MULTIPLE ATTEMPTS
-    function forceInitAllCharts() {
-      console.log('%c[CHART] Starting forced initialization...', 'color:#10b981');
-      
-      let successCount = 0;
-
-      // 1. Main Gender Chart
-      const genderCanvas = document.getElementById('genderChart');
-      if (genderCanvas) {
-        try {
-          if (window.genderChart) window.genderChart.destroy();
-          const ctx = genderCanvas.getContext('2d');
-          window.genderChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-              labels: ['Laki-laki', 'Perempuan'],
-              datasets: [{
-                data: [514, 485],
-                backgroundColor: ['#991b1b', '#ef4444'],
-                borderColor: '#ffffff',
-                borderWidth: 2
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                legend: { position: 'bottom' },
-                datalabels: {
-                  color: '#fff',
-                  font: { size: 16, weight: 'bold' },
-                  formatter: (v, c) => {
-                    const t = c.dataset.data.reduce((a,b)=>a+b,0);
-                    return v + ' orang\n' + ((v/t)*100).toFixed(1) + '%';
-                  }
-                }
-              }
-            }
-          });
-          console.log('%c[CHART] ✓ Gender chart OK', 'color:#10b981');
-          successCount++;
-        } catch(e) { console.error('[CHART] Gender error:', e); }
-      }
-
-      // 2. Male Detail Chart
-      const maleCanvas = document.getElementById('maleChart');
-      if (maleCanvas) {
-        try {
-          if (window.maleChart) window.maleChart.destroy();
-          const ctx = maleCanvas.getContext('2d');
-          window.maleChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-              labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
-              datasets: [{
-                data: [212, 158, 144],
-                backgroundColor: ['#991b1b', '#b91c1c', '#dc2626'],
-                borderColor: '#ffffff',
-                borderWidth: 2
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                legend: { position: 'bottom' },
-                datalabels: {
-                  color: '#fff',
-                  font: { size: 12, weight: 'bold' },
-                  formatter: (v, c) => {
-                    const t = c.dataset.data.reduce((a,b)=>a+b,0);
-                    return v + '\n' + ((v/t)*100).toFixed(1) + '%';
-                  }
-                }
-              }
-            }
-          });
-          console.log('%c[CHART] ✓ Male detail chart OK', 'color:#10b981');
-          successCount++;
-        } catch(e) { console.error('[CHART] Male error:', e); }
-      }
-
-      // 3. Female Detail Chart
-      const femaleCanvas = document.getElementById('femaleChart');
-      if (femaleCanvas) {
-        try {
-          if (window.femaleChart) window.femaleChart.destroy();
-          const ctx = femaleCanvas.getContext('2d');
-          window.femaleChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-              labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
-              datasets: [{
-                data: [246, 139, 104],
-                backgroundColor: ['#ef4444', '#f87171', '#fca5a5'],
-                borderColor: '#ffffff',
-                borderWidth: 2
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                legend: { position: 'bottom' },
-                datalabels: {
-                  color: '#fff',
-                  font: { size: 12, weight: 'bold' },
-                  formatter: (v, c) => {
-                    const t = c.dataset.data.reduce((a,b)=>a+b,0);
-                    return v + '\n' + ((v/t)*100).toFixed(1) + '%';
-                  }
-                }
-              }
-            }
-          });
-          console.log('%c[CHART] ✓ Female detail chart OK', 'color:#10b981');
-          successCount++;
-        } catch(e) { console.error('[CHART] Female error:', e); }
-      }
-      
-      console.log('%c[CHART] ' + successCount + '/3 charts initialized successfully!', 'color:#10b981; font-weight:bold');
-    }
-
-    // Run multiple times with increasing delays
-    setTimeout(forceInitAllCharts, 600);
-    setTimeout(forceInitAllCharts, 1200);
-    setTimeout(forceInitAllCharts, 2000);
-    setTimeout(forceInitAllCharts, 3000);
+    // Removed conflicting forceInitAllCharts - using clean window.init*Chart functions instead
 
     // Scroll to Top Button
     const scrollBtn = document.createElement('button');
