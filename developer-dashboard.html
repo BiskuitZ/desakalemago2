@@ -1526,23 +1526,27 @@ layout: null
       }, 100);
     });
 
-    // Show only one section at a time (SPA behavior)
+    // Show only one section at a time (SPA behavior - very strict)
     function showSection(sectionId) {
-      // Hide all sections
-      document.querySelectorAll('.section').forEach(section => {
-        section.classList.add('hidden');
+      const mainContent = document.querySelector('.flex-1.min-w-0');
+      if (!mainContent) return;
+
+      // Hide ALL direct children of main content
+      Array.from(mainContent.children).forEach(child => {
+        child.classList.add('hidden');
       });
-      
-      // Show selected section
+
+      // Show only the selected section
       const target = document.getElementById(sectionId);
       if (target) {
         target.classList.remove('hidden');
       }
-      
+
       // Update active sidebar link
       document.querySelectorAll('.sidebar-link').forEach(link => {
         link.classList.remove('bg-purple-100', 'font-semibold');
-        if (link.getAttribute('onclick') && link.getAttribute('onclick').includes(sectionId)) {
+        const onclickAttr = link.getAttribute('onclick') || '';
+        if (onclickAttr.includes(sectionId)) {
           link.classList.add('bg-purple-100', 'font-semibold');
         }
       });
