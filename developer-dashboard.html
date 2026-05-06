@@ -47,25 +47,33 @@ layout: null
         </h4>
         
         <div class="space-y-1 text-sm">
-          <a href="#user-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#" onclick="showSection('status-section'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+            <i class="fas fa-tachometer-alt w-5"></i> 
+            <span>Status Website</span>
+          </a>
+          <a href="#" onclick="showSection('user-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-users-cog w-5"></i> 
             <span>Manajemen Pengguna</span>
           </a>
-          <a href="#product-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#" onclick="showSection('product-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-box w-5"></i> 
             <span>Manajemen Produk</span>
           </a>
-          <a href="#population-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#" onclick="showSection('population-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-users w-5"></i> 
             <span>Data Penduduk</span>
           </a>
-          <a href="#apbdes-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#" onclick="showSection('apbdes-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-wallet w-5"></i> 
             <span>APB Desa</span>
           </a>
-          <a href="#team-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#" onclick="showSection('team-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-users text-purple-600 w-5"></i> 
             <span>Tim Web Designer</span>
+          </a>
+          <a href="#" onclick="showSection('account-section'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium mt-2 border-t pt-3">
+            <i class="fas fa-user-circle w-5"></i> 
+            <span>Akun</span>
           </a>
         </div>
         
@@ -79,6 +87,71 @@ layout: null
     
     <!-- MAIN CONTENT -->
     <div class="flex-1 min-w-0">
+      
+      <!-- STATUS WEBSITE SECTION (Default shown) -->
+      <div id="status-section" class="section">
+        <div class="mb-8">
+          <h2 class="text-3xl font-bold text-purple-800 mb-2">Status Website</h2>
+          <p class="text-gray-600">Ringkasan performa website Desa Kalemago</p>
+        </div>
+        
+        <!-- Visitor Stats -->
+        <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
+          <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
+            <i class="fas fa-chart-line text-purple-600"></i>
+            Statistik Pengunjung
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-purple-50 rounded-2xl p-6 text-center">
+              <p class="text-6xl font-extrabold text-purple-800" id="dashTotalVisitors">1,284</p>
+              <p class="text-purple-600 font-semibold mt-2">Total Pengunjung</p>
+            </div>
+            <div class="bg-emerald-50 rounded-2xl p-6 text-center">
+              <p class="text-6xl font-extrabold text-emerald-800" id="onlineVisitors">12</p>
+              <p class="text-emerald-600 font-semibold mt-2">Sedang Online</p>
+            </div>
+            <div class="bg-amber-50 rounded-2xl p-6 text-center">
+              <p class="text-6xl font-extrabold text-amber-800" id="dashTodayVisitors">87</p>
+              <p class="text-amber-600 font-semibold mt-2">Hari Ini</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Weather -->
+        <div class="bg-white rounded-3xl shadow-lg p-8">
+          <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
+            <i class="fas fa-cloud-sun text-purple-600"></i>
+            Cuaca Desa Kalemago
+          </h3>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-8 text-white">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-7xl font-extrabold" id="dashTemp">28°C</p>
+                  <p class="text-xl" id="dashWeather">Cerah Berawan</p>
+                </div>
+                <i class="fas fa-cloud-sun text-8xl opacity-80"></i>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center bg-gray-50 rounded-2xl p-4">
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-tint text-blue-500"></i>
+                  <span>Kelembaban</span>
+                </div>
+                <span class="font-bold" id="dashHumidity">72%</span>
+              </div>
+              <div class="flex justify-between items-center bg-gray-50 rounded-2xl p-4">
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-wind text-gray-500"></i>
+                  <span>Angin</span>
+                </div>
+                <span class="font-bold" id="dashWind">8 km/h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     <div class="bg-gradient-to-r from-purple-700 to-purple-600 rounded-3xl p-8 text-white mb-8 shadow-xl">
       <h2 class="text-4xl font-bold mb-2">Developer Panel 👨‍💻</h2>
       <p class="text-purple-200 text-lg" id="welcomeMessage">Memuat...</p>
@@ -145,7 +218,7 @@ layout: null
     </div>
 
     <!-- USER MANAGEMENT -->
-    <div id="user-management" class="bg-white rounded-3xl shadow-lg p-8">
+    <div id="user-management" class="section hidden bg-white rounded-3xl shadow-lg p-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="loadUserManagement()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-sync"></i>
@@ -170,7 +243,7 @@ layout: null
     </div>
 
     <!-- PRODUCT MANAGEMENT -->
-    <div id="product-management" class="bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="product-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="showAddProductModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-plus"></i>
@@ -195,7 +268,7 @@ layout: null
     </div>
 
     <!-- POPULATION MANAGEMENT -->
-    <div id="population-management" class="bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="population-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
       
       <div class="grid md:grid-cols-2 gap-6">
         <div>
@@ -259,7 +332,7 @@ layout: null
     </div>
 
     <!-- APBDES MANAGEMENT -->
-    <div id="apbdes-management" class="bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="apbdes-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
       
       <div class="grid md:grid-cols-2 gap-6">
         <div>
@@ -291,7 +364,7 @@ layout: null
     </div>
 
     <!-- WEB DESIGNER / TEAM MANAGEMENT -->
-    <div id="team-management" class="bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="team-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="showMemberModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-plus"></i>
@@ -350,6 +423,34 @@ layout: null
     </div>
   </div>
 
+    <!-- ACCOUNT SECTION -->
+    <div id="account-section" class="section hidden">
+      <div class="mb-8">
+        <h2 class="text-3xl font-bold text-purple-800 mb-2">Pengaturan Akun</h2>
+        <p class="text-gray-600">Kelola akun developer dan keamanan</p>
+      </div>
+      
+      <div class="bg-white rounded-3xl shadow-lg p-8 max-w-2xl">
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+            <input type="text" value="developer" class="w-full px-4 py-3 border border-gray-300 rounded-2xl bg-gray-50" readonly>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+            <input type="email" value="developer@desakalemago.id" class="w-full px-4 py-3 border border-gray-300 rounded-2xl">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Ganti Password</label>
+            <input type="password" placeholder="Masukkan password baru" class="w-full px-4 py-3 border border-gray-300 rounded-2xl">
+          </div>
+          <button onclick="alert('Fitur ganti password akan segera tersedia')" class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-2xl font-semibold">
+            Simpan Perubahan
+          </button>
+        </div>
+      </div>
+    </div>
+    
     </div> <!-- end of main content -->
 
   <!-- ADD PRODUCT MODAL -->
@@ -1418,7 +1519,32 @@ layout: null
           }
         });
       });
+      
+      // Show Status Website by default
+      showSection('status-section');
     });
+
+    // Show only one section at a time (SPA behavior)
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      
+      // Show selected section
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.classList.remove('hidden');
+      }
+      
+      // Update active sidebar link
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.classList.remove('bg-purple-100', 'font-semibold');
+        if (link.getAttribute('onclick') && link.getAttribute('onclick').includes(sectionId)) {
+          link.classList.add('bg-purple-100', 'font-semibold');
+        }
+      });
+    }
   </script>
 </body>
 </html>
