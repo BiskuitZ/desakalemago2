@@ -396,8 +396,17 @@
       <!-- Current penduduk content here -->
       <div class="bg-white rounded-lg shadow-lg p-6 mb-12 max-w-3xl mx-auto">
         <h3 class="text-xl font-bold text-emerald-800 mb-6 text-center">Data Gender Penduduk</h3>
-        <div class="w-full max-w-lg mx-auto">
+        <div class="w-full max-w-lg mx-auto mb-8">
           <canvas id="genderChart"></canvas>
+        </div>
+
+        <!-- New Age Distribution Chart -->
+        <div class="mt-8">
+          <h4 class="text-lg font-semibold text-emerald-800 mb-4 text-center">Distribusi Usia Laki-laki & Perempuan</h4>
+          <div class="w-full max-w-2xl mx-auto">
+            <canvas id="ageDistributionChart"></canvas>
+          </div>
+          <p class="text-center text-xs text-gray-500 mt-2">Data sinkron otomatis dengan Developer Dashboard</p>
         </div>
       </div>
 
@@ -530,6 +539,26 @@
             window.genderChart.data.datasets[0].data = [data.male, data.female];
             window.genderChart.update();
           }
+
+          // Update age distribution chart (sync with Developer Dashboard)
+          if (window.ageDistributionChart && data.maleAge && data.femaleAge) {
+            window.ageDistributionChart.data.datasets[0].data = [
+              data.maleAge['0-15'] || 0,
+              data.maleAge['16-55'] || 0,
+              data.maleAge['55+'] || 0
+            ];
+            window.ageDistributionChart.data.datasets[1].data = [
+              data.femaleAge['0-15'] || 0,
+              data.femaleAge['16-55'] || 0,
+              data.femaleAge['55+'] || 0
+            ];
+            window.ageDistributionChart.update();
+          } else if (window.ageDistributionChart) {
+            // Fallback if no age data
+            window.ageDistributionChart.data.datasets[0].data = [212, 158, 144];
+            window.ageDistributionChart.data.datasets[1].data = [246, 139, 104];
+            window.ageDistributionChart.update();
+          }
           
           // Update all Administrasi Penduduk elements (Total = Male + Female)
           const totalEl = document.getElementById('popTotal');
@@ -555,6 +584,7 @@
       // Initialize all charts on page load
       setTimeout(() => {
         if (window.initGenderChart) window.initGenderChart();
+        if (window.initAgeDistributionChart) window.initAgeDistributionChart();
       }, 300);
       
       // Load population data on page load (sync with index.html)
@@ -592,6 +622,7 @@
               if (category === 'penduduk') {
                 setTimeout(() => {
                   if (window.initGenderChart) window.initGenderChart();
+                  if (window.initAgeDistributionChart) window.initAgeDistributionChart();
                   loadPopulationData(); // Sync with index.html
                 }, 50);
               } else if (category === 'cuaca') {
@@ -619,6 +650,7 @@
 
       // Global chart variables
       window.genderChart = null;
+      window.ageDistributionChart = null;
       window.weatherChart = null;
       window.sunshineChart = null;
       window.socialWelfareChart = null;
@@ -681,6 +713,72 @@
                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 borderRadius: 6,
                 textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        });
+      }
+
+      // NEW: Age Distribution Chart (Laki-laki & Perempuan by age group)
+      // Syncs with Developer Dashboard population data
+      window.initAgeDistributionChart = function(maleData = [212, 158, 144], femaleData = [246, 139, 104]) {
+        if (window.ageDistributionChart) window.ageDistributionChart.destroy();
+
+        const ctx = document.getElementById('ageDistributionChart').getContext('2d');
+        window.ageDistributionChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['0-15 Tahun', '16-55 Tahun', 'Diatas 55 Tahun'],
+            datasets: [
+              {
+                label: 'Laki-laki',
+                data: maleData,
+                backgroundColor: '#991b1b',
+                borderColor: '#7f1d1d',
+                borderWidth: 1,
+                borderRadius: 4
+              },
+              {
+                label: 'Perempuan',
+                data: femaleData,
+                backgroundColor: '#ef4444',
+                borderColor: '#b91c1c',
+                borderWidth: 1,
+                borderRadius: 4
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Jumlah Penduduk',
+                  font: { family: 'Inter', size: 12, weight: 'bold' }
+                }
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Kelompok Usia',
+                  font: { family: 'Inter', size: 12, weight: 'bold' }
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                position: 'top',
+                labels: {
+                  font: { family: 'Inter', size: 12 }
+                }
+              },
+              datalabels: {
+                color: '#fff',
+                font: { size: 11, weight: 'bold' },
+                formatter: (v) => v
               }
             }
           }
