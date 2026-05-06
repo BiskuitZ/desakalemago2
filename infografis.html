@@ -396,18 +396,8 @@
       <!-- Current penduduk content here -->
       <div class="bg-white rounded-lg shadow-lg p-6 mb-12 max-w-3xl mx-auto">
         <h3 class="text-xl font-bold text-emerald-800 mb-6 text-center">Data Gender Penduduk</h3>
-        <div class="w-full max-w-lg mx-auto mb-8">
+        <div class="w-full max-w-lg mx-auto">
           <canvas id="genderChart"></canvas>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-          <div class="bg-white rounded-lg p-6">
-            <h4 class="text-lg font-semibold text-emerald-800 mb-4 text-center">Detail Laki-laki</h4>
-            <canvas id="maleChart"></canvas>
-          </div>
-          <div class="bg-white rounded-lg p-6">
-            <h4 class="text-lg font-semibold text-emerald-800 mb-4 text-center">Detail Perempuan</h4>
-            <canvas id="femaleChart"></canvas>
-          </div>
         </div>
       </div>
 
@@ -539,26 +529,6 @@
           if (window.genderChart) {
             window.genderChart.data.datasets[0].data = [data.male, data.female];
             window.genderChart.update();
-          }
-
-          // Update male age chart (Detail Laki-laki)
-          if (window.maleChart && data.maleAge) {
-            window.maleChart.data.datasets[0].data = [
-              data.maleAge['0-15'] || 0,
-              data.maleAge['16-55'] || 0,
-              data.maleAge['55+'] || 0
-            ];
-            window.maleChart.update();
-          }
-
-          // Update female age chart (Detail Perempuan)
-          if (window.femaleChart && data.femaleAge) {
-            window.femaleChart.data.datasets[0].data = [
-              data.femaleAge['0-15'] || 0,
-              data.femaleAge['16-55'] || 0,
-              data.femaleAge['55+'] || 0
-            ];
-            window.femaleChart.update();
           }
           
           // Update all Administrasi Penduduk elements (Total = Male + Female)
