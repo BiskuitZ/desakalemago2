@@ -1499,31 +1499,42 @@ layout: null
       }, 100);
     });
 
-    // Show only one section at a time (SPA behavior - very strict)
+    // Show only one section at a time (SPA behavior - VERY STRICT)
     function showSection(sectionId) {
       const mainContent = document.querySelector('.flex-1.min-w-0');
       if (!mainContent) return;
 
-      // Hide ALL direct children of main content
+      // Hide EVERYTHING inside main content first
       Array.from(mainContent.children).forEach(child => {
         child.classList.add('hidden');
       });
 
-      // Show only the selected section
+      // Show only the selected one
       const target = document.getElementById(sectionId);
       if (target) {
         target.classList.remove('hidden');
       }
 
-      // Update active sidebar link
+      // Highlight active menu
       document.querySelectorAll('.sidebar-link').forEach(link => {
         link.classList.remove('bg-purple-100', 'font-semibold');
-        const onclickAttr = link.getAttribute('onclick') || '';
-        if (onclickAttr.includes(sectionId)) {
+        if ((link.getAttribute('onclick') || '').includes(sectionId)) {
           link.classList.add('bg-purple-100', 'font-semibold');
         }
       });
     }
+
+    // Force separation on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Hide everything first
+      const main = document.querySelector('.flex-1.min-w-0');
+      if (main) {
+        Array.from(main.children).forEach(c => c.classList.add('hidden'));
+      }
+      // Show only Status Website
+      const status = document.getElementById('status-section');
+      if (status) status.classList.remove('hidden');
+    });
   </script>
 </body>
 </html>
