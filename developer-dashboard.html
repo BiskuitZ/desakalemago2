@@ -345,23 +345,6 @@ layout: null
         <span>Simpan Perubahan</span>
       </button>
     </div>
-
-    <!-- LIVE PREVIEW STRUKTUR ORGANISASI (Tampilan Publik) -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
-      <h3 class="text-2xl font-bold text-purple-800 mb-4 flex items-center gap-3">
-        <i class="fas fa-eye text-purple-600"></i>
-        Preview Struktur Organisasi (Tampilan Publik)
-      </h3>
-      <p class="text-sm text-gray-600 mb-6">Ini adalah tampilan yang akan dilihat pengunjung website. Kelompok tidak ditampilkan sebagai kotak terpisah.</p>
-      
-      <div id="teamPreview" class="bg-gray-50 rounded-2xl p-6 min-h-[200px]">
-        <!-- Preview will be rendered here by JavaScript -->
-        <div class="text-center text-gray-400 py-8">
-          <i class="fas fa-sitemap text-4xl mb-3"></i>
-          <p>Preview akan muncul setelah data dimuat</p>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- ADD PRODUCT MODAL -->
@@ -470,15 +453,24 @@ layout: null
     // USER MANAGEMENT
     async function loadUserManagement() {
       try {
+        console.log('%c[BACKEND] Loading users...', 'color:#3b82f6');
         const res = await fetch(`${API_URL}/api/admin/users`, {
           headers: { 'x-username': JSON.parse(localStorage.getItem('user')).username }
         });
         
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
         const data = await res.json();
-        if (data.success) {
-          const tbody = document.getElementById('userTableBody');
-          tbody.innerHTML = '';
-          
+        console.log('%c[BACKEND] Users response:', 'color:#3b82f6', data);
+        
+        const tbody = document.getElementById('userTableBody');
+        if (!tbody) {
+          console.error('userTableBody not found');
+          return;
+        }
+        tbody.innerHTML = '';
+        
+        if (data.success && Array.isArray(data.users)) {
           data.users.forEach(user => {
             const row = document.createElement('tr');
             row.className = 'border-b border-gray-100 hover:bg-gray-50';
@@ -498,8 +490,15 @@ layout: null
             `;
             tbody.appendChild(row);
           });
+          console.log('%c[BACKEND] ✓ Loaded ' + data.users.length + ' users', 'color:#10b981');
+        } else {
+          tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Tidak ada data user</td></tr>';
         }
-      } catch (err) {}
+      } catch (err) {
+        console.error('%c[BACKEND] Failed to load users:', 'color:#ef4444', err);
+        const tbody = document.getElementById('userTableBody');
+        if (tbody) tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-red-500">Gagal memuat data user</td></tr>';
+      }
     }
 
     async function editUser(id, username, name, role) {
@@ -559,31 +558,50 @@ layout: null
     // PRODUCT MANAGEMENT
     async function loadProductManagement() {
       try {
+        console.log('%c[BACKEND] Loading products...', 'color:#3b82f6');
         const res = await fetch(`${API_URL}/api/products`);
-        const data = await res.json();
         
-        if (data.success) {
-          const tbody = document.getElementById('productTableBody');
-          tbody.innerHTML = '';
-          
-          data.products.forEach(product => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const data = await res.json();
+        console.log('%c[BACKEND] Products response:', 'color:#3b82f6', data);
+        
+        const tbody = document.getElementById('productTableBody');
+        if (!tbody) {
+          console.error('productTableBody not found');
+          return;
+        }
+        tbody.innerHTML = '';
+        
+        let products = [];
+        if (data.success && Array.isArray(data.products)) products = data.products;
+        else if (Array.isArray(data)) products = data;
+        else if (data.data && Array.isArray(data.data)) products = data.data;
+        
+        if (products.length > 0) {
+          products.forEach(product => {
             const row = document.createElement('tr');
             row.className = 'border-b border-gray-100 hover:bg-gray-50';
             row.innerHTML = `
               <td class="py-3 px-4 font-mono text-sm">${product.id}</td>
               <td class="py-3 px-4 font-semibold">${product.name}</td>
-              <td class="py-3 px-4">Rp ${product.price.toLocaleString('id-ID')}</td>
+              <td class="py-3 px-4">Rp ${Number(product.price).toLocaleString('id-ID')}</td>
               <td class="py-3 px-4">${product.stock}</td>
               <td class="py-3 px-4 text-center">
-                <button onclick="editProduct(${product.id}, '${product.name}', ${product.price}, '${product.image}', '${product.description}', ${product.stock})" class="text-blue-600 hover:text-blue-800 mx-1"><i class="fas fa-edit"></i></button>
+                <button onclick="editProduct(${product.id}, '${product.name}', ${product.price}, '${product.image || ''}', '${product.description || ''}', ${product.stock || 0})" class="text-blue-600 hover:text-blue-800 mx-1"><i class="fas fa-edit"></i></button>
                 <button onclick="deleteProduct(${product.id}, '${product.name}')" class="text-red-600 hover:text-red-800 mx-1"><i class="fas fa-trash"></i></button>
               </td>
             `;
             tbody.appendChild(row);
           });
+          console.log('%c[BACKEND] ✓ Loaded ' + products.length + ' products', 'color:#10b981');
+        } else {
+          tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Tidak ada produk</td></tr>';
         }
       } catch (err) {
-        console.error('Error loading products:', err);
+        console.error('%c[BACKEND] Failed to load products:', 'color:#ef4444', err);
+        const tbody = document.getElementById('productTableBody');
+        if (tbody) tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-red-500">Gagal memuat data produk</td></tr>';
       }
     }
 
