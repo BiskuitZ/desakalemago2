@@ -92,6 +92,10 @@ layout: null
 
     function logout() {
       if (confirm('Yakin ingin logout?')) {
+        // Kurangi jumlah user aktif
+        let active = parseInt(localStorage.getItem('dk_activeUsers') || '3');
+        localStorage.setItem('dk_activeUsers', Math.max(1, active - 1));
+
         localStorage.removeItem('user');
         window.location.href = 'login.html';
       }
