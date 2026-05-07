@@ -903,18 +903,32 @@ layout: null
     // APBDES MANAGEMENT
     async function loadAPBDesData() {
       try {
+        console.log('%c[BACKEND] Loading APBDes...', 'color:#3b82f6');
         const res = await fetch(`${API_URL}/api/apbdes`);
-        const data = await res.json();
         
-        if (data.success) {
-          document.getElementById('apbPendapatan').value = data.data.pendapatan;
-          document.getElementById('apbBelanja').value = data.data.belanja;
-          document.getElementById('apbPegawai').value = data.data.belanjaPegawai;
-          document.getElementById('apbBarang').value = data.data.belanjaBarang;
-          document.getElementById('apbModal').value = data.data.belanjaModal;
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const data = await res.json();
+        console.log('%c[BACKEND] APBDes response:', 'color:#3b82f6', data);
+        
+        const apb = data.data || data;
+        
+        const fields = {
+          'apbPendapatan': apb.pendapatan,
+          'apbBelanja': apb.belanja,
+          'apbPegawai': apb.belanjaPegawai,
+          'apbBarang': apb.belanjaBarang,
+          'apbModal': apb.belanjaModal
+        };
+        
+        Object.keys(fields).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = fields[id] || 0;
+        });
+        
+        console.log('%c[BACKEND] ✓ APBDes data synced', 'color:#10b981');
       } catch (err) {
-        console.error('Error loading APBDes:', err);
+        console.error('%c[BACKEND] Failed to load APBDes:', 'color:#ef4444', err);
       }
     }
 
@@ -1445,7 +1459,10 @@ layout: null
         }
       });
       
-      // Load data
+      // Load data when section is opened
+      if (sectionId === 'user-management' && typeof loadUserManagement === 'function') setTimeout(loadUserManagement, 50);
+      if (sectionId === 'product-management' && typeof loadProductManagement === 'function') setTimeout(loadProductManagement, 50);
+      if (sectionId === 'apbdes-management' && typeof loadAPBDesData === 'function') setTimeout(loadAPBDesData, 50);
       if (sectionId === 'team-management' && typeof loadTeamData === 'function') setTimeout(loadTeamData, 50);
       if (sectionId === 'population-management' && typeof loadPopulationData === 'function') setTimeout(loadPopulationData, 50);
     }
