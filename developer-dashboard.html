@@ -50,27 +50,27 @@ layout: null
         </div>
         
         <div class="space-y-1 text-sm">
-          <a href="#" onclick="showSection('status-section'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#status-section" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-tachometer-alt w-5"></i> 
             <span>Status Website</span>
           </a>
-          <a href="#" onclick="showSection('user-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#user-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-users-cog w-5"></i> 
             <span>Manajemen Pengguna</span>
           </a>
-          <a href="#" onclick="showSection('product-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#product-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-box w-5"></i> 
             <span>Manajemen Produk</span>
           </a>
-          <a href="#" onclick="showSection('population-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#population-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-users w-5"></i> 
             <span>Data Penduduk</span>
           </a>
-          <a href="#" onclick="showSection('apbdes-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#apbdes-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-wallet w-5"></i> 
             <span>APB Desa</span>
           </a>
-          <a href="#" onclick="showSection('team-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#team-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-users text-purple-600 w-5"></i> 
             <span>Tim Web Designer</span>
           </a>
@@ -88,7 +88,7 @@ layout: null
     <div id="main-content" class="flex-1 min-w-0 ml-64 px-6 py-8 max-w-[1400px]">
       
       <!-- STATUS WEBSITE SECTION -->
-      <div id="status-section" class="section hidden">
+      <div id="status-section" class="section">
         <div class="mb-8">
           <h2 class="text-3xl font-bold text-purple-800 mb-2">Status Website</h2>
           <p class="text-gray-600">Ringkasan performa website Desa Kalemago</p>
@@ -217,7 +217,7 @@ layout: null
     </div>
 
     <!-- USER MANAGEMENT -->
-    <div id="user-management" class="section hidden bg-white rounded-3xl shadow-lg p-8">
+    <div id="user-management" class="section bg-white rounded-3xl shadow-lg p-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="loadUserManagement()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-sync"></i>
@@ -242,7 +242,7 @@ layout: null
     </div>
 
     <!-- PRODUCT MANAGEMENT -->
-    <div id="product-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="product-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="showAddProductModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-plus"></i>
@@ -267,7 +267,7 @@ layout: null
     </div>
 
     <!-- POPULATION MANAGEMENT -->
-    <div id="population-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="population-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
       
       <div class="grid md:grid-cols-2 gap-6">
         <div>
@@ -331,7 +331,7 @@ layout: null
     </div>
 
     <!-- APBDES MANAGEMENT -->
-    <div id="apbdes-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="apbdes-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
       
       <div class="grid md:grid-cols-2 gap-6">
         <div>
@@ -363,7 +363,7 @@ layout: null
     </div>
 
     <!-- WEB DESIGNER / TEAM MANAGEMENT -->
-    <div id="team-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="team-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="showMemberModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-plus"></i>
@@ -1472,15 +1472,40 @@ layout: null
     }
 
     // Active sidebar link highlighting
+    // Simple smooth scroll for sidebar navigation
     document.addEventListener('DOMContentLoaded', () => {
       const sidebarLinks = document.querySelectorAll('.sidebar-link');
       
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          // Remove active class from all
+          sidebarLinks.forEach(l => l.classList.remove('bg-purple-100', 'font-semibold'));
+          // Add active to clicked
+          link.classList.add('bg-purple-100', 'font-semibold');
+          
+          // Smooth scroll to target
+          const targetId = link.getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            const offset = 80;
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition - bodyRect - offset;
+            
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+      
+      // Highlight active section on scroll
       window.addEventListener('scroll', () => {
         let current = '';
-        
-        document.querySelectorAll('div[id$="-management"]').forEach(section => {
+        document.querySelectorAll('.section').forEach(section => {
           const sectionTop = section.offsetTop;
-          if (scrollY >= sectionTop - 200) {
+          if (scrollY >= sectionTop - 150) {
             current = section.getAttribute('id');
           }
         });
@@ -1493,41 +1518,13 @@ layout: null
         });
       });
       
-      // Show Status Website by default
+      // Load initial data
       setTimeout(() => {
-        showSection('status-section');
-      }, 100);
+        if (typeof loadTeamData === 'function') loadTeamData();
+        if (typeof loadPopulationData === 'function') loadPopulationData();
+        if (typeof loadUserManagement === 'function') loadUserManagement();
+      }, 300);
     });
-
-    // Show only one section at a time (SPA behavior - VERY STRICT)
-    function showSection(sectionId) {
-      const mainContent = document.getElementById('main-content');
-      if (!mainContent) {
-        console.error('Main content not found');
-        return;
-      }
-
-      // Hide EVERYTHING inside main content first
-      Array.from(mainContent.children).forEach(child => {
-        child.classList.add('hidden');
-      });
-
-      // Show only the selected one
-      const target = document.getElementById(sectionId);
-      if (target) {
-        target.classList.remove('hidden');
-      } else {
-        console.warn('Section not found:', sectionId);
-      }
-
-      // Highlight active menu
-      document.querySelectorAll('.sidebar-link').forEach(link => {
-        link.classList.remove('bg-purple-100', 'font-semibold');
-        if ((link.getAttribute('onclick') || '').includes(sectionId)) {
-          link.classList.add('bg-purple-100', 'font-semibold');
-        }
-      });
-    }
 
   </script>
 </body>
