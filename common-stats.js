@@ -7,7 +7,7 @@
  * https://github.com/BiskuitZ/desakalemago2/graphs/traffic
  */
 
-const GITHUB_BASE_TOTAL = 1284;   // ← Update manual dari GitHub (Unique visitors)
+const GITHUB_BASE_TOTAL = 1148;   // ← Update manual dari GitHub (Unique visitors)
 const GITHUB_BASE_TODAY = 87;     // ← Update manual dari GitHub (Total views hari ini)
 
 function loadSharedVisitorStats() {
