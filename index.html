@@ -348,7 +348,7 @@
     </div>
     <div class="bg-emerald-800 rounded-lg shadow-lg p-6 text-white">
       <h3 class="text-xl font-bold mb-6">Peta Desa</h3>
-      <img src="fotokkn/PETA.png" alt="Peta Desa Kalemago" class="w-full h-[600px] object-contain rounded-lg shadow-lg">
+      <img src="fotokkn/PETA.jpg" alt="Peta Desa Kalemago" class="w-full h-[600px] object-contain rounded-lg shadow-lg">
       <p class="mt-4 text-sm leading-relaxed opacity-90">Menampilkan Peta Desa Dengan <em>Interest Point</em> Desa Kalemago</p>
     </div>
   </section>
@@ -499,27 +499,55 @@
     </div>
   </section>
 
-  <!-- Struktur Organisasi Section -->
-  <section class="bg-gradient-to-br from-blue-900 to-blue-800 py-16 text-white" data-scroll="fade-up">
-    <div class="container mx-auto px-6">
-      <h2 class="text-3xl font-bold text-center mb-4">Supporter</h2>
-      <p class="text-white/90 text-center mb-12 max-w-3xl mx-auto">Berikut adalah nama-nama supporter yang telah berkontribusi dalam pengembangan dan pengelolaan website Desa Kalemago.</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 flex items-center space-x-4 shadow-lg hover:scale-105 transition transform duration-300">
-          <img src="fotokkn/yumi.jpg" alt="Ahmad Fadli" class="w-16 h-16 rounded-full object-cover" />
-          <p class="text-xl font-semibold">Dwi Oktaviani M.</p>
+  <!-- Made By Section -->
+  <section class="bg-white py-12 border-t border-gray-200">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <p class="text-gray-500 text-sm mb-4 tracking-widest">WEBSITE INI DIBUAT OLEH</p>
+      
+      <div class="flex justify-center mb-6">
+        <div class="relative inline-block shiny-logo">
+          <img src="/fotokkn/asindu.png" alt="Asindu Engineering Consultant" class="h-20 w-auto mx-auto" />
         </div>
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 flex items-center space-x-4 shadow-lg hover:scale-105 transition transform duration-300">
-          <img src="fotokkn/kia.jpg" alt="Siti Aminah" class="w-16 h-16 rounded-full object-cover" />
-          <p class="text-xl font-semibold">Alkia Djaniba</p>
-        </div>
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 flex items-center space-x-4 shadow-lg hover:scale-105 transition transform duration-300">
-          <img src="fotokkn/melkris.jpg" alt="Budi Santoso" class="w-16 h-16 rounded-full object-cover" />
-          <p class="text-xl font-semibold">Melkris Nofker Perabu</p>
-        </div>
+      </div>
+      
+      <div class="space-y-1">
+        <h3 class="text-2xl font-bold text-gray-800">Asindu Media Group</h3>
+        <p class="text-emerald-600 font-semibold">Asindu Engineering Consultant</p>
+      </div>
+      
+      <div class="mt-4 text-sm text-gray-500 max-w-md mx-auto">
+        Jl. Hi. Agus Salim No. 31C, Kec. Poso Kota Utara,<br>
+        Kab. Poso, Provinsi Sulawesi Tengah
       </div>
     </div>
   </section>
+
+  <style>
+    .shiny-logo {
+      position: relative;
+      overflow: hidden;
+    }
+    .shiny-logo::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -100%;
+      width: 50%;
+      height: 200%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.85),
+        transparent
+      );
+      animation: shine 3s infinite;
+    }
+    @keyframes shine {
+      0% { left: -100%; }
+      20% { left: 200%; }
+      100% { left: 200%; }
+    }
+  </style>
 
   <!-- Footer -->
   <footer class="bg-emerald-800 py-8 text-center text-white">
