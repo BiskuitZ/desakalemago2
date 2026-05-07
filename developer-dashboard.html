@@ -9,7 +9,6 @@ layout: null
   <title>Developer Dashboard - Desa Kalemago</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="common-stats.js" defer></script>
 </head>
 <body class="bg-gray-100">
   <nav class="bg-purple-800 text-white shadow-lg sticky top-0 z-50">
@@ -488,15 +487,27 @@ layout: null
       document.getElementById('userName').textContent = user.name || user.username;
       document.getElementById('welcomeMessage').textContent = `Halo Developer, ${user.name || user.username}!`;
       
-      // Load shared visitor stats (sinkron antar halaman)
-      loadSharedVisitorStats();
-      
+      await loadVisitorStats();
       await loadWeather();
       await loadUserManagement();
       await loadProductManagement();
       await loadPopulationData();
       await loadAPBDesData();
       await loadTeamData();
+    }
+
+    async function loadVisitorStats() {
+      try {
+        const res = await fetch(`${API_URL}/api/stats`);
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('totalVisitors').textContent = data.totalVisitors || 1247;
+          document.getElementById('todayVisitors').textContent = Math.floor((data.totalVisitors || 1247) * 0.3);
+        }
+      } catch (err) {
+        document.getElementById('totalVisitors').textContent = '1,247';
+        document.getElementById('todayVisitors').textContent = '89';
+      }
     }
         document.getElementById('todayVisitors').textContent = '89';
       }
@@ -1262,10 +1273,6 @@ layout: null
 
     function logout() {
       if (confirm('Yakin ingin logout?')) {
-        // Kurangi user aktif
-        let active = parseInt(localStorage.getItem('dk_activeUsers') || '3');
-        localStorage.setItem('dk_activeUsers', Math.max(1, active - 1));
-
         localStorage.removeItem('user');
         window.location.href = 'login.html';
       }
@@ -1273,7 +1280,10 @@ layout: null
 
     checkAuth();
     
-    // Auto-refresh (shared stats sudah handle sendiri)
+    // Auto-refresh visitor stats
+    setInterval(() => {
+      loadVisitorStats();
+    }, 30000);
     }, 30000);
     // ============================================
     // MODAL FORM FOR ADD/EDIT MEMBER (Popup Overlay)
