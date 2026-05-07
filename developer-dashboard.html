@@ -36,11 +36,19 @@ layout: null
     </div>
   </nav>
 
-  <div class="max-w-7xl mx-auto px-6 py-8 flex gap-8">
+  <div class="flex">
     
-    <!-- LEFT SIDEBAR -->
-    <div class="w-72 flex-shrink-0">
-      <div class="bg-white rounded-3xl shadow-lg p-6 sticky top-6">
+    <!-- LEFT SIDEBAR (FIXED) -->
+    <div class="w-64 fixed left-0 top-[73px] h-[calc(100vh-73px)] bg-white border-r border-gray-200 overflow-y-auto z-40 shadow-sm">
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-6 px-2">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-purple-600 rounded-xl flex items-center justify-center">
+              <i class="fas fa-edit text-white text-sm"></i>
+            </div>
+            <span class="font-bold text-purple-800">Menu</span>
+          </div>
+        </div>
         <h4 class="font-bold text-purple-800 mb-4 flex items-center gap-2">
           <i class="fas fa-edit"></i> 
           <span>Menu Pengeditan</span>
@@ -73,7 +81,7 @@ layout: null
           </a>
         </div>
         
-        <div class="mt-8 pt-6 border-t border-gray-200">
+        <div class="mt-8 pt-6 border-t border-gray-200 px-1">
           <div class="text-xs text-gray-500 px-4">
             Tip: Klik menu di sebelah kiri untuk langsung ke bagian pengeditan.
           </div>
@@ -81,8 +89,8 @@ layout: null
       </div>
     </div>
     
-    <!-- MAIN CONTENT -->
-    <div class="flex-1 min-w-0">
+    <!-- MAIN CONTENT (with left margin for fixed sidebar) -->
+    <div class="flex-1 min-w-0 ml-64 px-6 py-8 max-w-[1400px]">
       
       <!-- STATUS WEBSITE SECTION -->
       <div id="status-section" class="section hidden">
@@ -418,8 +426,6 @@ layout: null
       </div>
     </div>
   </div>
-
-    </div> <!-- end of main content -->
 
   <!-- ADD PRODUCT MODAL -->
   <div id="addProductModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
