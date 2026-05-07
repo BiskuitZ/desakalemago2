@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peta Desa Kalemago</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map { height: 600px; border-radius: 20px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
+    .leaflet-popup-content-wrapper { border-radius: 12px; }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <!-- Navbar -->
+  <nav class="bg-emerald-800 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <img src="fotokkn/logokabposo.png" alt="Logo" class="w-12 h-12 object-contain">
+          <div>
+            <h1 class="font-bold text-2xl">Peta Desa Kalemago</h1>
+            <p class="text-emerald-300 text-sm">Kabupaten Poso • Sulawesi Tengah</p>
+          </div>
+        </div>
+        <a href="index.html" class="bg-white text-emerald-800 px-5 py-2 rounded-2xl text-sm font-semibold flex items-center gap-2 hover:bg-emerald-100 transition">
+          <i class="fas fa-home"></i>
+          <span>Kembali ke Beranda</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <div class="mb-6">
+      <h2 class="text-3xl font-bold text-emerald-800">Peta Interaktif Desa Kalemago</h2>
+      <p class="text-gray-600 mt-1">Klik marker untuk melihat informasi lokasi</p>
+    </div>
+
+    <!-- Map -->
+    <div id="map" class="w-full rounded-3xl shadow-xl border border-emerald-100"></div>
+
+    <div class="mt-6 text-center text-sm text-gray-500">
+      <i class="fas fa-info-circle mr-1"></i>
+      Data peta dikelola melalui Developer Dashboard
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Initialize map centered on Kalemago
+    const map = L.map('map').setView([-1.5123, 120.4300], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Load map points from localStorage
+    function loadMapPointsOnPublic() {
+      const points = JSON.parse(localStorage.getItem('mapPoints') || '[]');
+      
+      points.forEach(point => {
+        const marker = L.marker([point.lat, point.lng]).addTo(map);
+        
+        const popupContent = `
+          <div class="min-w-[200px]">
+            <h3 class="font-bold text-lg text-emerald-800 mb-1">${point.name}</h3>
+            ${point.description ? `<p class="text-gray-600 text-sm mb-2">${point.description}</p>` : ''}
+            <div class="text-xs text-gray-500 mt-2">
+              <i class="fas fa-map-marker-alt"></i> ${point.lat.toFixed(4)}, ${point.lng.toFixed(4)}
+            </div>
+          </div>
+        `;
+        
+        marker.bindPopup(popupContent, { maxWidth: 300, className: 'custom-popup' });
+      });
+      
+      // Fit map to points if any exist
+      if (points.length > 0) {
+        const group = new L.featureGroup(points.map(p => L.marker([p.lat, p.lng])));
+        map.fitBounds(group.getBounds().pad(0.2));
+      }
+    }
+
+    // Load on page ready
+    document.addEventListener('DOMContentLoaded', () => {
+      loadMapPointsOnPublic();
+    });
+  </script>
+</body>
+</html>
