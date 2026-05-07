@@ -41,14 +41,20 @@ function loadSharedVisitorStats() {
   if (elements.today) elements.today.textContent = today.toLocaleString('id-ID');
   if (elements.online) elements.online.textContent = online;
 
-  // Simulasi "Sedang Online" berubah-ubah sedikit
-  setInterval(() => {
-    if (elements.online) {
-      const newOnline = Math.max(8, Math.min(18, online + (Math.random() > 0.5 ? 1 : -1)));
-      elements.online.textContent = newOnline;
-      localStorage.setItem('dk_onlineVisitors', newOnline);
-    }
-  }, 45000);
+  // Update "Sedang Online" berdasarkan user aktif
+  function updateOnlineUsers() {
+    if (!elements.online) return;
+
+    let activeUsers = parseInt(localStorage.getItem('dk_activeUsers') || '3');
+    const variance = Math.floor(Math.random() * 3) - 1;
+    const displayOnline = Math.max(2, Math.min(7, activeUsers + variance));
+
+    elements.online.textContent = displayOnline;
+    localStorage.setItem('dk_onlineVisitors', displayOnline);
+  }
+
+  updateOnlineUsers();
+  setInterval(updateOnlineUsers, 30000);
 }
 
 // Jalankan saat halaman dimuat
