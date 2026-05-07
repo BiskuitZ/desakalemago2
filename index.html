@@ -566,13 +566,15 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const links = document.querySelectorAll('a[href]');
-      links.forEach(link => {
+      // Only trigger loading screen for navbar links (top navigation)
+      const navLinks = document.querySelectorAll('nav a[href]');
+      navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
           const isExternal = this.hostname !== window.location.hostname;
           const isBlank = this.target === '_blank';
-          const isNoLoader = this.classList.contains('no-loader');
-          if (!isExternal && !isBlank && !isNoLoader && this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
+          const isHash = this.href.includes('#');
+          
+          if (!isExternal && !isBlank && !isHash && this.href && this.href !== window.location.href) {
             showLoading();
           }
         });
