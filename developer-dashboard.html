@@ -85,7 +85,7 @@ layout: null
     </div>
     
     <!-- MAIN CONTENT (with left margin for fixed sidebar) -->
-    <div class="flex-1 min-w-0 ml-64 px-6 py-8 max-w-[1400px]">
+    <div id="main-content" class="flex-1 min-w-0 ml-64 px-6 py-8 max-w-[1400px]">
       
       <!-- STATUS WEBSITE SECTION -->
       <div id="status-section" class="section hidden">
@@ -1501,8 +1501,11 @@ layout: null
 
     // Show only one section at a time (SPA behavior - VERY STRICT)
     function showSection(sectionId) {
-      const mainContent = document.querySelector('.flex-1.min-w-0');
-      if (!mainContent) return;
+      const mainContent = document.getElementById('main-content');
+      if (!mainContent) {
+        console.error('Main content not found');
+        return;
+      }
 
       // Hide EVERYTHING inside main content first
       Array.from(mainContent.children).forEach(child => {
@@ -1513,6 +1516,8 @@ layout: null
       const target = document.getElementById(sectionId);
       if (target) {
         target.classList.remove('hidden');
+      } else {
+        console.warn('Section not found:', sectionId);
       }
 
       // Highlight active menu
