@@ -539,10 +539,12 @@
       background: linear-gradient(
         120deg,
         transparent,
-        rgba(255,255,255,0.85),
+        rgba(255,255,255,0.9),
         transparent
       );
       animation: shine 3s infinite;
+      mix-blend-mode: screen;
+      pointer-events: none;
     }
     @keyframes shine {
       0% { left: -100%; }
