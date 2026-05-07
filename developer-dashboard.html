@@ -1471,45 +1471,27 @@ layout: null
       alert('✅ Data berhasil disimpan! (Foto disimpan sebagai base64 untuk sementara)\n\nUntuk production, backend upload perlu ditambahkan.');
     }
 
-    // Active sidebar link highlighting
-    // Simple smooth scroll for sidebar navigation
+    // Sidebar navigation - simple & reliable
     document.addEventListener('DOMContentLoaded', () => {
       const sidebarLinks = document.querySelectorAll('.sidebar-link');
       
       sidebarLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          // Remove active class from all
+        link.addEventListener('click', () => {
+          // Remove active from all
           sidebarLinks.forEach(l => l.classList.remove('bg-purple-100', 'font-semibold'));
-          // Add active to clicked
+          // Activate clicked
           link.classList.add('bg-purple-100', 'font-semibold');
-          
-          // Smooth scroll to target
-          const targetId = link.getAttribute('href').substring(1);
-          const targetElement = document.getElementById(targetId);
-          if (targetElement) {
-            const offset = 80;
-            const bodyRect = document.body.getBoundingClientRect().top;
-            const elementPosition = targetElement.getBoundingClientRect().top;
-            const offsetPosition = elementPosition - bodyRect - offset;
-            
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'smooth'
-            });
-          }
         });
       });
       
-      // Highlight active section on scroll
+      // Scroll spy for active menu
       window.addEventListener('scroll', () => {
         let current = '';
         document.querySelectorAll('.section').forEach(section => {
-          const sectionTop = section.offsetTop;
-          if (scrollY >= sectionTop - 150) {
+          if (scrollY >= section.offsetTop - 120) {
             current = section.getAttribute('id');
           }
         });
-        
         sidebarLinks.forEach(link => {
           link.classList.remove('bg-purple-100', 'font-semibold');
           if (link.getAttribute('href') === `#${current}`) {
@@ -1518,12 +1500,26 @@ layout: null
         });
       });
       
-      // Load initial data
+      // Initial data load from backend
       setTimeout(() => {
-        if (typeof loadTeamData === 'function') loadTeamData();
-        if (typeof loadPopulationData === 'function') loadPopulationData();
-        if (typeof loadUserManagement === 'function') loadUserManagement();
-      }, 300);
+        console.log('%c[SYNC] Loading data from backend...', 'color:#10b981');
+        
+        if (typeof loadUserManagement === 'function') {
+          loadUserManagement().catch(e => console.error('User load error:', e));
+        }
+        if (typeof loadPopulationData === 'function') {
+          loadPopulationData().catch(e => console.error('Population load error:', e));
+        }
+        if (typeof loadTeamData === 'function') {
+          loadTeamData().catch(e => console.error('Team load error:', e));
+        }
+        if (typeof loadProductManagement === 'function') {
+          loadProductManagement().catch(e => console.error('Product load error:', e));
+        }
+        if (typeof loadAPBDesData === 'function') {
+          loadAPBDesData().catch(e => console.error('APBDes load error:', e));
+        }
+      }, 800);
     });
 
   </script>
