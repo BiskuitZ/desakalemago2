@@ -363,11 +363,28 @@
           const group = L.featureGroup();
           
           points.forEach(point => {
-            const marker = L.marker([point.lat, point.lng]).addTo(map);
+            const iconClass = point.icon || 'fa-map-marker-alt';
+            const iconColor = ['fa-church','fa-mosque'].includes(iconClass) ? '#10b981' : 
+                             iconClass === 'fa-landmark' ? '#f59e0b' : '#6366f1';
+            
+            const customIcon = L.divIcon({
+              className: 'custom-map-icon',
+              html: `<div style="background:white;border:3px solid ${iconColor};width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1);">
+                       <i class="fas ${iconClass}" style="color:${iconColor};font-size:17px;"></i>
+                     </div>`,
+              iconSize: [34, 34],
+              iconAnchor: [17, 17],
+              popupAnchor: [0, -17]
+            });
+            
+            const marker = L.marker([point.lat, point.lng], { icon: customIcon }).addTo(map);
             
             const popupContent = `
               <div class="min-w-[220px]">
-                <h3 class="font-bold text-lg text-emerald-800 mb-2">${point.name}</h3>
+                <div class="flex items-center gap-2 mb-2">
+                  <i class="fas ${iconClass} text-xl" style="color: ${iconColor}"></i>
+                  <h3 class="font-bold text-lg text-emerald-800">${point.name}</h3>
+                </div>
                 ${point.description ? `<p class="text-gray-600 text-sm mb-3">${point.description}</p>` : ''}
                 <div class="text-xs text-gray-500 border-t pt-2 mt-2">
                   <i class="fas fa-map-marker-alt"></i> ${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}
