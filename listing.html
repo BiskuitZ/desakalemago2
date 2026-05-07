@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     html {
       touch-action: manipulation;
@@ -319,6 +320,79 @@
         scrollBtn.style.pointerEvents = 'none';
       }
     });
+
+    // ==================== PETA DESA INTERAKTIF ====================
+    function initPetaDesa() {
+      const mapContainer = document.createElement('div');
+      mapContainer.className = 'max-w-7xl mx-auto px-6 py-12';
+      mapContainer.innerHTML = `
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-bold text-emerald-800 mb-2">Peta Interaktif Desa Kalemago</h2>
+          <p class="text-gray-600">Klik marker untuk melihat informasi lokasi penting</p>
+        </div>
+        
+        <div id="peta-desa" class="w-full h-[500px] rounded-3xl shadow-xl border border-emerald-100 overflow-hidden"></div>
+        
+        <div class="mt-4 text-center text-sm text-gray-500">
+          <i class="fas fa-info-circle mr-1"></i>
+          Data peta dikelola melalui Developer Dashboard
+        </div>
+      `;
+      
+      // Insert before footer or at the end of main content
+      const footer = document.querySelector('footer');
+      if (footer) {
+        footer.parentNode.insertBefore(mapContainer, footer);
+      } else {
+        document.body.appendChild(mapContainer);
+      }
+      
+      // Initialize Leaflet Map
+      setTimeout(() => {
+        const map = L.map('peta-desa').setView([-1.5123, 120.4300], 15);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap',
+          maxZoom: 19
+        }).addTo(map);
+        
+        // Load points from localStorage (synced with Developer Dashboard)
+        const points = JSON.parse(localStorage.getItem('mapPoints') || '[]');
+        
+        if (points.length > 0) {
+          const group = L.featureGroup();
+          
+          points.forEach(point => {
+            const marker = L.marker([point.lat, point.lng]).addTo(map);
+            
+            const popupContent = `
+              <div class="min-w-[220px]">
+                <h3 class="font-bold text-lg text-emerald-800 mb-2">${point.name}</h3>
+                ${point.description ? `<p class="text-gray-600 text-sm mb-3">${point.description}</p>` : ''}
+                <div class="text-xs text-gray-500 border-t pt-2 mt-2">
+                  <i class="fas fa-map-marker-alt"></i> ${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}
+                </div>
+              </div>
+            `;
+            
+            marker.bindPopup(popupContent, { maxWidth: 280, className: 'custom-popup' });
+            group.addLayer(marker);
+          });
+          
+          map.fitBounds(group.getBounds().pad(0.15));
+        }
+      }, 300);
+    }
+
+    // Load map when page is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPetaDesa);
+    } else {
+      initPetaDesa();
+    }
   </script>
+  
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
 </html>
