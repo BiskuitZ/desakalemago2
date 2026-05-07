@@ -217,7 +217,7 @@ layout: null
     </div>
 
     <!-- USER MANAGEMENT -->
-    <div id="user-management" class="section bg-white rounded-3xl shadow-lg p-8">
+    <div id="user-management" class="section hidden bg-white rounded-3xl shadow-lg p-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="loadUserManagement()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-sync"></i>
@@ -242,7 +242,7 @@ layout: null
     </div>
 
     <!-- PRODUCT MANAGEMENT -->
-    <div id="product-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="product-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="showAddProductModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-plus"></i>
@@ -267,7 +267,7 @@ layout: null
     </div>
 
     <!-- POPULATION MANAGEMENT -->
-    <div id="population-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="population-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
       
       <div class="grid md:grid-cols-2 gap-6">
         <div>
@@ -331,7 +331,7 @@ layout: null
     </div>
 
     <!-- APBDES MANAGEMENT -->
-    <div id="apbdes-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="apbdes-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
       
       <div class="grid md:grid-cols-2 gap-6">
         <div>
@@ -363,7 +363,7 @@ layout: null
     </div>
 
     <!-- WEB DESIGNER / TEAM MANAGEMENT -->
-    <div id="team-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="team-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="showMemberModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-plus"></i>
@@ -1467,55 +1467,49 @@ layout: null
       alert('✅ Data berhasil disimpan! (Foto disimpan sebagai base64 untuk sementara)\n\nUntuk production, backend upload perlu ditambahkan.');
     }
 
-    // Sidebar navigation - simple & reliable
-    document.addEventListener('DOMContentLoaded', () => {
-      const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    // SPA: Show ONLY the selected section (force hide others)
+    function showSection(sectionId) {
+      // Force hide ALL sections
+      document.querySelectorAll('.section').forEach(el => {
+        el.style.display = 'none';
+      });
       
-      sidebarLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          // Remove active from all
-          sidebarLinks.forEach(l => l.classList.remove('bg-purple-100', 'font-semibold'));
-          // Activate clicked
+      // Show only target
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.style.display = 'block';
+      }
+      
+      // Highlight active menu
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.classList.remove('bg-purple-100', 'font-semibold');
+        if (link.getAttribute('href') === `#${sectionId}`) {
           link.classList.add('bg-purple-100', 'font-semibold');
+        }
+      });
+      
+      // Sync backend data
+      if (sectionId === 'team-management' && typeof loadTeamData === 'function') setTimeout(loadTeamData, 80);
+      if (sectionId === 'population-management' && typeof loadPopulationData === 'function') setTimeout(loadPopulationData, 80);
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      // Wire up sidebar links
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          showSection(link.getAttribute('href').substring(1));
         });
       });
       
-      // Scroll spy for active menu
-      window.addEventListener('scroll', () => {
-        let current = '';
-        document.querySelectorAll('.section').forEach(section => {
-          if (scrollY >= section.offsetTop - 120) {
-            current = section.getAttribute('id');
-          }
-        });
-        sidebarLinks.forEach(link => {
-          link.classList.remove('bg-purple-100', 'font-semibold');
-          if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('bg-purple-100', 'font-semibold');
-          }
-        });
-      });
+      // Show Status Website by default
+      showSection('status-section');
       
-      // Initial data load from backend
+      // Initial backend sync
       setTimeout(() => {
-        console.log('%c[SYNC] Loading data from backend...', 'color:#10b981');
-        
-        if (typeof loadUserManagement === 'function') {
-          loadUserManagement().catch(e => console.error('User load error:', e));
-        }
-        if (typeof loadPopulationData === 'function') {
-          loadPopulationData().catch(e => console.error('Population load error:', e));
-        }
-        if (typeof loadTeamData === 'function') {
-          loadTeamData().catch(e => console.error('Team load error:', e));
-        }
-        if (typeof loadProductManagement === 'function') {
-          loadProductManagement().catch(e => console.error('Product load error:', e));
-        }
-        if (typeof loadAPBDesData === 'function') {
-          loadAPBDesData().catch(e => console.error('APBDes load error:', e));
-        }
-      }, 800);
+        if (typeof loadTeamData === 'function') loadTeamData();
+        if (typeof loadPopulationData === 'function') loadPopulationData();
+      }, 500);
     });
 
   </script>
