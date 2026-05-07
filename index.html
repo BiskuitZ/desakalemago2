@@ -569,7 +569,9 @@
       const links = document.querySelectorAll('a[href]');
       links.forEach(link => {
         link.addEventListener('click', function(e) {
-          if (this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
+          const isExternal = this.hostname !== window.location.hostname;
+          const isBlank = this.target === '_blank';
+          if (!isExternal && !isBlank && this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
             showLoading();
           }
         });
