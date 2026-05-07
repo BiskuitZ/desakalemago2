@@ -9,6 +9,16 @@ layout: null
   <title>Developer Dashboard - Desa Kalemago</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    .section { scroll-margin-top: 80px; }
+    .section-header { 
+      background: linear-gradient(135deg, #581c87 0%, #7c3aed 100%);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 16px 16px 0 0;
+      margin-bottom: 0;
+    }
+  </style>
 </head>
 <body class="bg-gray-100">
   <nav class="bg-purple-800 text-white shadow-lg sticky top-0 z-50">
@@ -218,7 +228,7 @@ layout: null
     </div>
 
     <!-- USER MANAGEMENT -->
-    <div id="user-management" class="section hidden bg-white rounded-3xl shadow-lg p-8">
+    <div id="user-management" class="section bg-white rounded-3xl shadow-lg p-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="loadUserManagement()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-sync"></i>
@@ -243,7 +253,7 @@ layout: null
     </div>
 
     <!-- PRODUCT MANAGEMENT -->
-    <div id="product-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="product-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="showAddProductModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-plus"></i>
@@ -268,7 +278,7 @@ layout: null
     </div>
 
     <!-- POPULATION MANAGEMENT -->
-    <div id="population-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="population-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
       
       <div class="grid md:grid-cols-2 gap-6">
         <div>
@@ -332,7 +342,7 @@ layout: null
     </div>
 
     <!-- APBDES MANAGEMENT -->
-    <div id="apbdes-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="apbdes-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
       
       <div class="grid md:grid-cols-2 gap-6">
         <div>
@@ -364,7 +374,7 @@ layout: null
     </div>
 
     <!-- WEB DESIGNER / TEAM MANAGEMENT -->
-    <div id="team-management" class="section hidden bg-white rounded-3xl shadow-lg p-8 mt-8">
+    <div id="team-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
       <div class="flex items-center justify-end mb-6">
         <button onclick="showMemberModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
           <i class="fas fa-plus"></i>
@@ -1468,49 +1478,27 @@ layout: null
       alert('✅ Data berhasil disimpan! (Foto disimpan sebagai base64 untuk sementara)\n\nUntuk production, backend upload perlu ditambahkan.');
     }
 
-    // SPA: Show ONLY the selected section (force hide others)
-    function showSection(sectionId) {
-      // Force hide ALL sections
-      document.querySelectorAll('.section').forEach(el => {
-        el.style.display = 'none';
-      });
-      
-      // Show only target
-      const target = document.getElementById(sectionId);
-      if (target) {
-        target.style.display = 'block';
-      }
-      
-      // Highlight active menu
-      document.querySelectorAll('.sidebar-link').forEach(link => {
-        link.classList.remove('bg-purple-100', 'font-semibold');
-        if (link.getAttribute('href') === `#${sectionId}`) {
-          link.classList.add('bg-purple-100', 'font-semibold');
-        }
-      });
-      
-      // Sync backend data
-      if (sectionId === 'team-management' && typeof loadTeamData === 'function') setTimeout(loadTeamData, 80);
-      if (sectionId === 'population-management' && typeof loadPopulationData === 'function') setTimeout(loadPopulationData, 80);
-    }
-    
     document.addEventListener('DOMContentLoaded', () => {
-      // Wire up sidebar links
-      document.querySelectorAll('.sidebar-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          showSection(link.getAttribute('href').substring(1));
+      const sidebarLinks = document.querySelectorAll('.sidebar-link');
+      
+      // Highlight active menu on click
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          sidebarLinks.forEach(l => l.classList.remove('bg-purple-100', 'font-semibold'));
+          link.classList.add('bg-purple-100', 'font-semibold');
         });
       });
-      
-      // Show Status Website by default
-      showSection('status-section');
       
       // Initial backend sync
       setTimeout(() => {
         if (typeof loadTeamData === 'function') loadTeamData();
         if (typeof loadPopulationData === 'function') loadPopulationData();
       }, 500);
+      
+      // If no hash in URL, default to status-section
+      if (!window.location.hash) {
+        window.location.hash = '#status-section';
+      }
     });
 
   </script>
