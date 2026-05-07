@@ -1524,17 +1524,6 @@ layout: null
       });
     }
 
-    // Force separation on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      // Hide everything first
-      const main = document.querySelector('.flex-1.min-w-0');
-      if (main) {
-        Array.from(main.children).forEach(c => c.classList.add('hidden'));
-      }
-      // Show only Status Website
-      const status = document.getElementById('status-section');
-      if (status) status.classList.remove('hidden');
-    });
   </script>
 </body>
 </html>
