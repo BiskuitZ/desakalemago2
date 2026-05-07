@@ -1616,6 +1616,37 @@ layout: null
               <label class="block text-sm font-semibold text-gray-700 mb-1">Deskripsi</label>
               <textarea id="mapPointDesc" class="w-full px-4 py-2 border border-gray-300 rounded-2xl h-20">${point ? point.description || '' : ''}</textarea>
             </div>
+            
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Icon Lokasi</label>
+              <div class="grid grid-cols-4 gap-2" id="icon-selector">
+                <div onclick="selectIcon(this, 'fa-church')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-church' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-church text-2xl text-purple-600"></i><span class="text-xs mt-1">Gereja</span>
+                </div>
+                <div onclick="selectIcon(this, 'fa-mosque')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-mosque' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-mosque text-2xl text-emerald-600"></i><span class="text-xs mt-1">Mesjid</span>
+                </div>
+                <div onclick="selectIcon(this, 'fa-landmark')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-landmark' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-landmark text-2xl text-amber-600"></i><span class="text-xs mt-1">Kantor Desa</span>
+                </div>
+                <div onclick="selectIcon(this, 'fa-futbol')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-futbol' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-futbol text-2xl text-blue-600"></i><span class="text-xs mt-1">Lapangan</span>
+                </div>
+                <div onclick="selectIcon(this, 'fa-school')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-school' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-school text-2xl text-indigo-600"></i><span class="text-xs mt-1">Sekolah</span>
+                </div>
+                <div onclick="selectIcon(this, 'fa-hospital')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-hospital' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-hospital text-2xl text-red-600"></i><span class="text-xs mt-1">Puskesmas</span>
+                </div>
+                <div onclick="selectIcon(this, 'fa-warehouse')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-warehouse' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-warehouse text-2xl text-gray-600"></i><span class="text-xs mt-1">Gudang</span>
+                </div>
+                <div onclick="selectIcon(this, 'fa-home')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-home' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-home text-2xl text-orange-600"></i><span class="text-xs mt-1">Rumah Warga</span>
+                </div>
+              </div>
+              <input type="hidden" id="mapPointIcon" value="${point ? point.icon || 'fa-map-marker-alt' : 'fa-map-marker-alt'}">
+            </div>
           </div>
           
           <div class="flex gap-3 mt-6">
@@ -1625,6 +1656,25 @@ layout: null
         </div>
       `;
       document.body.appendChild(modal);
+      
+      // Pre-select current icon
+      if (point && point.icon) {
+        setTimeout(() => {
+          const selected = document.querySelector(`.icon-option[onclick*="${point.icon}"]`);
+          if (selected) selected.classList.add('ring-2', 'ring-purple-500', 'bg-purple-50');
+        }, 50);
+      }
+    }
+
+    function selectIcon(element, iconClass) {
+      // Remove selection from all
+      document.querySelectorAll('#icon-selector .icon-option').forEach(el => {
+        el.classList.remove('ring-2', 'ring-purple-500', 'bg-purple-50');
+      });
+      // Select current
+      element.classList.add('ring-2', 'ring-purple-500', 'bg-purple-50');
+      // Set hidden input
+      document.getElementById('mapPointIcon').value = iconClass;
     }
 
     function saveMapPoint(editIndex) {
@@ -1638,7 +1688,8 @@ layout: null
         return;
       }
       
-      const newPoint = { name, lat, lng, description };
+      const icon = document.getElementById('mapPointIcon').value || 'fa-map-marker-alt';
+      const newPoint = { name, lat, lng, description, icon };
       
       if (editIndex !== null) {
         mapPoints[editIndex] = newPoint;
