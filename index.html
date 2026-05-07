@@ -505,7 +505,7 @@
       <p class="text-gray-500 text-sm mb-4 tracking-widest">WEBSITE INI DIBUAT OLEH</p>
       
       <div class="flex justify-center mb-6">
-        <a href="https://asindu.site" target="_blank" class="relative inline-block shiny-logo group">
+        <a href="https://asindu.site" target="_blank" class="relative inline-block shiny-logo group no-loader">
           <img src="fotokkn/asindu.png" alt="Asindu Engineering Consultant" 
                class="h-28 md:h-32 w-auto mx-auto object-contain transition-transform group-hover:scale-105" 
                style="max-width: 380px;" />
@@ -571,7 +571,8 @@
         link.addEventListener('click', function(e) {
           const isExternal = this.hostname !== window.location.hostname;
           const isBlank = this.target === '_blank';
-          if (!isExternal && !isBlank && this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
+          const isNoLoader = this.classList.contains('no-loader');
+          if (!isExternal && !isBlank && !isNoLoader && this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
             showLoading();
           }
         });
