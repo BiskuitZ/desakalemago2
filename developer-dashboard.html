@@ -156,6 +156,10 @@ layout: null
             <i class="fas fa-users text-purple-600 w-5"></i> 
             <span>Tim Web Designer</span>
           </a>
+          <a href="#map-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+            <i class="fas fa-map-marked w-5"></i> 
+            <span>Manajemen Peta Desa</span>
+          </a>
         </div>
         
         <div class="mt-8 pt-6 border-t border-gray-200 px-1">
@@ -421,6 +425,39 @@ layout: null
         <i class="fas fa-save"></i>
         <span>Simpan Perubahan</span>
       </button>
+    </div>
+
+    <!-- MAP MANAGEMENT -->
+    <div id="map-management" class="section bg-white rounded-3xl shadow-lg p-8 mt-8">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
+          <i class="fas fa-map-marked text-purple-600"></i>
+          Manajemen Peta Desa
+        </h3>
+        <button onclick="showAddMapPointModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
+          <i class="fas fa-plus"></i>
+          <span>Tambah Titik</span>
+        </button>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-gray-200">
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">No</th>
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">Nama Lokasi</th>
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">Koordinat</th>
+              <th class="text-left py-3 px-4 font-semibold text-gray-600">Deskripsi</th>
+              <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="mapTableBody"></tbody>
+        </table>
+      </div>
+      
+      <div class="mt-4 text-xs text-gray-500">
+        Data peta tersimpan di localStorage. Export/Import tersedia untuk backup.
+      </div>
     </div>
   </div>
 
@@ -1519,6 +1556,120 @@ layout: null
       document.querySelector('.fixed').remove();
       alert('✅ Data berhasil disimpan! (Foto disimpan sebagai base64 untuk sementara)\n\nUntuk production, backend upload perlu ditambahkan.');
     }
+
+    // MAP POINTS MANAGEMENT
+    let mapPoints = JSON.parse(localStorage.getItem('mapPoints') || '[]');
+
+    function loadMapPoints() {
+      const tbody = document.getElementById('mapTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      
+      if (mapPoints.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Belum ada titik peta</td></tr>';
+        return;
+      }
+      
+      mapPoints.forEach((point, index) => {
+        const row = document.createElement('tr');
+        row.className = 'border-b border-gray-100 hover:bg-gray-50';
+        row.innerHTML = `
+          <td class="py-3 px-4">${index + 1}</td>
+          <td class="py-3 px-4 font-semibold">${point.name}</td>
+          <td class="py-3 px-4 font-mono text-xs">${point.lat.toFixed(4)}, ${point.lng.toFixed(4)}</td>
+          <td class="py-3 px-4 text-sm text-gray-600">${point.description || '-'}</td>
+          <td class="py-3 px-4 text-center">
+            <button onclick="editMapPoint(${index})" class="text-blue-600 hover:text-blue-800 mx-1"><i class="fas fa-edit"></i></button>
+            <button onclick="deleteMapPoint(${index})" class="text-red-600 hover:text-red-800 mx-1"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function showAddMapPointModal(editIndex = null) {
+      const point = editIndex !== null ? mapPoints[editIndex] : null;
+      
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999]';
+      modal.innerHTML = `
+        <div onclick="event.target.remove()" class="absolute inset-0"></div>
+        <div onclick="event.stopImmediatePropagation()" class="bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 p-6">
+          <h3 class="text-xl font-bold text-purple-800 mb-4">${point ? 'Edit Titik Peta' : 'Tambah Titik Peta Baru'}</h3>
+          
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Lokasi</label>
+              <input type="text" id="mapPointName" value="${point ? point.name : ''}" class="w-full px-4 py-2 border border-gray-300 rounded-2xl">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Latitude</label>
+                <input type="number" step="0.0001" id="mapPointLat" value="${point ? point.lat : '-1.5123'}" class="w-full px-4 py-2 border border-gray-300 rounded-2xl">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Longitude</label>
+                <input type="number" step="0.0001" id="mapPointLng" value="${point ? point.lng : '120.4300'}" class="w-full px-4 py-2 border border-gray-300 rounded-2xl">
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Deskripsi</label>
+              <textarea id="mapPointDesc" class="w-full px-4 py-2 border border-gray-300 rounded-2xl h-20">${point ? point.description || '' : ''}</textarea>
+            </div>
+          </div>
+          
+          <div class="flex gap-3 mt-6">
+            <button onclick="saveMapPoint(${editIndex})" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-2xl font-semibold">Simpan</button>
+            <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2.5 rounded-2xl font-semibold">Batal</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function saveMapPoint(editIndex) {
+      const name = document.getElementById('mapPointName').value.trim();
+      const lat = parseFloat(document.getElementById('mapPointLat').value);
+      const lng = parseFloat(document.getElementById('mapPointLng').value);
+      const description = document.getElementById('mapPointDesc').value.trim();
+      
+      if (!name || isNaN(lat) || isNaN(lng)) {
+        alert('Nama dan koordinat wajib diisi!');
+        return;
+      }
+      
+      const newPoint = { name, lat, lng, description };
+      
+      if (editIndex !== null) {
+        mapPoints[editIndex] = newPoint;
+      } else {
+        mapPoints.push(newPoint);
+      }
+      
+      localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
+      loadMapPoints();
+      document.querySelector('.fixed').remove();
+      
+      alert('✅ Titik peta berhasil disimpan!');
+    }
+
+    function editMapPoint(index) {
+      showAddMapPointModal(index);
+    }
+
+    function deleteMapPoint(index) {
+      if (!confirm('Hapus titik ini?')) return;
+      mapPoints.splice(index, 1);
+      localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
+      loadMapPoints();
+    }
+
+    // Load map points when page loads
+    setTimeout(() => {
+      if (document.getElementById('mapTableBody')) {
+        loadMapPoints();
+      }
+    }, 1000);
 
     function showSection(sectionId) {
       // Hide all sections
