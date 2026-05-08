@@ -318,7 +318,7 @@
     });
 
     // ==================== PETA DESA INTERAKTIF ====================
-    function initPetaDesa() {
+    async function initPetaDesa() {
       const mapContainer = document.createElement('div');
       mapContainer.className = 'max-w-7xl mx-auto px-6 py-12';
       mapContainer.innerHTML = `
@@ -343,8 +343,8 @@
         document.body.appendChild(mapContainer);
       }
       
-      // Initialize Leaflet Map
-      setTimeout(() => {
+      // Initialize Leaflet Map (async to support backend fetch)
+      setTimeout(async () => {
         const map = L.map('peta-desa').setView([-1.5123, 120.4300], 15);
         
         // Satellite Mode (Esri World Imagery)
@@ -353,8 +353,20 @@
           maxZoom: 19
         }).addTo(map);
         
-        // Load points from localStorage (synced with Developer Dashboard)
-        const points = JSON.parse(localStorage.getItem('mapPoints') || '[]');
+        // Load points from Backend (synced with Developer Dashboard - works on all devices)
+        let points = [];
+        try {
+          const res = await fetch('https://desakalemago2-backend-production.up.railway.app/api/map-points');
+          if (res.ok) {
+            const data = await res.json();
+            points = data.points || data || [];
+          } else {
+            // Fallback to localStorage
+            points = JSON.parse(localStorage.getItem('mapPoints') || '[]');
+          }
+        } catch (e) {
+          points = JSON.parse(localStorage.getItem('mapPoints') || '[]');
+        }
         
         if (points.length > 0) {
           const group = L.featureGroup();
