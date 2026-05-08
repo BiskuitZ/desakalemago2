@@ -73,7 +73,7 @@
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
-      const username = document.getElementById('username').value;
+      const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
       const loginBtn = document.getElementById('loginBtn');
       const errorDiv = document.getElementById('errorMessage');
@@ -83,15 +83,26 @@
       loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
 
       try {
+        // Add timeout for mobile networks
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
+          body: JSON.stringify({ username, password }),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
 
         const data = await response.json();
 
-        if (data.success) {
+        if (data.success && data.user) {
           localStorage.setItem('user', JSON.stringify(data.user));
           
           // REDIRECT BERDASARKAN ROLE
@@ -103,13 +114,22 @@
             window.location.href = 'user-dashboard.html';
           }
         } else {
-          errorDiv.textContent = data.message || 'Login gagal';
+          errorDiv.textContent = data.message || 'Username atau password salah';
           errorDiv.classList.remove('hidden');
           loginBtn.disabled = false;
           loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
         }
       } catch (error) {
-        errorDiv.textContent = 'Tidak dapat terhubung ke server';
+        console.error('Login error:', error);
+        
+        let msg = 'Gagal terhubung ke server.';
+        if (error.name === 'AbortError') {
+          msg = 'Koneksi timeout. Periksa internet Anda.';
+        } else if (error.message.includes('Failed to fetch')) {
+          msg = 'Tidak dapat terhubung. Coba matikan VPN atau ganti jaringan.';
+        }
+        
+        errorDiv.textContent = msg;
         errorDiv.classList.remove('hidden');
         loginBtn.disabled = false;
         loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
