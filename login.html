@@ -136,12 +136,8 @@
       }
     });
 
-    if (localStorage.getItem('user')) {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (user.role === 'developer') window.location.href = 'developer-dashboard.html';
-      else if (user.role === 'admin') window.location.href = 'admin-dashboard.html';
-      else window.location.href = 'user-dashboard.html';
-    }
+    // Auto-redirect removed to prevent infinite loop.
+    // User will be redirected only after successful login.
   </script>
 </body>
 </html>
