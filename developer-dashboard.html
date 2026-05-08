@@ -529,21 +529,35 @@ layout: null
     const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
 
     async function checkAuth() {
-      const userStr = localStorage.getItem('user');
-      if (!userStr) { window.location.href = 'login.html'; return; }
-      
-      const user = JSON.parse(userStr);
-      
-      if (user.role === 'user') { window.location.href = 'user-dashboard.html'; return; }
-      if (user.role === 'admin') { window.location.href = 'admin-dashboard.html'; return; }
-      
-      const userNameEl = document.getElementById('userName');
-      const welcomeEl = document.getElementById('welcomeMessage');
-      if (userNameEl) userNameEl.textContent = user.name || user.username;
-      if (welcomeEl) welcomeEl.textContent = `Halo Developer, ${user.name || user.username}!`;
-      
-      await loadVisitorStats();
-      await loadWeather();
+      try {
+        const userStr = localStorage.getItem('user');
+        if (!userStr) { window.location.href = 'login.html'; return; }
+        
+        const user = JSON.parse(userStr);
+        
+        if (user.role === 'user') { window.location.href = 'user-dashboard.html'; return; }
+        if (user.role === 'admin') { window.location.href = 'admin-dashboard.html'; return; }
+        
+        const userNameEl = document.getElementById('userName');
+        const welcomeEl = document.getElementById('welcomeMessage');
+        if (userNameEl) userNameEl.textContent = user.name || user.username;
+        if (welcomeEl) welcomeEl.textContent = `Halo Developer, ${user.name || user.username}!`;
+        
+        // Load all data in parallel (more stable)
+        await Promise.allSettled([
+          loadVisitorStats(),
+          loadWeather(),
+          loadUserManagement(),
+          loadProductManagement(),
+          loadPopulationData(),
+          loadAPBDesData(),
+          loadTeamData()
+        ]);
+        
+        console.log('%c[DEV] All dashboard data loaded successfully', 'color:#10b981');
+      } catch (err) {
+        console.error('[DEV] checkAuth error:', err);
+      }
     }
 
     async function loadVisitorStats() {
@@ -1766,36 +1780,7 @@ layout: null
         loadMapPoints();
       }
     }, 800);
-      }
-      if (!syncBtn) return;
-      
-      const original = syncBtn.innerHTML;
-      syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
-      syncBtn.disabled = true;
-      
-      const local = JSON.parse(localStorage.getItem('mapPoints') || '[]');
-      let ok = 0;
-      for (const p of local) {
-        try {
-          const r = await fetch(`${API_URL}/api/map-points`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: p.name,
-              lat: p.lat,
-              lng: p.lng,
-              description: p.description || '',
-              icon: p.icon || 'fa-map-marker-alt'
-            })
-          });
-          if (r.ok) ok++;
-        } catch (e) {}
-      }
-      alert(`✅ ${ok} titik berhasil diupload ke backend!`);
-      await loadMapPoints();
-      syncBtn.innerHTML = original;
-      syncBtn.disabled = false;
-    }
+  </script>
 
     function showSection(sectionId) {
       // Hide all sections
