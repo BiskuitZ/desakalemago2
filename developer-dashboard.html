@@ -425,6 +425,11 @@ layout: null
         <i class="fas fa-save"></i>
         <span>Simpan Perubahan</span>
       </button>
+      
+      <button onclick="syncMapToBackend()" class="mt-3 w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-semibold flex items-center justify-center gap-2">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <span>Upload Semua Titik ke Backend (Sinkron ke HP)</span>
+      </button>
     </div>
 
     <!-- MAP MANAGEMENT -->
@@ -1721,6 +1726,43 @@ layout: null
         loadMapPoints();
       }
     }, 1000);
+
+    // Sync all local points to backend
+    async function syncMapToBackend() {
+      const btns = document.querySelectorAll('button');
+      let syncBtn = null;
+      for (let b of btns) {
+        if (b.innerText.includes('Upload Semua')) syncBtn = b;
+      }
+      if (!syncBtn) return;
+      
+      const original = syncBtn.innerHTML;
+      syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+      syncBtn.disabled = true;
+      
+      const local = JSON.parse(localStorage.getItem('mapPoints') || '[]');
+      let ok = 0;
+      for (const p of local) {
+        try {
+          const r = await fetch(`${API_URL}/api/map-points`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: p.name,
+              lat: p.lat,
+              lng: p.lng,
+              description: p.description || '',
+              icon: p.icon || 'fa-map-marker-alt'
+            })
+          });
+          if (r.ok) ok++;
+        } catch (e) {}
+      }
+      alert(`✅ ${ok} titik berhasil diupload ke backend!`);
+      await loadMapPoints();
+      syncBtn.innerHTML = original;
+      syncBtn.disabled = false;
+    }
 
     function showSection(sectionId) {
       // Hide all sections
