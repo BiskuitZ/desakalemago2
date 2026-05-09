@@ -197,31 +197,31 @@
         </div>
         
         <div class="space-y-1 text-sm">
-          <a href="#status-section" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#status-section" onclick="showSection('status-section'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-tachometer-alt w-5"></i> 
             <span>Status Website</span>
           </a>
-          <a href="#user-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#user-management" onclick="showSection('user-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-users-cog w-5"></i> 
             <span>Manajemen Pengguna</span>
           </a>
-          <a href="#product-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#product-management" onclick="showSection('product-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-box w-5"></i> 
             <span>Manajemen Produk</span>
           </a>
-          <a href="#population-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#population-management" onclick="showSection('population-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-users w-5"></i> 
             <span>Data Penduduk</span>
           </a>
-          <a href="#apbdes-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#apbdes-management" onclick="showSection('apbdes-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-wallet w-5"></i> 
             <span>APB Desa</span>
           </a>
-          <a href="#team-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#team-management" onclick="showSection('team-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-users text-purple-600 w-5"></i> 
             <span>Tim Web Designer</span>
           </a>
-          <a href="#map-management" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
+          <a href="#map-management" onclick="showSection('map-management'); return false;" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-purple-50 text-purple-700 font-medium">
             <i class="fas fa-map-marked w-5"></i> 
             <span>Manajemen Peta Desa</span>
           </a>
@@ -704,9 +704,102 @@
       }
     }
 
+    // Fungsi untuk menampilkan section dan load data dari backend
+    function showSection(sectionId) {
+      // Sembunyikan semua section
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      
+      // Tampilkan section yang dipilih
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.classList.add('active');
+        
+        // Load data dari backend sesuai section
+        if (sectionId === 'status-section') {
+          loadDashboardStats();
+          loadVisitorList();
+        } else if (sectionId === 'user-management') {
+          loadUsersFromBackend();
+        } else if (sectionId === 'product-management') {
+          loadProductsFromBackend();
+        } else if (sectionId === 'population-management') {
+          loadPopulationFromBackend();
+        } else if (sectionId === 'apbdes-management') {
+          loadAPBDesFromBackend();
+        } else if (sectionId === 'team-management') {
+          loadTeamFromBackend();
+        } else if (sectionId === 'map-management') {
+          loadMapPointsFromBackend();
+        }
+      }
+    }
+
+    // Fungsi load data dari backend untuk setiap menu
+    async function loadUsersFromBackend() {
+      try {
+        const res = await fetch(`${API_URL}/api/admin/users`, {
+          headers: { 'x-username': JSON.parse(localStorage.getItem('user')).username }
+        });
+        const data = await res.json();
+        console.log('Users loaded from backend:', data);
+        // Tambahkan logika tampilkan data di sini jika ada tabel
+      } catch (e) { console.log('Gagal load users'); }
+    }
+
+    async function loadProductsFromBackend() {
+      try {
+        const res = await fetch(`${API_URL}/api/products`);
+        const data = await res.json();
+        console.log('Products loaded from backend:', data);
+      } catch (e) { console.log('Gagal load products'); }
+    }
+
+    async function loadPopulationFromBackend() {
+      try {
+        const res = await fetch(`${API_URL}/api/population`);
+        const data = await res.json();
+        console.log('Population loaded from backend:', data);
+      } catch (e) { console.log('Gagal load population'); }
+    }
+
+    async function loadAPBDesFromBackend() {
+      try {
+        const res = await fetch(`${API_URL}/api/apbdes`);
+        const data = await res.json();
+        console.log('APBDes loaded from backend:', data);
+      } catch (e) { console.log('Gagal load APBDes'); }
+    }
+
+    async function loadTeamFromBackend() {
+      try {
+        const res = await fetch(`${API_URL}/api/team`);
+        const data = await res.json();
+        console.log('Team loaded from backend:', data);
+      } catch (e) { console.log('Gagal load team'); }
+    }
+
+    async function loadMapPointsFromBackend() {
+      try {
+        const res = await fetch(`${API_URL}/api/map-points`);
+        const data = await res.json();
+        console.log('Map points loaded from backend:', data);
+      } catch (e) { console.log('Gagal load map points'); }
+    }
+
     // Load all data when page loads
     document.addEventListener('DOMContentLoaded', () => {
       checkAuth();
+      
+      // Tampilkan section Status secara default
+      setTimeout(() => {
+        const statusSection = document.getElementById('status-section');
+        if (statusSection) {
+          statusSection.classList.add('active');
+          loadDashboardStats();
+          loadVisitorList();
+        }
+      }, 500);
+    });
       
       // Auto load visitor list in status section
       setTimeout(() => {
