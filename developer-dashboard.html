@@ -1566,6 +1566,11 @@ layout: null
         if (typeof loadTeamData === 'function') loadTeamData();
         if (typeof loadPopulationData === 'function') loadPopulationData();
         if (typeof loadDashboardStats === 'function') loadDashboardStats();
+        
+        // Always initialize chart (even if backend fails)
+        if (typeof initVisitorChart === 'function') {
+          initVisitorChart(null, 0);
+        }
       }, 400);
       
       // Auth check (must be after DOM ready)
