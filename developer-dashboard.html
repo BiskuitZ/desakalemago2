@@ -1178,7 +1178,7 @@ layout: null
             
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-1">Icon Lokasi</label>
-              <div class="grid grid-cols-4 gap-2" id="icon-selector">
+              <div class="grid grid-cols-5 gap-2" id="icon-selector">
                 <div onclick="selectIcon(this, 'fa-church')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-church' ? 'ring-2 ring-purple-500' : ''}">
                   <i class="fas fa-church text-2xl text-purple-600"></i><span class="text-xs mt-1">Gereja</span>
                 </div>
@@ -1202,6 +1202,23 @@ layout: null
                 </div>
                 <div onclick="selectIcon(this, 'fa-home')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-home' ? 'ring-2 ring-purple-500' : ''}">
                   <i class="fas fa-home text-2xl text-orange-600"></i><span class="text-xs mt-1">Rumah Warga</span>
+                </div>
+
+                <!-- New Icons -->
+                <div onclick="selectIcon(this, 'fa-grave')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-grave' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-grave text-2xl text-gray-700"></i><span class="text-xs mt-1">TPU</span>
+                </div>
+                <div onclick="selectIcon(this, 'fa-shield-alt')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-shield-alt' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-shield-alt text-2xl text-red-600"></i><span class="text-xs mt-1">Pos Kamling</span>
+                </div>
+                <div onclick="selectIcon(this, 'fa-water')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-water' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-water text-2xl text-blue-500"></i><span class="text-xs mt-1">Sungai</span>
+                </div>
+                <div onclick="selectIcon(this, 'fa-seedling')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-seedling' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-seedling text-2xl text-green-600"></i><span class="text-xs mt-1">Pertanian</span>
+                </div>
+                <div onclick="selectIcon(this, 'fa-store')" class="icon-option flex flex-col items-center p-2 border rounded-xl cursor-pointer hover:bg-purple-50 ${point && point.icon === 'fa-store' ? 'ring-2 ring-purple-500' : ''}">
+                  <i class="fas fa-store text-2xl text-amber-600"></i><span class="text-xs mt-1">Pasar</span>
                 </div>
               </div>
               <input type="hidden" id="mapPointIcon" value="${point ? point.icon || 'fa-map-marker-alt' : 'fa-map-marker-alt'}">
@@ -1374,28 +1391,41 @@ layout: null
         return;
       }
 
+      console.log('%c[Backend Sync] Mulai sinkronisasi ke Railway...', 'color:#10b981');
+
       try {
         const username = localStorage.getItem('username') || 'developer';
         let successCount = 0;
+        let errorCount = 0;
 
         for (const point of mapPoints) {
-          if (!point.id) {
-            const res = await fetch(`${API_URL}/api/map-points`, {
-              method: 'POST',
-              headers: { 
-                'Content-Type': 'application/json',
-                'x-username': username 
-              },
-              body: JSON.stringify(point)
-            });
-            if (res.ok) successCount++;
+          const res = await fetch(`${API_URL}/api/map-points`, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'x-username': username 
+            },
+            body: JSON.stringify(point)
+          });
+
+          if (res.ok) {
+            successCount++;
+            console.log('%c[Backend Sync] Berhasil kirim titik:', 'color:#10b981', point.name);
+          } else {
+            errorCount++;
+            console.error('%c[Backend Sync] Gagal kirim titik:', 'color:#ef4444', point.name);
           }
         }
 
-        alert(`✅ ${successCount} titik peta berhasil disinkronkan ke backend!`);
-        loadMapPoints();
+        if (successCount > 0) {
+          alert(`✅ ${successCount} titik peta berhasil disinkronkan ke backend Railway!\n\nCek log di Railway untuk melihat proses peta.js`);
+          loadMapPoints();
+        } else {
+          alert('❌ Gagal sinkronisasi. Cek Console (F12) untuk detail error.');
+        }
       } catch (e) {
-        alert('Gagal sinkronisasi ke backend');
+        console.error('%c[Backend Sync] Error:', 'color:#ef4444', e);
+        alert('Gagal sinkronisasi ke backend: ' + e.message);
       }
     }
 
