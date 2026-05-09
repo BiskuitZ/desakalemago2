@@ -1225,7 +1225,7 @@ layout: null
       document.getElementById('mapPointIcon').value = iconClass;
     }
 
-    function saveMapPoint(editIndex) {
+    async function saveMapPoint(editIndex) {
       const name = document.getElementById('mapPointName').value.trim();
       const lat = parseFloat(document.getElementById('mapPointLat').value);
       const lng = parseFloat(document.getElementById('mapPointLng').value);
