@@ -1228,7 +1228,9 @@ layout: null
             attributionControl: false
           }).setView([initialLat, initialLng], 14);
 
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          // Satellite Mode (Esri World Imagery)
+          L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '© Esri, Maxar, GeoEye',
             maxZoom: 19
           }).addTo(miniMap);
 
