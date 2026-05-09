@@ -1091,11 +1091,28 @@ layout: null
     // MAP POINTS MANAGEMENT
     let mapPoints = JSON.parse(localStorage.getItem('mapPoints') || '[]');
 
-    function loadMapPoints() {
+    async function loadMapPoints() {
       const tbody = document.getElementById('mapTableBody');
       if (!tbody) return;
       tbody.innerHTML = '';
-      
+
+      // Try to load from backend first
+      try {
+        const username = localStorage.getItem('username') || 'developer';
+        const res = await fetch(`${API_URL}/api/map-points`, {
+          headers: { 'x-username': username }
+        });
+        if (res.ok) {
+          const backendPoints = await res.json();
+          if (Array.isArray(backendPoints) && backendPoints.length > 0) {
+            mapPoints = backendPoints;
+            localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
+          }
+        }
+      } catch (e) {
+        console.warn('Gagal load map points dari backend');
+      }
+
       if (mapPoints.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Belum ada titik peta</td></tr>';
         return;
@@ -1228,31 +1245,97 @@ layout: null
         mapPoints.push(newPoint);
       }
       
-      localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
-      loadMapPoints();
-      document.querySelector('.fixed').remove();
-      
-      alert('✅ Titik peta berhasil disimpan!');
+      // Save to backend
+      try {
+        const username = localStorage.getItem('username') || 'developer';
+        const res = await fetch(`${API_URL}/api/map-points`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'x-username': username 
+          },
+          body: JSON.stringify(newPoint)
+        });
+
+        if (res.ok) {
+          const savedPoint = await res.json();
+          // Update local array with backend id
+          if (editIndex !== null) {
+            mapPoints[editIndex] = { ...newPoint, id: savedPoint.id };
+          } else {
+            mapPoints.push({ ...newPoint, id: savedPoint.id });
+          }
+          localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
+          loadMapPoints();
+          document.querySelector('.fixed').remove();
+          alert('✅ Titik peta berhasil disimpan ke backend!');
+        } else {
+          throw new Error('Gagal simpan ke backend');
+        }
+      } catch (err) {
+        // Fallback to local only
+        localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
+        loadMapPoints();
+        document.querySelector('.fixed').remove();
+        alert('✅ Disimpan secara lokal (Backend belum siap)');
+      }
     }
 
     function editMapPoint(index) {
       showAddMapPointModal(index);
     }
 
-    function deleteMapPoint(index) {
+    async function deleteMapPoint(index) {
       if (!confirm('Hapus titik ini?')) return;
+
+      const point = mapPoints[index];
+      
+      // Try to delete from backend if it has an id
+      if (point.id) {
+        try {
+          const username = localStorage.getItem('username') || 'developer';
+          await fetch(`${API_URL}/api/map-points/${point.id}`, {
+            method: 'DELETE',
+            headers: { 'x-username': username }
+          });
+        } catch (e) {
+          console.warn('Gagal hapus dari backend');
+        }
+      }
+
       mapPoints.splice(index, 1);
       localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
       loadMapPoints();
     }
 
     async function saveAllMapPointsToBackend() {
+      if (mapPoints.length === 0) {
+        alert('Tidak ada titik peta untuk disimpan');
+        return;
+      }
+
       try {
-        // Since backend doesn't support bulk yet, just save locally
-        localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
-        alert('✅ Titik peta disimpan secara lokal.\n\nBackend saat ini hanya mendukung penambahan titik satu per satu.');
+        const username = localStorage.getItem('username') || 'developer';
+        let successCount = 0;
+
+        for (const point of mapPoints) {
+          if (!point.id) { // Only save points that don't have backend id yet
+            const res = await fetch(`${API_URL}/api/map-points`, {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json',
+                'x-username': username 
+              },
+              body: JSON.stringify(point)
+            });
+            if (res.ok) successCount++;
+          }
+        }
+
+        alert(`✅ ${successCount} titik peta berhasil disinkronkan ke backend!`);
+        loadMapPoints();
       } catch (e) {
-        alert('Gagal menyimpan titik peta');
+        alert('Gagal sinkronisasi ke backend');
       }
     }
 
