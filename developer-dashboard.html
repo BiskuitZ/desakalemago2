@@ -1781,57 +1781,5 @@ layout: null
       }
     }, 800);
   </script>
-
-    function showSection(sectionId) {
-      // Hide all sections
-      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-      
-      // Show target with animation
-      const target = document.getElementById(sectionId);
-      if (target) {
-        target.classList.add('active', 'section-enter');
-        setTimeout(() => target.classList.remove('section-enter'), 500);
-      }
-      
-      // Highlight menu
-      document.querySelectorAll('.sidebar-link').forEach(link => {
-        link.classList.remove('bg-purple-100', 'font-semibold');
-        if (link.getAttribute('href') === `#${sectionId}`) {
-          link.classList.add('bg-purple-100', 'font-semibold');
-        }
-      });
-      
-      // Load data when section is opened
-      if (sectionId === 'user-management' && typeof loadUserManagement === 'function') setTimeout(loadUserManagement, 50);
-      if (sectionId === 'product-management' && typeof loadProductManagement === 'function') setTimeout(loadProductManagement, 50);
-      if (sectionId === 'apbdes-management' && typeof loadAPBDesData === 'function') setTimeout(loadAPBDesData, 50);
-      if (sectionId === 'team-management' && typeof loadTeamData === 'function') setTimeout(loadTeamData, 50);
-      if (sectionId === 'population-management' && typeof loadPopulationData === 'function') setTimeout(loadPopulationData, 50);
-    }
-    
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.sidebar-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          showSection(link.getAttribute('href').substring(1));
-        });
-      });
-      
-      // Show Status by default
-      showSection('status-section');
-      
-      // Initial sync
-      setTimeout(() => {
-        if (typeof loadTeamData === 'function') loadTeamData();
-        if (typeof loadPopulationData === 'function') loadPopulationData();
-      }, 400);
-      
-      // Auth check (must be after DOM ready)
-      if (typeof checkAuth === 'function') checkAuth();
-      
-      console.log('%c[SPA v2.4] Sections separated - Status Website shows only stats + weather', 'color:#10b981');
-    });
-
-  </script>
 </body>
 </html>
