@@ -229,6 +229,7 @@ layout: null
                       <th class="text-left py-4 px-6 font-semibold text-purple-800">Waktu</th>
                       <th class="text-left py-4 px-6 font-semibold text-purple-800">Nama Perangkat</th>
                       <th class="text-left py-4 px-6 font-semibold text-purple-800">Alamat IP</th>
+                      <th class="text-center py-4 px-6 font-semibold text-purple-800">Lokasi</th>
                     </tr>
                   </thead>
                   <tbody id="visitorListBody" class="divide-y divide-gray-100">
@@ -894,6 +895,13 @@ layout: null
               <td class="py-4 px-6">
                 <code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-700">${visitor.ip}</code>
               </td>
+              <td class="py-4 px-6 text-center">
+                <button onclick="showVisitorLocation('${visitor.ip}', this)" 
+                        class="bg-purple-100 hover:bg-purple-200 text-purple-700 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 mx-auto transition">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>Lihat Lokasi</span>
+                </button>
+              </td>
             `;
             tbody.appendChild(row);
           });
@@ -926,6 +934,64 @@ layout: null
       if (device.includes('Mac')) return 'laptop';
       if (device.includes('Linux')) return 'server';
       return 'desktop';
+    }
+
+    // Show visitor location using free IP geolocation API
+    async function showVisitorLocation(ip, buttonElement) {
+      const originalText = buttonElement.innerHTML;
+      buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mencari...';
+      buttonElement.disabled = true;
+
+      try {
+        // Using ipapi.co (free, no API key needed)
+        const res = await fetch(`https://ipapi.co/${ip}/json/`);
+        const data = await res.json();
+
+        if (data.error) {
+          throw new Error(data.reason || 'IP tidak valid');
+        }
+
+        const location = `${data.city || ''}, ${data.region || ''}, ${data.country_name || ''}`.replace(/^,\s*|,\s*$/g, '');
+
+        // Create popup
+        const popup = document.createElement('div');
+        popup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999]';
+        popup.innerHTML = `
+          <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 p-6">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="text-xl font-bold text-purple-800">Lokasi Pengunjung</h3>
+                <p class="text-sm text-gray-500">${ip}</p>
+              </div>
+              <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-2xl"></i>
+              </button>
+            </div>
+            
+            <div class="bg-purple-50 rounded-2xl p-4 mb-4">
+              <div class="flex items-center gap-3">
+                <i class="fas fa-map-marker-alt text-3xl text-purple-600"></i>
+                <div>
+                  <p class="font-semibold text-purple-800">${location || 'Lokasi tidak tersedia'}</p>
+                  <p class="text-sm text-purple-600">${data.org || 'Unknown ISP'}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-xs text-gray-500">
+              <p>Latitude: ${data.latitude || '-'}</p>
+              <p>Longitude: ${data.longitude || '-'}</p>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(popup);
+
+      } catch (err) {
+        alert('Gagal mendapatkan lokasi: ' + err.message);
+      } finally {
+        buttonElement.innerHTML = originalText;
+        buttonElement.disabled = false;
+      }
     }
 
     function initWeeklyVisitorChart(historyData = null) {
