@@ -359,12 +359,13 @@
           const res = await fetch('https://desakalemago2-backend-production.up.railway.app/api/map-points');
           if (res.ok) {
             const data = await res.json();
-            points = data.points || data || [];
+            points = Array.isArray(data) ? data : (data.points || data || []);
           } else {
             // Fallback to localStorage
             points = JSON.parse(localStorage.getItem('mapPoints') || '[]');
           }
         } catch (e) {
+          console.warn('Gagal load dari backend, menggunakan data lokal');
           points = JSON.parse(localStorage.getItem('mapPoints') || '[]');
         }
         
