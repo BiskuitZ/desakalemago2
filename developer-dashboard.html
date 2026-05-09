@@ -1540,7 +1540,13 @@ layout: null
       }
 
       renderTeamTable();
-      document.querySelector('.fixed').remove();
+      
+      // Remove only the member modal (not any .fixed element)
+      const memberModal = document.querySelector('.fixed[style*="z-index: 9999"]') || 
+                          document.querySelector('.fixed:last-child');
+      if (memberModal) {
+        memberModal.remove();
+      }
       
       // Sync to backend
       saveTeamToBackend();
