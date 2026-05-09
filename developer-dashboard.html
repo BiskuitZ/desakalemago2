@@ -1089,7 +1089,7 @@ layout: null
     }
 
     // MAP POINTS MANAGEMENT
-    let mapPoints = JSON.parse(localStorage.getItem('mapPoints') || '[]');
+    let mapPoints = [];
 
     async function loadMapPoints() {
       const tbody = document.getElementById('mapTableBody');
@@ -1265,7 +1265,6 @@ layout: null
           } else {
             mapPoints.push({ ...newPoint, id: savedPoint.id });
           }
-          localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
           loadMapPoints();
           document.querySelector('.fixed').remove();
           alert('✅ Titik peta berhasil disimpan ke backend!');
@@ -1273,11 +1272,9 @@ layout: null
           throw new Error('Gagal simpan ke backend');
         }
       } catch (err) {
-        // Fallback to local only
-        localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
         loadMapPoints();
         document.querySelector('.fixed').remove();
-        alert('✅ Disimpan secara lokal (Backend belum siap)');
+        alert('Gagal menyimpan ke backend');
       }
     }
 
@@ -1304,7 +1301,6 @@ layout: null
       }
 
       mapPoints.splice(index, 1);
-      localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
       loadMapPoints();
     }
 
@@ -1319,7 +1315,7 @@ layout: null
         let successCount = 0;
 
         for (const point of mapPoints) {
-          if (!point.id) { // Only save points that don't have backend id yet
+          if (!point.id) {
             const res = await fetch(`${API_URL}/api/map-points`, {
               method: 'POST',
               headers: { 

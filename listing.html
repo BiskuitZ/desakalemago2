@@ -353,20 +353,17 @@
           maxZoom: 19
         }).addTo(map);
         
-        // Load points from Backend (synced with Developer Dashboard - works on all devices)
+        // Load points ONLY from Backend (no localStorage)
         let points = [];
         try {
           const res = await fetch('https://desakalemago2-backend-production.up.railway.app/api/map-points');
           if (res.ok) {
             const data = await res.json();
             points = Array.isArray(data) ? data : (data.points || data || []);
-          } else {
-            // Fallback to localStorage
-            points = JSON.parse(localStorage.getItem('mapPoints') || '[]');
           }
         } catch (e) {
-          console.warn('Gagal load dari backend, menggunakan data lokal');
-          points = JSON.parse(localStorage.getItem('mapPoints') || '[]');
+          console.warn('Gagal memuat data peta dari backend');
+          points = [];
         }
         
         if (points.length > 0) {
