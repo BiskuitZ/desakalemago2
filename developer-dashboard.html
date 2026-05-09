@@ -855,6 +855,17 @@ layout: null
       const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
       
       try {
+        // Load Visitor Stats from backend
+        const visitorRes = await fetch(`${API_URL}/api/visitor`);
+        if (visitorRes.ok) {
+          const visitorData = await visitorRes.json();
+          if (visitorData.success) {
+            document.getElementById('dashTotalVisitors').textContent = visitorData.data.total || 0;
+            document.getElementById('dashTodayVisitors').textContent = visitorData.data.today || 0;
+            document.getElementById('onlineVisitors').textContent = visitorData.data.online || 1;
+          }
+        }
+
         // Load Map Points
         const mapRes = await fetch(`${API_URL}/api/map-points`);
         if (mapRes.ok) {

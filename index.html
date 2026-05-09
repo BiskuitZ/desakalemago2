@@ -624,6 +624,13 @@
           }
         });
       });
+
+      // Simple Visitor Counter (using backend - no localStorage)
+      fetch('https://desakalemago2-backend-production.up.railway.app/api/visitor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ page: 'index' })
+      }).catch(() => {});
     });
 
     window.addEventListener('pageshow', function(event) {
