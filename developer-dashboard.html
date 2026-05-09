@@ -9,6 +9,10 @@ layout: null
   <title>Developer Dashboard - Desa Kalemago</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- Leaflet for Mini Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     .section { display: none !important; }
     .section.active { display: block !important; }
@@ -1261,7 +1265,7 @@ layout: null
         } else {
           console.warn('Leaflet belum dimuat atau container tidak ditemukan');
         }
-      }, 500);
+      }, 600);
 
       // Pre-select current icon
       if (point && point.icon) {
