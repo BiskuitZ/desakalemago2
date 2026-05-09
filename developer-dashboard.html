@@ -2067,6 +2067,22 @@ layout: null
         sidebar.style.setProperty('opacity', '1', 'important');
       }
     }, 500);
+    
+    // Helper function for loading button state
+    window.setButtonLoading = function(button, isLoading, loadingText = 'Menyimpan...') {
+      if (!button) return;
+      
+      if (isLoading) {
+        button.dataset.originalText = button.innerHTML;
+        button.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> ${loadingText}`;
+        button.disabled = true;
+        button.style.opacity = '0.8';
+      } else {
+        button.innerHTML = button.dataset.originalText || button.innerHTML;
+        button.disabled = false;
+        button.style.opacity = '1';
+      }
+    };
   </script>
 </body>
 </html>
