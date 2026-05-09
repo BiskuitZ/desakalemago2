@@ -952,7 +952,9 @@ layout: null
       }
     }
 
-    async function savePopulationData() {
+    async function savePopulationData(btn = null) {
+      if (btn) setButtonLoading(btn, true, 'Menyimpan...');
+      
       const payload = {
         male: parseInt(document.getElementById('popMale').value) || 0,
         female: parseInt(document.getElementById('popFemale').value) || 0,
@@ -983,13 +985,20 @@ layout: null
         });
         
         if (res.ok) {
-          alert('✅ Data penduduk berhasil disimpan!');
+          if (btn) {
+            setButtonLoading(btn, false);
+            showToast('Data penduduk berhasil disimpan!', 'success');
+          } else {
+            alert('✅ Data penduduk berhasil disimpan!');
+          }
         } else {
           const errData = await res.json();
           alert('Gagal: ' + (errData.message || 'Server error'));
+          if (btn) setButtonLoading(btn, false);
         }
       } catch (err) {
         alert('Gagal menyimpan data penduduk: ' + err.message);
+        if (btn) setButtonLoading(btn, false);
       }
     }
 
@@ -1320,7 +1329,9 @@ layout: null
       }
     }
 
-    async function saveAPBDesData() {
+    async function saveAPBDesData(btn = null) {
+      if (btn) setButtonLoading(btn, true, 'Menyimpan...');
+      
       const payload = {
         pendapatan: parseInt(document.getElementById('apbPendapatan').value) || 0,
         belanja: parseInt(document.getElementById('apbBelanja').value) || 0,
@@ -1341,13 +1352,20 @@ layout: null
         });
         
         if (res.ok) {
-          alert('✅ Data APB Desa berhasil disimpan!');
+          if (btn) {
+            setButtonLoading(btn, false);
+            showToast('Data APB Desa berhasil disimpan!', 'success');
+          } else {
+            alert('✅ Data APB Desa berhasil disimpan!');
+          }
         } else {
           const errData = await res.json();
           alert('Gagal: ' + (errData.message || 'Server error'));
+          if (btn) setButtonLoading(btn, false);
         }
       } catch (err) {
         alert('Gagal menyimpan data APB Desa: ' + err.message);
+        if (btn) setButtonLoading(btn, false);
       }
     }
 
@@ -1824,6 +1842,8 @@ layout: null
         return;
       }
       
+      if (btn) setButtonLoading(btn, true, 'Menyimpan...');
+      
       const icon = document.getElementById('mapPointIcon').value || 'fa-map-marker-alt';
       const newPoint = { name, lat, lng, description, icon };
       
@@ -1834,6 +1854,8 @@ layout: null
       }
       
       // Save to backend
+      if (btn) setButtonLoading(btn, true, 'Menyimpan...');
+      
       try {
         const username = localStorage.getItem('username') || 'developer';
         const res = await fetch(`${API_URL}/api/map-points`, {
@@ -1863,6 +1885,7 @@ layout: null
         loadMapPoints();
         document.querySelector('.fixed').remove();
         alert('Gagal menyimpan ke backend');
+        if (btn) setButtonLoading(btn, false);
       }
     }
 
