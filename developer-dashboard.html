@@ -821,31 +821,62 @@ layout: null
       }
     }
 
-    // Initialize Visitor Chart
-    function initVisitorChart() {
+    // Initialize Visitor Chart with real data from backend
+    let visitorChartInstance = null;
+
+    function initVisitorChart(historyData = null) {
       const ctx = document.getElementById('visitorChart');
       if (!ctx) return;
 
-      new Chart(ctx, {
+      // Destroy previous chart if exists
+      if (visitorChartInstance) {
+        visitorChartInstance.destroy();
+      }
+
+      let labels = ['H-6', 'H-5', 'H-4', 'H-3', 'H-2', 'Kemarin', 'Hari Ini'];
+      let data = [0, 0, 0, 0, 0, 0, 0];
+
+      if (historyData && historyData.length === 7) {
+        labels = historyData.map(h => {
+          const d = new Date(h.date);
+          return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+        });
+        data = historyData.map(h => h.count);
+      }
+
+      visitorChartInstance = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
+          labels: labels,
           datasets: [{
             label: 'Pengunjung',
-            data: [0, 0, 0, 0, 0, 0, 0],
+            data: data,
             borderColor: '#8b5cf6',
             backgroundColor: 'rgba(139, 92, 246, 0.1)',
             tension: 0.4,
-            fill: true
+            fill: true,
+            pointBackgroundColor: '#8b5cf6',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 4
           }]
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
-            legend: { display: false }
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) => `${context.parsed.y} pengunjung`
+              }
+            }
           },
           scales: {
-            y: { beginAtZero: true }
+            y: { 
+              beginAtZero: true,
+              ticks: { stepSize: 1 }
+            }
           }
         }
       });
@@ -863,6 +894,11 @@ layout: null
             document.getElementById('dashTotalVisitors').textContent = visitorData.data.total || 0;
             document.getElementById('dashTodayVisitors').textContent = visitorData.data.today || 0;
             document.getElementById('onlineVisitors').textContent = visitorData.data.online || 1;
+            
+            // Update chart with real history
+            if (visitorData.data.history) {
+              initVisitorChart(visitorData.data.history);
+            }
           }
         }
 
