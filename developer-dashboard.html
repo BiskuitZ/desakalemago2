@@ -770,7 +770,7 @@ layout: null
     }
 
     // Edit Product Function (was missing)
-    async function editProduct(productId) {
+    window.editProduct = async function(productId) {
       try {
         const res = await fetch(`${API_URL}/api/products`);
         const data = await res.json();
@@ -830,7 +830,7 @@ layout: null
     }
     
     // Update Product Function
-    async function updateProduct(productId, btn) {
+    window.updateProduct = async function(productId, btn) {
       const name = document.getElementById('editProdName').value;
       const price = parseInt(document.getElementById('editProdPrice').value);
       const stock = parseInt(document.getElementById('editProdStock').value);
@@ -2051,6 +2051,16 @@ layout: null
         });
       }
     }, 1000);
+    
+    // SUPER AGGRESSIVE: Force sidebar visible every 500ms
+    setInterval(() => {
+      const sidebar = document.querySelector('body > div.w-64.fixed.left-0');
+      if (sidebar) {
+        sidebar.style.setProperty('display', 'block', 'important');
+        sidebar.style.setProperty('visibility', 'visible', 'important');
+        sidebar.style.setProperty('opacity', '1', 'important');
+      }
+    }, 500);
   </script>
 </body>
 </html>
