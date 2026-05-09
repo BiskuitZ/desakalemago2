@@ -742,10 +742,8 @@
         });
         const data = await res.json();
         console.log('%c✅ [Users] Data dari backend:', 'color:#10b981;font-weight:bold', data);
-        alert('✅ Data Users berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
       } catch (e) { 
         console.error('❌ Gagal load users:', e);
-        alert('❌ Gagal memuat data Users dari backend');
       }
     }
 
@@ -754,10 +752,8 @@
         const res = await fetch(`${API_URL}/api/products`);
         const data = await res.json();
         console.log('%c✅ [Products] Data dari backend:', 'color:#10b981;font-weight:bold', data);
-        alert('✅ Data Products berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
       } catch (e) { 
         console.error('❌ Gagal load products:', e);
-        alert('❌ Gagal memuat data Products dari backend');
       }
     }
 
@@ -766,10 +762,8 @@
         const res = await fetch(`${API_URL}/api/population`);
         const data = await res.json();
         console.log('%c✅ [Population] Data dari backend:', 'color:#10b981;font-weight:bold', data);
-        alert('✅ Data Population berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
       } catch (e) { 
         console.error('❌ Gagal load population:', e);
-        alert('❌ Gagal memuat data Population dari backend');
       }
     }
 
@@ -778,10 +772,8 @@
         const res = await fetch(`${API_URL}/api/apbdes`);
         const data = await res.json();
         console.log('%c✅ [APBDes] Data dari backend:', 'color:#10b981;font-weight:bold', data);
-        alert('✅ Data APBDes berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
       } catch (e) { 
         console.error('❌ Gagal load APBDes:', e);
-        alert('❌ Gagal memuat data APBDes dari backend');
       }
     }
 
@@ -790,10 +782,8 @@
         const res = await fetch(`${API_URL}/api/team`);
         const data = await res.json();
         console.log('%c✅ [Team] Data dari backend:', 'color:#10b981;font-weight:bold', data);
-        alert('✅ Data Team berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
       } catch (e) { 
         console.error('❌ Gagal load team:', e);
-        alert('❌ Gagal memuat data Team dari backend');
       }
     }
 
@@ -802,10 +792,8 @@
         const res = await fetch(`${API_URL}/api/map-points`);
         const data = await res.json();
         console.log('%c✅ [Map Points] Data dari backend:', 'color:#10b981;font-weight:bold', data);
-        alert('✅ Data Map Points berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
       } catch (e) { 
         console.error('❌ Gagal load map points:', e);
-        alert('❌ Gagal memuat data Map Points dari backend');
       }
     }
 
