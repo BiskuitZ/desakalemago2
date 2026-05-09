@@ -1204,7 +1204,7 @@ layout: null
       }
     }
 
-    function initWeeklyVisitorChart(historyData = null) {
+    // function initWeeklyVisitorChart(historyData = null) { // REMOVED
       const canvas = document.getElementById('weeklyVisitorChart');
       if (!canvas) {
         console.warn('weeklyVisitorChart canvas not found');
@@ -1286,13 +1286,10 @@ layout: null
             document.getElementById('dashTodayVisitors').textContent = visitorData.data.today || 0;
             document.getElementById('onlineVisitors').textContent = visitorData.data.online || 1;
             
-            // Update chart with real history
-            // Update chart with real data
+            // Load visitor list instead of chart
             setTimeout(() => {
-              if (visitorData.data.history && visitorData.data.history.length > 0) {
-                initWeeklyVisitorChart(visitorData.data.history);
-              } else {
-                initWeeklyVisitorChart(null);
+              if (typeof loadVisitorList === 'function') {
+                loadVisitorList();
               }
             }, 100);
           }
