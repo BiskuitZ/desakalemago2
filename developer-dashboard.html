@@ -195,17 +195,23 @@ layout: null
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-purple-50 rounded-2xl p-6 text-center">
-              <p class="text-6xl font-extrabold text-purple-800" id="dashTotalVisitors">1,284</p>
+              <p class="text-6xl font-extrabold text-purple-800" id="dashTotalVisitors">0</p>
               <p class="text-purple-600 font-semibold mt-2">Total Pengunjung</p>
             </div>
             <div class="bg-emerald-50 rounded-2xl p-6 text-center">
-              <p class="text-6xl font-extrabold text-emerald-800" id="onlineVisitors">12</p>
+              <p class="text-6xl font-extrabold text-emerald-800" id="onlineVisitors">1</p>
               <p class="text-emerald-600 font-semibold mt-2">Sedang Online</p>
             </div>
             <div class="bg-amber-50 rounded-2xl p-6 text-center">
-              <p class="text-6xl font-extrabold text-amber-800" id="dashTodayVisitors">87</p>
+              <p class="text-6xl font-extrabold text-amber-800" id="dashTodayVisitors">0</p>
               <p class="text-amber-600 font-semibold mt-2">Hari Ini</p>
             </div>
+          </div>
+
+          <!-- Chart Section -->
+          <div class="mt-8">
+            <h4 class="text-lg font-semibold text-purple-800 mb-4">Tren Pengunjung 7 Hari Terakhir</h4>
+            <canvas id="visitorChart" class="w-full h-64"></canvas>
           </div>
 
           <!-- Additional Statistics -->
@@ -813,6 +819,36 @@ layout: null
       } catch (err) {
         console.log('Using default APBDes data');
       }
+    }
+
+    // Initialize Visitor Chart
+    function initVisitorChart() {
+      const ctx = document.getElementById('visitorChart');
+      if (!ctx) return;
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
+          datasets: [{
+            label: 'Pengunjung',
+            data: [12, 19, 8, 15, 22, 31, 0],
+            borderColor: '#8b5cf6',
+            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
     }
 
     async function loadDashboardStats() {
@@ -1471,6 +1507,7 @@ layout: null
         if (typeof loadTeamData === 'function') loadTeamData();
         if (typeof loadPopulationData === 'function') loadPopulationData();
         if (typeof loadDashboardStats === 'function') loadDashboardStats();
+        if (typeof initVisitorChart === 'function') initVisitorChart();
       }, 400);
       
       // Auth check (must be after DOM ready)
