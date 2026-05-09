@@ -208,16 +208,37 @@ layout: null
             </div>
           </div>
 
-          <!-- Weekly Visitor Chart -->
+          <!-- Visitor List -->
           <div class="mt-8">
-            <h4 class="text-lg font-semibold text-purple-800 mb-4 flex items-center gap-2">
-              <i class="fas fa-chart-bar text-purple-600"></i>
-              Jumlah Pengunjung 1 Minggu Ini
-            </h4>
-            <div style="height: 260px; position: relative;">
-              <canvas id="weeklyVisitorChart"></canvas>
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-lg font-semibold text-purple-800 flex items-center gap-2">
+                <i class="fas fa-users text-purple-600"></i>
+                Daftar Pengunjung Website
+              </h4>
+              <button onclick="loadVisitorList()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
+                <i class="fas fa-sync"></i>
+                <span>Refresh</span>
+              </button>
             </div>
-            <p class="text-xs text-gray-500 mt-2 text-center">Data diambil langsung dari backend (viewer.js)</p>
+            
+            <div class="bg-white rounded-3xl shadow-lg overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead class="bg-purple-50">
+                    <tr>
+                      <th class="text-left py-4 px-6 font-semibold text-purple-800">Waktu</th>
+                      <th class="text-left py-4 px-6 font-semibold text-purple-800">Nama Perangkat</th>
+                      <th class="text-left py-4 px-6 font-semibold text-purple-800">Alamat IP</th>
+                    </tr>
+                  </thead>
+                  <tbody id="visitorListBody" class="divide-y divide-gray-100">
+                    <!-- Populated by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <p class="text-xs text-gray-500 mt-2 text-center">Maksimal 100 pengunjung terakhir • Data dari backend (viewer.js)</p>
           </div>
 
           <!-- Additional Statistics -->
@@ -829,6 +850,83 @@ layout: null
 
     // Weekly Visitor Chart - Synced with viewer.js
     let weeklyChartInstance = null;
+
+    // Load and display visitor list
+    async function loadVisitorList() {
+      const tbody = document.getElementById('visitorListBody');
+      if (!tbody) return;
+
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="3" class="py-8 text-center text-gray-500">
+            <i class="fas fa-spinner fa-spin mr-2"></i> Memuat data pengunjung...
+          </td>
+        </tr>
+      `;
+
+      try {
+        const res = await fetch(`${API_URL}/api/visitor`);
+        const data = await res.json();
+
+        if (data.success && data.data.visitors && data.data.visitors.length > 0) {
+          tbody.innerHTML = '';
+
+          data.data.visitors.forEach(visitor => {
+            const time = new Date(visitor.timestamp).toLocaleString('id-ID', {
+              day: 'numeric',
+              month: 'short',
+              hour: '2-digit',
+              minute: '2-digit'
+            });
+
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-purple-50 transition';
+            row.innerHTML = `
+              <td class="py-4 px-6 text-sm text-gray-600">${time}</td>
+              <td class="py-4 px-6">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-${getDeviceIcon(visitor.device)} text-purple-600"></i>
+                  </div>
+                  <span class="font-medium text-gray-800">${visitor.device}</span>
+                </div>
+              </td>
+              <td class="py-4 px-6">
+                <code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-700">${visitor.ip}</code>
+              </td>
+            `;
+            tbody.appendChild(row);
+          });
+        } else {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="3" class="py-8 text-center text-gray-500">
+                <i class="fas fa-users text-4xl mb-3 opacity-50"></i>
+                <p>Belum ada pengunjung tercatat</p>
+              </td>
+            </tr>
+          `;
+        }
+      } catch (err) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="3" class="py-8 text-center text-red-500">
+              Gagal memuat data pengunjung
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    function getDeviceIcon(device) {
+      if (device.includes('iPhone')) return 'mobile-alt';
+      if (device.includes('iPad')) return 'tablet-alt';
+      if (device.includes('Android')) return 'mobile-alt';
+      if (device.includes('Windows')) return 'desktop';
+      if (device.includes('Mac')) return 'laptop';
+      if (device.includes('Linux')) return 'server';
+      return 'desktop';
+    }
 
     function initWeeklyVisitorChart(historyData = null) {
       const canvas = document.getElementById('weeklyVisitorChart');
@@ -1578,8 +1676,8 @@ layout: null
         if (typeof loadDashboardStats === 'function') loadDashboardStats();
         
         // Always initialize weekly chart (even if backend fails)
-        if (typeof initWeeklyVisitorChart === 'function') {
-          initWeeklyVisitorChart(null);
+        if (typeof loadVisitorList === 'function') {
+          loadVisitorList();
         }
       }, 400);
       
