@@ -905,11 +905,14 @@ layout: null
             document.getElementById('onlineVisitors').textContent = visitorData.data.online || 1;
             
             // Update chart with real history
-            if (visitorData.data.history) {
-              initWeeklyVisitorChart(visitorData.data.history);
-            } else {
-              initWeeklyVisitorChart(null);
-            }
+            // Update chart with real data
+            setTimeout(() => {
+              if (visitorData.data.history && visitorData.data.history.length > 0) {
+                initWeeklyVisitorChart(visitorData.data.history);
+              } else {
+                initWeeklyVisitorChart(null);
+              }
+            }, 100);
           }
         }
 
