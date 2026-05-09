@@ -10,6 +10,9 @@ layout: null
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
+  <!-- Chart.js for Statistics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
   <!-- Leaflet for Mini Map -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -204,6 +207,31 @@ layout: null
               <p class="text-amber-600 font-semibold mt-2">Hari Ini</p>
             </div>
           </div>
+
+          <!-- Additional Statistics -->
+          <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white border border-purple-200 rounded-2xl p-5 text-center">
+              <div class="text-purple-600 mb-1"><i class="fas fa-map-marker-alt text-2xl"></i></div>
+              <p class="text-3xl font-bold text-purple-800" id="totalMapPoints">24</p>
+              <p class="text-sm text-purple-600">Titik Peta</p>
+            </div>
+            <div class="bg-white border border-emerald-200 rounded-2xl p-5 text-center">
+              <div class="text-emerald-600 mb-1"><i class="fas fa-box text-2xl"></i></div>
+              <p class="text-3xl font-bold text-emerald-800" id="totalProducts">8</p>
+              <p class="text-sm text-emerald-600">Produk Aktif</p>
+            </div>
+            <div class="bg-white border border-blue-200 rounded-2xl p-5 text-center">
+              <div class="text-blue-600 mb-1"><i class="fas fa-users text-2xl"></i></div>
+              <p class="text-3xl font-bold text-blue-800" id="totalTeam">9</p>
+              <p class="text-sm text-blue-600">Anggota Tim</p>
+            </div>
+            <div class="bg-white border border-orange-200 rounded-2xl p-5 text-center">
+              <div class="text-orange-600 mb-1"><i class="fas fa-user-friends text-2xl"></i></div>
+              <p class="text-3xl font-bold text-orange-800" id="totalPopulation">1,045</p>
+              <p class="text-sm text-orange-600">Penduduk</p>
+            </div>
+          </div>
+        </div>
         </div>
         
         <!-- Weather -->
@@ -823,6 +851,45 @@ layout: null
       }
     }
 
+    async function loadDashboardStats() {
+      const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
+      
+      try {
+        // Load Map Points
+        const mapRes = await fetch(`${API_URL}/api/map-points`);
+        if (mapRes.ok) {
+          const mapData = await mapRes.json();
+          document.getElementById('totalMapPoints').textContent = Array.isArray(mapData) ? mapData.length : 0;
+        }
+
+        // Load Products
+        const prodRes = await fetch(`${API_URL}/api/products`);
+        if (prodRes.ok) {
+          const prodData = await prodRes.json();
+          document.getElementById('totalProducts').textContent = prodData.products ? prodData.products.length : 0;
+        }
+
+        // Load Team
+        const teamRes = await fetch(`${API_URL}/api/team`);
+        if (teamRes.ok) {
+          const teamData = await teamRes.json();
+          document.getElementById('totalTeam').textContent = teamData.team ? teamData.team.length : 0;
+        }
+
+        // Load Population
+        const popRes = await fetch(`${API_URL}/api/population`);
+        if (popRes.ok) {
+          const popData = await popRes.json();
+          if (popData.success) {
+            const total = (popData.data.male || 0) + (popData.data.female || 0);
+            document.getElementById('totalPopulation').textContent = total.toLocaleString('id-ID');
+          }
+        }
+      } catch (err) {
+        console.log('Using default dashboard stats');
+      }
+    }
+
     async function saveAPBDesData() {
       const payload = {
         pendapatan: parseInt(document.getElementById('apbPendapatan').value) || 0,
@@ -1439,6 +1506,7 @@ layout: null
       setTimeout(() => {
         if (typeof loadTeamData === 'function') loadTeamData();
         if (typeof loadPopulationData === 'function') loadPopulationData();
+        if (typeof loadDashboardStats === 'function') loadDashboardStats();
       }, 400);
       
       // Auth check (must be after DOM ready)
