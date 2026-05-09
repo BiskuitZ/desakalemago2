@@ -826,7 +826,7 @@ layout: null
     // Initialize Visitor Chart with real data from backend
     let visitorChartInstance = null;
 
-    function initVisitorChart(historyData = null) {
+    function initVisitorChart(historyData = null, totalVisitors = 0) {
       const ctx = document.getElementById('visitorChart');
       if (!ctx) return;
 
@@ -846,6 +846,10 @@ layout: null
         });
         data = historyData.map(h => h.count);
       }
+
+      // Calculate suggested max based on total visitors or highest daily count
+      const maxDaily = Math.max(...data);
+      const suggestedMax = Math.max(totalVisitors, maxDaily) + 2;
 
       visitorChartInstance = new Chart(ctx, {
         type: 'line',
@@ -879,7 +883,7 @@ layout: null
           scales: {
             y: { 
               beginAtZero: true,
-              suggestedMax: Math.max(...data) + 2 || 10,
+              suggestedMax: suggestedMax,
               ticks: { 
                 stepSize: 1,
                 precision: 0
@@ -905,7 +909,7 @@ layout: null
             
             // Update chart with real history
             if (visitorData.data.history) {
-              initVisitorChart(visitorData.data.history);
+              initVisitorChart(visitorData.data.history, visitorData.data.total || 0);
             }
           }
         }
