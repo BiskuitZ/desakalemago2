@@ -842,6 +842,8 @@ layout: null
         return;
       }
       
+      if (btn) setButtonLoading(btn, true, 'Menyimpan...');
+      
       try {
         const username = localStorage.getItem('username') || 'developer';
         const res = await fetch(`${API_URL}/api/products/${productId}`, {
@@ -860,9 +862,11 @@ layout: null
         } else {
           const errData = await res.json();
           alert('Gagal memperbarui produk: ' + (errData.message || 'Server error'));
+          if (btn) setButtonLoading(btn, false);
         }
       } catch (err) {
         alert('Gagal memperbarui produk: ' + err.message);
+        if (btn) setButtonLoading(btn, false);
       }
     }
 
@@ -1523,6 +1527,9 @@ layout: null
 
     function saveMemberForm(e) {
       e.preventDefault();
+      
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
 
       const photoUrl = document.getElementById('memberPhotoUrl').value || '';
       const photoFile = document.getElementById('memberPhotoFile').files[0];
@@ -1534,16 +1541,18 @@ layout: null
         const reader = new FileReader();
         reader.onload = function(ev) {
           finalPhoto = ev.target.result;
-          saveMemberData(finalPhoto);
+          saveMemberData(finalPhoto, submitBtn);
         };
         reader.readAsDataURL(photoFile);
         return; // Wait for file read
       }
 
-      saveMemberData(finalPhoto);
+      saveMemberData(finalPhoto, submitBtn);
     }
 
-    function saveMemberData(finalPhoto) {
+    function saveMemberData(finalPhoto, btn = null) {
+      if (btn) setButtonLoading(btn, true, 'Menyimpan...');
+      
       const newData = {
         id: currentEditIndex !== null ? currentTeam[currentEditIndex].id : Date.now(),
         name: document.getElementById('memberName').value,
@@ -1576,8 +1585,6 @@ layout: null
     }
 
     async function saveTeamToBackend(btn = null) {
-      if (btn) setButtonLoading(btn, true, 'Menyimpan...');
-      
       try {
         const username = localStorage.getItem('username') || 'developer';
         const res = await fetch(`${API_URL}/api/team`, {
