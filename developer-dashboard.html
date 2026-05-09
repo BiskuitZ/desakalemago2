@@ -831,6 +831,7 @@ layout: null
       // Destroy previous chart if exists
       if (visitorChartInstance) {
         visitorChartInstance.destroy();
+        visitorChartInstance = null;
       }
 
       let labels = ['H-6', 'H-5', 'H-4', 'H-3', 'H-2', 'Kemarin', 'Hari Ini'];
