@@ -611,8 +611,8 @@ layout: null
       const image = document.getElementById('prodImage').value;
       const description = document.getElementById('prodDesc').value;
       
-      if (!name || !price) {
-        alert('Nama dan harga wajib diisi!');
+      if (!name || !price || !image || !description) {
+        alert('Semua field wajib diisi: Nama, Harga, Gambar URL, dan Deskripsi!');
         return;
       }
       
@@ -630,6 +630,9 @@ layout: null
         if (res.ok) {
           btn.closest('.fixed').remove();
           loadProductManagement();
+        } else {
+          const errData = await res.json();
+          alert('Gagal menambah produk: ' + (errData.message || 'Server error 400'));
         }
       } catch (err) {
         alert('Gagal menambah produk');
