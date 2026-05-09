@@ -752,6 +752,25 @@
         const res = await fetch(`${API_URL}/api/products`);
         const data = await res.json();
         console.log('%c✅ [Products] Data dari backend:', 'color:#10b981;font-weight:bold', data);
+        
+        const tbody = document.getElementById('productTableBody');
+        if (tbody && data.products) {
+          tbody.innerHTML = '';
+          data.products.forEach(product => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td class="px-4 py-3">${product.id}</td>
+              <td class="px-4 py-3 font-medium">${product.name}</td>
+              <td class="px-4 py-3">Rp ${product.price.toLocaleString('id-ID')}</td>
+              <td class="px-4 py-3">${product.stock || 0}</td>
+              <td class="px-4 py-3 text-center">
+                <button onclick="editProduct(${product.id})" class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                <button onclick="deleteProduct(${product.id})" class="text-red-600 hover:text-red-800">Hapus</button>
+              </td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
       } catch (e) { 
         console.error('❌ Gagal load products:', e);
       }
@@ -762,6 +781,20 @@
         const res = await fetch(`${API_URL}/api/population`);
         const data = await res.json();
         console.log('%c✅ [Population] Data dari backend:', 'color:#10b981;font-weight:bold', data);
+        
+        if (data.success && data.data) {
+          // Update input fields if exist
+          const popMale = document.getElementById('popMale');
+          const popFemale = document.getElementById('popFemale');
+          if (popMale) popMale.value = data.data.male || 0;
+          if (popFemale) popFemale.value = data.data.female || 0;
+          
+          // Show summary
+          const summary = document.getElementById('populationSummary');
+          if (summary) {
+            summary.innerHTML = `Total: ${(data.data.male + data.data.female).toLocaleString('id-ID')} jiwa | Keluarga: ${data.data.families || 0}`;
+          }
+        }
       } catch (e) { 
         console.error('❌ Gagal load population:', e);
       }
@@ -782,6 +815,25 @@
         const res = await fetch(`${API_URL}/api/team`);
         const data = await res.json();
         console.log('%c✅ [Team] Data dari backend:', 'color:#10b981;font-weight:bold', data);
+        
+        const teamList = document.getElementById('teamList');
+        if (teamList && data.team) {
+          teamList.innerHTML = '';
+          data.team.forEach(member => {
+            const div = document.createElement('div');
+            div.className = 'bg-white border border-gray-200 rounded-2xl p-4 flex items-center gap-4';
+            div.innerHTML = `
+              <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 font-bold">
+                ${member.name.split(' ').map(n => n[0]).join('').substring(0,2)}
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold">${member.name}</div>
+                <div class="text-sm text-gray-500">${member.role}</div>
+              </div>
+            `;
+            teamList.appendChild(div);
+          });
+        }
       } catch (e) { 
         console.error('❌ Gagal load team:', e);
       }
