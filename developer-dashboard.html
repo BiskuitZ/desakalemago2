@@ -1164,8 +1164,8 @@ layout: null
             <!-- Interactive Map for Picking Location -->
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-1">Klik Peta untuk Pilih Lokasi</label>
-              <div id="mini-map" class="w-full h-64 rounded-2xl border border-gray-300 overflow-hidden"></div>
-              <p class="text-xs text-gray-500 mt-1">Klik di peta untuk mengisi otomatis Latitude & Longitude</p>
+              <div id="mini-map" style="width:100%; height:220px; border-radius:16px; border:1px solid #d1d5db; overflow:hidden;"></div>
+              <p class="text-xs text-gray-500 mt-1">Klik di peta • Scroll untuk zoom in/out</p>
             </div>
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-1">Deskripsi</label>
@@ -1212,29 +1212,33 @@ layout: null
       `;
       document.body.appendChild(modal);
 
-      // Initialize Mini Map for Location Picker
+      // Initialize Mini Map for Location Picker (Leaflet)
       setTimeout(() => {
         const miniMapContainer = document.getElementById('mini-map');
         if (miniMapContainer && typeof L !== 'undefined') {
           const initialLat = point ? point.lat : -1.5123;
           const initialLng = point ? point.lng : 120.4300;
 
-          const miniMap = L.map('mini-map').setView([initialLat, initialLng], 13);
+          const miniMap = L.map('mini-map', {
+            zoomControl: true,
+            attributionControl: false
+          }).setView([initialLat, initialLng], 14);
 
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
+            maxZoom: 19
           }).addTo(miniMap);
 
-          // Add marker at initial location
+          // Add marker
           let marker = L.marker([initialLat, initialLng], { draggable: true }).addTo(miniMap);
 
-          // Function to update inputs
           function updateInputs(lat, lng) {
-            document.getElementById('mapPointLat').value = lat.toFixed(6);
-            document.getElementById('mapPointLng').value = lng.toFixed(6);
+            const latInput = document.getElementById('mapPointLat');
+            const lngInput = document.getElementById('mapPointLng');
+            if (latInput) latInput.value = lat.toFixed(6);
+            if (lngInput) lngInput.value = lng.toFixed(6);
           }
 
-          // Click on map
+          // Click anywhere on map
           miniMap.on('click', function(e) {
             const { lat, lng } = e.latlng;
             marker.setLatLng([lat, lng]);
@@ -1249,8 +1253,15 @@ layout: null
 
           // Set initial values
           updateInputs(initialLat, initialLng);
+
+          // Force map to resize correctly
+          setTimeout(() => {
+            miniMap.invalidateSize();
+          }, 300);
+        } else {
+          console.warn('Leaflet belum dimuat atau container tidak ditemukan');
         }
-      }, 400);
+      }, 500);
 
       // Pre-select current icon
       if (point && point.icon) {
