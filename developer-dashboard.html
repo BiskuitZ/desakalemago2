@@ -951,40 +951,74 @@ layout: null
           throw new Error(data.reason || 'IP tidak valid');
         }
 
+        const lat = parseFloat(data.latitude);
+        const lng = parseFloat(data.longitude);
         const location = `${data.city || ''}, ${data.region || ''}, ${data.country_name || ''}`.replace(/^,\s*|,\s*$/g, '');
 
-        // Create popup
-        const popup = document.createElement('div');
-        popup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999]';
-        popup.innerHTML = `
-          <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 p-6">
-            <div class="flex justify-between items-start mb-4">
-              <div>
-                <h3 class="text-xl font-bold text-purple-800">Lokasi Pengunjung</h3>
-                <p class="text-sm text-gray-500">${ip}</p>
+        // Create modal with map
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999]';
+        modal.innerHTML = `
+          <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-purple-600 to-purple-700 p-6 text-white">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="text-2xl font-bold">Lokasi Pengunjung</h3>
+                  <p class="text-purple-200 text-sm mt-1">${ip}</p>
+                </div>
+                <button onclick="this.closest('.fixed').remove()" class="text-white/80 hover:text-white text-3xl leading-none">&times;</button>
               </div>
-              <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600">
-                <i class="fas fa-times text-2xl"></i>
-              </button>
             </div>
             
-            <div class="bg-purple-50 rounded-2xl p-4 mb-4">
-              <div class="flex items-center gap-3">
-                <i class="fas fa-map-marker-alt text-3xl text-purple-600"></i>
+            <!-- Map Container -->
+            <div id="visitor-map" style="height: 400px; width: 100%;"></div>
+            
+            <!-- Info -->
+            <div class="p-6 bg-gray-50">
+              <div class="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p class="font-semibold text-purple-800">${location || 'Lokasi tidak tersedia'}</p>
-                  <p class="text-sm text-purple-600">${data.org || 'Unknown ISP'}</p>
+                  <p class="text-gray-500">Lokasi</p>
+                  <p class="font-semibold text-gray-800">${location || 'Tidak tersedia'}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500">ISP / Organisasi</p>
+                  <p class="font-semibold text-gray-800">${data.org || 'Tidak diketahui'}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500">Koordinat</p>
+                  <p class="font-mono text-gray-800">${lat.toFixed(4)}, ${lng.toFixed(4)}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500">Zona Waktu</p>
+                  <p class="font-semibold text-gray-800">${data.timezone || '-'}</p>
                 </div>
               </div>
             </div>
-            
-            <div class="text-xs text-gray-500">
-              <p>Latitude: ${data.latitude || '-'}</p>
-              <p>Longitude: ${data.longitude || '-'}</p>
-            </div>
           </div>
         `;
-        document.body.appendChild(popup);
+        document.body.appendChild(modal);
+
+        // Initialize Leaflet Map after modal is added to DOM
+        setTimeout(() => {
+          const mapContainer = document.getElementById('visitor-map');
+          if (mapContainer && typeof L !== 'undefined') {
+            const map = L.map('visitor-map').setView([lat, lng], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Add marker
+            L.marker([lat, lng])
+              .addTo(map)
+              .bindPopup(`
+                <b>${location}</b><br>
+                <small>${ip}</small>
+              `)
+              .openPopup();
+          }
+        }, 300);
 
       } catch (err) {
         alert('Gagal mendapatkan lokasi: ' + err.message);
