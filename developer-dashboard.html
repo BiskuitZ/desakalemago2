@@ -74,9 +74,11 @@ layout: null
     .section { display: none !important; }
     .section.active { display: block !important; }
     
-    /* Ensure sidebar always visible */
-    #sidebar {
-      display: flex !important;
+    /* Force sidebar to always be visible - very specific selector */
+    body > div.w-64.fixed.left-0 {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
     
     /* Framer-like card effects */
