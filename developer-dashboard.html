@@ -851,14 +851,10 @@ layout: null
         });
         data = historyData.map(h => h.count);
       } else {
-        // Fallback empty data
-        const days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
-        labels = days.map((day, i) => {
-          const d = new Date();
-          d.setDate(d.getDate() - (6 - i));
-          return `${day} ${d.getDate()}`;
-        });
-        data = [0, 0, 0, 0, 0, 0, 0];
+        // Show today's count if no history yet
+        const today = new Date();
+        labels = [`Hari Ini (${today.getDate()})`];
+        data = [0]; // Will be updated by loadDashboardStats if total > 0
       }
 
       weeklyChartInstance = new Chart(ctx, {
