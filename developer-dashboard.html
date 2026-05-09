@@ -734,56 +734,79 @@
       }
     }
 
-    // Fungsi load data dari backend untuk setiap menu
+    // Fungsi load data dari backend untuk setiap menu (dengan notifikasi)
     async function loadUsersFromBackend() {
       try {
         const res = await fetch(`${API_URL}/api/admin/users`, {
           headers: { 'x-username': JSON.parse(localStorage.getItem('user')).username }
         });
         const data = await res.json();
-        console.log('Users loaded from backend:', data);
-        // Tambahkan logika tampilkan data di sini jika ada tabel
-      } catch (e) { console.log('Gagal load users'); }
+        console.log('%c✅ [Users] Data dari backend:', 'color:#10b981;font-weight:bold', data);
+        alert('✅ Data Users berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
+      } catch (e) { 
+        console.error('❌ Gagal load users:', e);
+        alert('❌ Gagal memuat data Users dari backend');
+      }
     }
 
     async function loadProductsFromBackend() {
       try {
         const res = await fetch(`${API_URL}/api/products`);
         const data = await res.json();
-        console.log('Products loaded from backend:', data);
-      } catch (e) { console.log('Gagal load products'); }
+        console.log('%c✅ [Products] Data dari backend:', 'color:#10b981;font-weight:bold', data);
+        alert('✅ Data Products berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
+      } catch (e) { 
+        console.error('❌ Gagal load products:', e);
+        alert('❌ Gagal memuat data Products dari backend');
+      }
     }
 
     async function loadPopulationFromBackend() {
       try {
         const res = await fetch(`${API_URL}/api/population`);
         const data = await res.json();
-        console.log('Population loaded from backend:', data);
-      } catch (e) { console.log('Gagal load population'); }
+        console.log('%c✅ [Population] Data dari backend:', 'color:#10b981;font-weight:bold', data);
+        alert('✅ Data Population berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
+      } catch (e) { 
+        console.error('❌ Gagal load population:', e);
+        alert('❌ Gagal memuat data Population dari backend');
+      }
     }
 
     async function loadAPBDesFromBackend() {
       try {
         const res = await fetch(`${API_URL}/api/apbdes`);
         const data = await res.json();
-        console.log('APBDes loaded from backend:', data);
-      } catch (e) { console.log('Gagal load APBDes'); }
+        console.log('%c✅ [APBDes] Data dari backend:', 'color:#10b981;font-weight:bold', data);
+        alert('✅ Data APBDes berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
+      } catch (e) { 
+        console.error('❌ Gagal load APBDes:', e);
+        alert('❌ Gagal memuat data APBDes dari backend');
+      }
     }
 
     async function loadTeamFromBackend() {
       try {
         const res = await fetch(`${API_URL}/api/team`);
         const data = await res.json();
-        console.log('Team loaded from backend:', data);
-      } catch (e) { console.log('Gagal load team'); }
+        console.log('%c✅ [Team] Data dari backend:', 'color:#10b981;font-weight:bold', data);
+        alert('✅ Data Team berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
+      } catch (e) { 
+        console.error('❌ Gagal load team:', e);
+        alert('❌ Gagal memuat data Team dari backend');
+      }
     }
 
     async function loadMapPointsFromBackend() {
       try {
         const res = await fetch(`${API_URL}/api/map-points`);
         const data = await res.json();
-        console.log('Map points loaded from backend:', data);
-      } catch (e) { console.log('Gagal load map points'); }
+        console.log('%c✅ [Map Points] Data dari backend:', 'color:#10b981;font-weight:bold', data);
+        alert('✅ Data Map Points berhasil dimuat dari backend!\n\nLihat Console (F12) untuk detail lengkap.');
+      } catch (e) { 
+        console.error('❌ Gagal load map points:', e);
+        alert('❌ Gagal memuat data Map Points dari backend');
+      }
     }
 
     // Load all data when page loads
