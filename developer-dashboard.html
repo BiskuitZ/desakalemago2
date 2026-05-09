@@ -1997,75 +1997,77 @@ layout: null
 
   <!-- Toast + Loading Helper (Global) -->
   <script>
-    // Toast Notification System
-    window.showToast = function(message, type = 'success', duration = 4000) {
-      const container = document.querySelector('.toast-container') || createToastContainer();
+    // Toast + Loading Helper (Global - Single Instance)
+    if (!window.__helpersLoaded) {
+      window.__helpersLoaded = true;
       
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
+      window.showToast = function(message, type = 'success', duration = 4000) {
+        const container = document.querySelector('.toast-container') || createToastContainer();
+        
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const icon = type === 'success' ? 'check-circle' : 
+                     type === 'error' ? 'exclamation-circle' : 
+                     type === 'warning' ? 'exclamation-triangle' : 'info-circle';
+        
+        toast.innerHTML = `
+          <div class="flex-shrink-0">
+            <i class="fas fa-${icon} text-xl ${type === 'success' ? 'text-emerald-500' : type === 'error' ? 'text-red-500' : type === 'warning' ? 'text-amber-500' : 'text-blue-500'}"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-gray-800 font-medium">${message}</p>
+          </div>
+          <button onclick="this.closest('.toast').remove()" class="text-gray-400 hover:text-gray-600 flex-shrink-0">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+          if (toast.parentNode) {
+            toast.classList.add('fade-out');
+            setTimeout(() => toast.remove(), 200);
+          }
+        }, duration);
+      };
       
-      const icon = type === 'success' ? 'check-circle' : 
-                   type === 'error' ? 'exclamation-circle' : 
-                   type === 'warning' ? 'exclamation-triangle' : 'info-circle';
+      function createToastContainer() {
+        const container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+        return container;
+      }
       
-      toast.innerHTML = `
-        <div class="flex-shrink-0">
-          <i class="fas fa-${icon} text-xl ${type === 'success' ? 'text-emerald-500' : type === 'error' ? 'text-red-500' : type === 'warning' ? 'text-amber-500' : 'text-blue-500'}"></i>
-        </div>
-        <div class="flex-1">
-          <p class="text-gray-800 font-medium">${message}</p>
-        </div>
-        <button onclick="this.closest('.toast').remove()" class="text-gray-400 hover:text-gray-600 flex-shrink-0">
-          <i class="fas fa-times"></i>
-        </button>
-      `;
-      
-      container.appendChild(toast);
-      
-      setTimeout(() => {
-        if (toast.parentNode) {
-          toast.classList.add('fade-out');
-          setTimeout(() => toast.remove(), 200);
+      window.setButtonLoading = function(button, isLoading, loadingText = 'Menyimpan...') {
+        if (!button) return;
+        
+        if (isLoading) {
+          button.dataset.originalText = button.innerHTML;
+          button.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> ${loadingText}`;
+          button.disabled = true;
+          button.style.opacity = '0.8';
+        } else {
+          button.innerHTML = button.dataset.originalText || button.innerHTML;
+          button.disabled = false;
+          button.style.opacity = '1';
         }
-      }, duration);
-    };
-    
-    function createToastContainer() {
-      const container = document.createElement('div');
-      container.className = 'toast-container';
-      document.body.appendChild(container);
-      return container;
-    }
-    
-    // Loading State Helper
-    window.setButtonLoading = function(button, isLoading, loadingText = 'Menyimpan...') {
-      if (!button) return;
+      };
       
-      if (isLoading) {
-        button.dataset.originalText = button.innerHTML;
-        button.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> ${loadingText}`;
-        button.disabled = true;
-        button.style.opacity = '0.8';
-      } else {
-        button.innerHTML = button.dataset.originalText || button.innerHTML;
-        button.disabled = false;
-        button.style.opacity = '1';
-      }
-    };
-    
-    // Override alert
-    const originalAlert = window.alert;
-    window.alert = function(message) {
-      if (typeof message === 'string' && message.length < 100) {
-        window.showToast(message, 'info');
-      } else {
-        originalAlert(message);
-      }
-    };
+      const originalAlert = window.alert;
+      window.alert = function(message) {
+        if (typeof message === 'string' && message.length < 100) {
+          window.showToast(message, 'info');
+        } else {
+          originalAlert(message);
+        }
+      };
+    }
   </script>
   <script>
-    // Toast Notification System
-    window.showToast = function(message, type = 'success', duration = 4000) {
+    // Ensure sidebar is always visible (safety guard)
+    function ensureSidebarVisible() {
       const container = document.querySelector('.toast-container') || createToastContainer();
       
       const toast = document.createElement('div');
