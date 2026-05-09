@@ -208,12 +208,16 @@ layout: null
             </div>
           </div>
 
-          <!-- Chart Section -->
+          <!-- Weekly Visitor Chart -->
           <div class="mt-8">
-            <h4 class="text-lg font-semibold text-purple-800 mb-4">Tren Pengunjung 7 Hari Terakhir</h4>
-            <div style="height: 280px; position: relative; max-height: 280px; overflow: hidden;">
-              <canvas id="visitorChart"></canvas>
+            <h4 class="text-lg font-semibold text-purple-800 mb-4 flex items-center gap-2">
+              <i class="fas fa-chart-bar text-purple-600"></i>
+              Jumlah Pengunjung 1 Minggu Ini
+            </h4>
+            <div style="height: 260px; position: relative;">
+              <canvas id="weeklyVisitorChart"></canvas>
             </div>
+            <p class="text-xs text-gray-500 mt-2 text-center">Data diambil langsung dari backend (viewer.js)</p>
           </div>
 
           <!-- Additional Statistics -->
@@ -823,55 +827,56 @@ layout: null
       }
     }
 
-    // Initialize Visitor Chart with real data from backend
-    let visitorChartInstance = null;
+    // Weekly Visitor Chart - Synced with viewer.js
+    let weeklyChartInstance = null;
 
-    function initVisitorChart(historyData = null, totalVisitors = 0) {
-      const ctx = document.getElementById('visitorChart');
+    function initWeeklyVisitorChart(historyData = null) {
+      const ctx = document.getElementById('weeklyVisitorChart');
       if (!ctx) return;
 
-      // Destroy previous chart if exists
-      if (visitorChartInstance) {
-        visitorChartInstance.destroy();
-        visitorChartInstance = null;
+      // Destroy previous chart
+      if (weeklyChartInstance) {
+        weeklyChartInstance.destroy();
+        weeklyChartInstance = null;
       }
 
-      let labels = ['H-6', 'H-5', 'H-4', 'H-3', 'H-2', 'Kemarin', 'Hari Ini'];
-      let data = [0, 0, 0, 0, 0, 0, 0];
+      let labels = [];
+      let data = [];
 
-      if (historyData && historyData.length === 7) {
+      if (historyData && historyData.length > 0) {
+        // Use real data from backend
         labels = historyData.map(h => {
           const d = new Date(h.date);
-          return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+          return d.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' });
         });
         data = historyData.map(h => h.count);
+      } else {
+        // Fallback empty data
+        const days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+        labels = days.map((day, i) => {
+          const d = new Date();
+          d.setDate(d.getDate() - (6 - i));
+          return `${day} ${d.getDate()}`;
+        });
+        data = [0, 0, 0, 0, 0, 0, 0];
       }
 
-      // Calculate suggested max based on total visitors or highest daily count
-      const maxDaily = Math.max(...data);
-      const suggestedMax = Math.max(totalVisitors, maxDaily) + 2;
-
-      visitorChartInstance = new Chart(ctx, {
-        type: 'line',
+      weeklyChartInstance = new Chart(ctx, {
+        type: 'bar',
         data: {
           labels: labels,
           datasets: [{
-            label: 'Pengunjung',
+            label: 'Pengunjung per Hari',
             data: data,
+            backgroundColor: 'rgba(139, 92, 246, 0.7)',
             borderColor: '#8b5cf6',
-            backgroundColor: 'rgba(139, 92, 246, 0.1)',
-            tension: 0.4,
-            fill: true,
-            pointBackgroundColor: '#8b5cf6',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 4
+            borderWidth: 1,
+            borderRadius: 6
           }]
         },
         options: {
           responsive: true,
-          maintainAspectRatio: true,
-          aspectRatio: 2.5,
+          maintainAspectRatio: false,
           plugins: {
             legend: { display: false },
             tooltip: {
@@ -881,13 +886,9 @@ layout: null
             }
           },
           scales: {
-            y: { 
+            y: {
               beginAtZero: true,
-              suggestedMax: suggestedMax,
-              ticks: { 
-                stepSize: 1,
-                precision: 0
-              }
+              ticks: { stepSize: 1, precision: 0 }
             }
           }
         }
@@ -909,7 +910,9 @@ layout: null
             
             // Update chart with real history
             if (visitorData.data.history) {
-              initVisitorChart(visitorData.data.history, visitorData.data.total || 0);
+              initWeeklyVisitorChart(visitorData.data.history);
+            } else {
+              initWeeklyVisitorChart(null);
             }
           }
         }
@@ -1567,9 +1570,9 @@ layout: null
         if (typeof loadPopulationData === 'function') loadPopulationData();
         if (typeof loadDashboardStats === 'function') loadDashboardStats();
         
-        // Always initialize chart (even if backend fails)
-        if (typeof initVisitorChart === 'function') {
-          initVisitorChart(null, 0);
+        // Always initialize weekly chart (even if backend fails)
+        if (typeof initWeeklyVisitorChart === 'function') {
+          initWeeklyVisitorChart(null);
         }
       }, 400);
       
