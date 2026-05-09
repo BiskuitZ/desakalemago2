@@ -831,8 +831,11 @@ layout: null
     let weeklyChartInstance = null;
 
     function initWeeklyVisitorChart(historyData = null) {
-      const ctx = document.getElementById('weeklyVisitorChart');
-      if (!ctx) return;
+      const canvas = document.getElementById('weeklyVisitorChart');
+      if (!canvas) {
+        console.warn('weeklyVisitorChart canvas not found');
+        return;
+      }
 
       // Destroy previous chart
       if (weeklyChartInstance) {
@@ -857,7 +860,8 @@ layout: null
         data = [0]; // Will be updated by loadDashboardStats if total > 0
       }
 
-      weeklyChartInstance = new Chart(ctx, {
+      try {
+        weeklyChartInstance = new Chart(canvas, {
         type: 'bar',
         data: {
           labels: labels,
@@ -889,6 +893,10 @@ layout: null
           }
         }
       });
+        console.log('✅ Weekly visitor chart created successfully');
+      } catch (err) {
+        console.error('Error creating weekly visitor chart:', err);
+      }
     }
 
     async function loadDashboardStats() {
