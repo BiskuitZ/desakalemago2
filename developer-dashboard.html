@@ -426,10 +426,6 @@ layout: null
             <i class="fas fa-plus"></i>
             <span>Tambah Titik</span>
           </button>
-          <button onclick="saveAllMapPointsToBackend()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <span>Simpan ke Backend</span>
-          </button>
           <button onclick="exportMapPoints()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
             <i class="fas fa-download"></i>
             <span>Export JSON</span>
@@ -1383,50 +1379,6 @@ layout: null
 
       mapPoints.splice(index, 1);
       loadMapPoints();
-    }
-
-    async function saveAllMapPointsToBackend() {
-      if (mapPoints.length === 0) {
-        alert('Tidak ada titik peta untuk disimpan');
-        return;
-      }
-
-      console.log('%c[Backend Sync] Mulai sinkronisasi ke Railway...', 'color:#10b981');
-
-      try {
-        const username = localStorage.getItem('username') || 'developer';
-        let successCount = 0;
-        let errorCount = 0;
-
-        for (const point of mapPoints) {
-          const res = await fetch(`${API_URL}/api/map-points`, {
-            method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json',
-              'x-username': username 
-            },
-            body: JSON.stringify(point)
-          });
-
-          if (res.ok) {
-            successCount++;
-            console.log('%c[Backend Sync] Berhasil kirim titik:', 'color:#10b981', point.name);
-          } else {
-            errorCount++;
-            console.error('%c[Backend Sync] Gagal kirim titik:', 'color:#ef4444', point.name);
-          }
-        }
-
-        if (successCount > 0) {
-          alert(`✅ ${successCount} titik peta berhasil disinkronkan ke backend Railway!\n\nCek log di Railway untuk melihat proses peta.js`);
-          loadMapPoints();
-        } else {
-          alert('❌ Gagal sinkronisasi. Cek Console (F12) untuk detail error.');
-        }
-      } catch (e) {
-        console.error('%c[Backend Sync] Error:', 'color:#ef4444', e);
-        alert('Gagal sinkronisasi ke backend: ' + e.message);
-      }
     }
 
     function exportMapPoints() {
