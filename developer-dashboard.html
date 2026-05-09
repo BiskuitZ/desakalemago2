@@ -2081,7 +2081,10 @@ layout: null
       }
     }, 500);
     
-    // Helper function for loading button state
+  </script>
+  
+  <!-- Loading State Helper (must be before other scripts) -->
+  <script>
     window.setButtonLoading = function(button, isLoading, loadingText = 'Menyimpan...') {
       if (!button) return;
       
