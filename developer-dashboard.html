@@ -211,7 +211,9 @@ layout: null
           <!-- Chart Section -->
           <div class="mt-8">
             <h4 class="text-lg font-semibold text-purple-800 mb-4">Tren Pengunjung 7 Hari Terakhir</h4>
-            <canvas id="visitorChart" class="w-full h-64"></canvas>
+            <div style="height: 280px; position: relative; max-height: 280px; overflow: hidden;">
+              <canvas id="visitorChart"></canvas>
+            </div>
           </div>
 
           <!-- Additional Statistics -->
@@ -864,7 +866,8 @@ layout: null
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
           plugins: {
             legend: { display: false },
             tooltip: {
@@ -876,7 +879,11 @@ layout: null
           scales: {
             y: { 
               beginAtZero: true,
-              ticks: { stepSize: 1 }
+              suggestedMax: Math.max(...data) + 2 || 10,
+              ticks: { 
+                stepSize: 1,
+                precision: 0
+              }
             }
           }
         }
