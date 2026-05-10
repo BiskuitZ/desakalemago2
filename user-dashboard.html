@@ -43,30 +43,6 @@ layout: null
       <p class="text-emerald-200 text-lg" id="welcomeMessage">Memuat...</p>
     </div>
 
-    <div class="bg-white rounded-3xl shadow-lg p-8">
-      <h3 class="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-3">
-        <i class="fas fa-chart-line text-emerald-600"></i>
-        Statistik Pengunjung
-      </h3>
-      
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="bg-emerald-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-emerald-800" id="totalVisitors">0</p>
-          <p class="text-emerald-600 font-semibold mt-2">Total Pengunjung</p>
-        </div>
-        
-        <div class="bg-blue-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-blue-800" id="todayVisitors">0</p>
-          <p class="text-blue-600 font-semibold mt-2">Pengunjung Hari Ini</p>
-        </div>
-        
-        <div class="bg-purple-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-purple-800" id="onlineVisitors">12</p>
-          <p class="text-purple-600 font-semibold mt-2">Sedang Online</p>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <script>
@@ -83,9 +59,6 @@ layout: null
       
       document.getElementById('userName').textContent = user.name || user.username;
       document.getElementById('welcomeMessage').textContent = `Halo, ${user.name || user.username}!`;
-      
-      // Load shared visitor stats
-      loadSharedVisitorStats();
     }
 
     // (Fitur Lihat Kartu Keluarga telah dihapus sesuai permintaan)
@@ -102,11 +75,6 @@ layout: null
     }
 
     checkAuth();
-    
-    // Auto-refresh every 30 seconds
-    setInterval(() => {
-      loadVisitorStats();
-    }, 30000);
   </script>
 </body>
 </html>
