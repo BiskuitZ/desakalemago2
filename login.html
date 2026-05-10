@@ -73,7 +73,7 @@
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
-      const username = document.getElementById('username').value.trim();
+      const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const loginBtn = document.getElementById('loginBtn');
       const errorDiv = document.getElementById('errorMessage');
@@ -83,26 +83,15 @@
       loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
 
       try {
-        // Add timeout for mobile networks
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password }),
-          signal: controller.signal
+          body: JSON.stringify({ username, password })
         });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
-        }
 
         const data = await response.json();
 
-        if (data.success && data.user) {
+        if (data.success) {
           localStorage.setItem('user', JSON.stringify(data.user));
           
           // REDIRECT BERDASARKAN ROLE
@@ -114,30 +103,25 @@
             window.location.href = 'user-dashboard.html';
           }
         } else {
-          errorDiv.textContent = data.message || 'Username atau password salah';
+          errorDiv.textContent = data.message || 'Login gagal';
           errorDiv.classList.remove('hidden');
           loginBtn.disabled = false;
           loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
         }
       } catch (error) {
-        console.error('Login error:', error);
-        
-        let msg = 'Gagal terhubung ke server.';
-        if (error.name === 'AbortError') {
-          msg = 'Koneksi timeout. Periksa internet Anda.';
-        } else if (error.message.includes('Failed to fetch')) {
-          msg = 'Tidak dapat terhubung. Coba matikan VPN atau ganti jaringan.';
-        }
-        
-        errorDiv.textContent = msg;
+        errorDiv.textContent = 'Tidak dapat terhubung ke server';
         errorDiv.classList.remove('hidden');
         loginBtn.disabled = false;
         loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
       }
     });
 
-    // Auto-redirect removed to prevent infinite loop.
-    // User will be redirected only after successful login.
+    if (localStorage.getItem('user')) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user.role === 'developer') window.location.href = 'developer-dashboard.html';
+      else if (user.role === 'admin') window.location.href = 'admin-dashboard.html';
+      else window.location.href = 'user-dashboard.html';
+    }
   </script>
 </body>
 </html>

@@ -8,47 +8,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     html {
       touch-action: manipulation;
       -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
     }
-
-    .modern-card {
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-    .modern-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 
-                  0 8px 10px -6px rgb(0 0 0 / 0.1);
-    }
-    .nav-link {
-      position: relative;
-      transition: color 0.3s ease;
-    }
-    .nav-link:after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: -2px;
-      left: 0;
-      background-color: #10b981;
-      transition: width 0.3s ease;
-    }
-    .nav-link:hover:after {
-      width: 100%;
-    }
-
-    /* Mobile Improvements */
-    @media (max-width: 768px) {
-      .container { padding-left: 1rem; padding-right: 1rem; }
-      button, .btn { min-height: 48px; }
-      .modern-card { padding: 1.25rem; }
-    }
-    
     /* Animated Loading Text (same as index.html) */
     #loading-overlay {
       display: none;
@@ -93,6 +58,10 @@
         transform: translateY(-18px) scale(1.15); 
         color: #34d399;
       }
+    }
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
     }
     body {
       font-family: 'Inter', sans-serif;
@@ -254,7 +223,7 @@
   <main class="container mx-auto px-6 py-12">
     <section class="bg-emerald-800 rounded-lg shadow-lg p-6 text-white max-w-5xl mx-auto">
       <h3 class="text-xl font-bold mb-6">Peta Desa</h3>
-      <img src="fotokkn/PETA.png" alt="Peta Desa Kalemago" class="w-full h-[600px] object-contain rounded-lg shadow-lg" />
+      <img src="fotokkn/PETA.jpg" alt="Peta Desa Kalemago" class="w-full h-[600px] object-contain rounded-lg shadow-lg" />
       <p class="mt-4 text-sm leading-relaxed opacity-90">Menampilkan Peta Desa Dengan <em>Interest Point</em> Desa Kalemago</p>
     </section>
   </main>
@@ -267,7 +236,7 @@
       <a href="#" aria-label="Instagram" class="text-white hover:text-yellow-300 transition text-2xl"><i class="fab fa-instagram"></i></a>
       <a href="#" aria-label="LinkedIn" class="text-white hover:text-yellow-300 transition text-2xl"><i class="fab fa-linkedin"></i></a>
     </div>
-    <p class="text-white/80">&copy; 2026 Asindu Engineering Consultant. All rights reserved.</p>
+    <p class="text-white/80">&copy; 2025 Asindu Engineering Consultant. All rights reserved.</p>
   </footer>
 
   </div><!-- end of root div -->
@@ -350,133 +319,6 @@
         scrollBtn.style.pointerEvents = 'none';
       }
     });
-
-    // ==================== PETA DESA INTERAKTIF ====================
-    async function initPetaDesa() {
-      const mapContainer = document.createElement('div');
-      mapContainer.className = 'max-w-7xl mx-auto px-6 py-12';
-      mapContainer.innerHTML = `
-        <div class="text-center mb-8">
-          <h2 class="text-3xl font-bold text-emerald-800 mb-2">Peta Interaktif Desa Kalemago</h2>
-          <p class="text-gray-600">Klik marker untuk melihat informasi lokasi penting</p>
-        </div>
-        
-        <div id="peta-desa" class="w-full h-[500px] rounded-3xl shadow-xl border border-emerald-100 overflow-hidden"></div>
-        
-        <div class="mt-4 text-center text-sm text-gray-500">
-          <i class="fas fa-info-circle mr-1"></i>
-          Data peta dikelola melalui Developer Dashboard
-        </div>
-      `;
-      
-      // Insert before footer or at the end of main content
-      const footer = document.querySelector('footer');
-      if (footer) {
-        footer.parentNode.insertBefore(mapContainer, footer);
-      } else {
-        document.body.appendChild(mapContainer);
-      }
-      
-      // Initialize Leaflet Map (async to support backend fetch)
-      setTimeout(async () => {
-        const map = L.map('peta-desa').setView([-1.5123, 120.4300], 15);
-        
-        // Satellite Mode (Esri World Imagery)
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-          attribution: '© Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
-          maxZoom: 19
-        }).addTo(map);
-        
-        // Load points ONLY from Backend (no localStorage)
-        let points = [];
-        try {
-          const res = await fetch('https://desakalemago2-backend-production.up.railway.app/api/map-points');
-          if (res.ok) {
-            const data = await res.json();
-            points = Array.isArray(data) ? data : (data.points || data || []);
-          }
-        } catch (e) {
-          console.warn('Gagal memuat data peta dari backend');
-          points = [];
-        }
-        
-        if (points.length > 0) {
-          const group = L.featureGroup();
-          
-          points.forEach(point => {
-            const iconClass = point.icon || 'fa-map-marker-alt';
-            const iconColor = ['fa-church','fa-mosque'].includes(iconClass) ? '#10b981' : 
-                             iconClass === 'fa-landmark' ? '#f59e0b' : '#6366f1';
-            
-            const customIcon = L.divIcon({
-              className: 'custom-map-icon',
-              html: `<div style="background:white;border:3px solid ${iconColor};width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1);">
-                       <i class="fas ${iconClass}" style="color:${iconColor};font-size:17px;"></i>
-                     </div>`,
-              iconSize: [34, 34],
-              iconAnchor: [17, 17],
-              popupAnchor: [0, -17]
-            });
-            
-            const marker = L.marker([point.lat, point.lng], { icon: customIcon }).addTo(map);
-            
-            const popupContent = `
-              <div class="min-w-[220px]">
-                <div class="flex items-center gap-2 mb-2">
-                  <i class="fas ${iconClass} text-xl" style="color: ${iconColor}"></i>
-                  <h3 class="font-bold text-lg text-emerald-800">${point.name}</h3>
-                </div>
-                ${point.description ? `<p class="text-gray-600 text-sm mb-3">${point.description}</p>` : ''}
-                <div class="text-xs text-gray-500 border-t pt-2 mt-2">
-                  <i class="fas fa-map-marker-alt"></i> ${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}
-                </div>
-              </div>
-            `;
-            
-            marker.bindPopup(popupContent, { maxWidth: 280, className: 'custom-popup' });
-            group.addLayer(marker);
-          });
-          
-          map.fitBounds(group.getBounds().pad(0.15));
-        }
-      }, 300);
-    }
-
-    // Load map when page is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initPetaDesa);
-    } else {
-      initPetaDesa();
-    }
-  </script>
-  
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <!-- Automatic Visitor Tracking - Data pengunjung tersimpan otomatis -->
-  <script>
-    // Simpan data pengunjung secara otomatis ke backend (viewer.js) setiap kunjungan
-    // Hanya sekali per sesi browser untuk menghindari hitungan ganda
-    const VISITOR_API_URL = 'https://desakalemago2-backend-production.up.railway.app';
-
-    async function trackVisitor() {
-      try {
-        const res = await fetch(`${VISITOR_API_URL}/api/visitor`, { method: 'POST' });
-        if (res.ok) {
-          console.log('%c✅ [Visitor] Data pengunjung berhasil disimpan otomatis ke backend', 'color:#10b981');
-        }
-      } catch (err) {
-        console.log('%c⚠️ [Visitor] Gagal mencatat kunjungan (backend offline atau CORS)', 'color:#f59e0b');
-      }
-    }
-
-    // Jalankan tracking otomatis
-    if (!sessionStorage.getItem('kalemagoVisitorTracked')) {
-      setTimeout(() => {
-        trackVisitor();
-        sessionStorage.setItem('kalemagoVisitorTracked', 'true');
-      }, 800);
-    }
   </script>
 </body>
 </html>

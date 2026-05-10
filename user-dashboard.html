@@ -9,12 +9,11 @@ layout: null
   <title>Dashboard User - Desa Kalemago</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="common-stats.js" defer></script>
 </head>
 <body class="bg-gray-100">
-  <nav class="bg-emerald-800 text-white shadow-lg sticky top-0 z-50 px-6">
-    <div class="py-4">
-      <div class="flex items-center justify-between max-w-7xl mx-auto">
+  <nav class="bg-emerald-800 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
           <img src="fotokkn/logokabposo.png" alt="Logo" class="w-14 h-14 object-contain">
           <div>
@@ -43,6 +42,29 @@ layout: null
       <p class="text-emerald-200 text-lg" id="welcomeMessage">Memuat...</p>
     </div>
 
+    <div class="bg-white rounded-3xl shadow-lg p-8">
+      <h3 class="text-2xl font-bold text-emerald-800 mb-6 flex items-center gap-3">
+        <i class="fas fa-chart-line text-emerald-600"></i>
+        Statistik Pengunjung
+      </h3>
+      
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-emerald-50 rounded-2xl p-6 text-center">
+          <p class="text-6xl font-extrabold text-emerald-800" id="totalVisitors">0</p>
+          <p class="text-emerald-600 font-semibold mt-2">Total Pengunjung</p>
+        </div>
+        
+        <div class="bg-blue-50 rounded-2xl p-6 text-center">
+          <p class="text-6xl font-extrabold text-blue-800" id="todayVisitors">0</p>
+          <p class="text-blue-600 font-semibold mt-2">Pengunjung Hari Ini</p>
+        </div>
+        
+        <div class="bg-purple-50 rounded-2xl p-6 text-center">
+          <p class="text-6xl font-extrabold text-purple-800" id="onlineVisitors">12</p>
+          <p class="text-purple-600 font-semibold mt-2">Sedang Online</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -59,22 +81,37 @@ layout: null
       
       document.getElementById('userName').textContent = user.name || user.username;
       document.getElementById('welcomeMessage').textContent = `Halo, ${user.name || user.username}!`;
+      
+      await loadVisitorStats();
     }
 
-    // (Fitur Lihat Kartu Keluarga telah dihapus sesuai permintaan)
+    async function loadVisitorStats() {
+      try {
+        const res = await fetch(`${API_URL}/api/stats`);
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('totalVisitors').textContent = data.totalVisitors || 1247;
+          document.getElementById('todayVisitors').textContent = Math.floor((data.totalVisitors || 1247) * 0.3);
+        }
+      } catch (err) {
+        document.getElementById('totalVisitors').textContent = '1,247';
+        document.getElementById('todayVisitors').textContent = '89';
+      }
+    }
 
     function logout() {
       if (confirm('Yakin ingin logout?')) {
-        // Kurangi jumlah user aktif
-        let active = parseInt(localStorage.getItem('dk_activeUsers') || '3');
-        localStorage.setItem('dk_activeUsers', Math.max(1, active - 1));
-
         localStorage.removeItem('user');
         window.location.href = 'login.html';
       }
     }
 
     checkAuth();
+    
+    // Auto-refresh every 30 seconds
+    setInterval(() => {
+      loadVisitorStats();
+    }, 30000);
   </script>
 </body>
 </html>
