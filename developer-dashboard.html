@@ -1529,6 +1529,103 @@ layout: null
       }
     }, 800);
 
+    // ============================================
+    // VISITOR STATS - Sinkron dengan backend/viewer.js
+    // ============================================
+    async function loadVisitorList() {
+      try {
+        const res = await fetch(`${API_URL}/api/visitor`);
+        const result = await res.json();
+
+        if (result.success && result.data) {
+          const data = result.data;
+
+          // Update dashboard stats
+          const totalEl = document.getElementById('dashTotalVisitors');
+          if (totalEl) totalEl.textContent = (data.total || 0).toLocaleString('id-ID');
+
+          const todayEl = document.getElementById('dashTodayVisitors');
+          if (todayEl) todayEl.textContent = (data.today || 0).toLocaleString('id-ID');
+
+          const onlineEl = document.getElementById('onlineVisitors');
+          if (onlineEl) onlineEl.textContent = data.online || 1;
+
+          // Populate visitor list table (last 100 visitors)
+          const tbody = document.getElementById('visitorListBody');
+          if (tbody) {
+            tbody.innerHTML = '';
+
+            const visitors = Array.isArray(data.visitors) ? data.visitors : [];
+
+            if (visitors.length === 0) {
+              const emptyRow = document.createElement('tr');
+              emptyRow.innerHTML = `
+                <td colspan="4" class="py-8 px-6 text-center text-gray-400">
+                  <i class="fas fa-user-clock text-3xl mb-2"></i><br>
+                  Belum ada data pengunjung
+                </td>
+              `;
+              tbody.appendChild(emptyRow);
+            } else {
+              visitors.forEach(visitor => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-purple-50 transition-colors';
+
+                const timestamp = visitor.timestamp ? new Date(visitor.timestamp).toLocaleString('id-ID', {
+                  day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+                }) : '-';
+                const device = visitor.device || 'Unknown Device';
+                const ip = visitor.ip || 'N/A';
+                const location = 'Indonesia'; // Backend belum support geolocation detail
+
+                row.innerHTML = `
+                  <td class="py-3 px-6 text-sm text-gray-700">${timestamp}</td>
+                  <td class="py-3 px-6 text-sm font-medium text-purple-700">${device}</td>
+                  <td class="py-3 px-6 text-sm font-mono text-gray-600">${ip}</td>
+                  <td class="py-3 px-6 text-center text-sm text-emerald-600">
+                    <i class="fas fa-globe mr-1"></i> ${location}
+                  </td>
+                `;
+                tbody.appendChild(row);
+              });
+            }
+          }
+
+          console.log('%c[Visitor] Statistik pengunjung berhasil disinkronkan dengan viewer.js', 'color:#10b981');
+        } else {
+          throw new Error('Invalid response from /api/visitor');
+        }
+      } catch (err) {
+        console.error('Gagal memuat statistik pengunjung dari backend:', err);
+
+        // Fallback demo data (jika backend offline)
+        const totalEl = document.getElementById('dashTotalVisitors');
+        if (totalEl) totalEl.textContent = '1,248';
+        const todayEl = document.getElementById('dashTodayVisitors');
+        if (todayEl) todayEl.textContent = '47';
+        const onlineEl = document.getElementById('onlineVisitors');
+        if (onlineEl) onlineEl.textContent = '2';
+
+        const tbody = document.getElementById('visitorListBody');
+        if (tbody) {
+          tbody.innerHTML = `
+            <tr class="hover:bg-purple-50">
+              <td class="py-3 px-6 text-sm">10 Mei 2026, 15:10</td>
+              <td class="py-3 px-6 text-sm font-medium text-purple-700">Android Device</td>
+              <td class="py-3 px-6 text-sm font-mono text-gray-600">192.168.1.105</td>
+              <td class="py-3 px-6 text-center text-sm text-emerald-600"><i class="fas fa-globe mr-1"></i> Indonesia</td>
+            </tr>
+            <tr class="hover:bg-purple-50">
+              <td class="py-3 px-6 text-sm">10 Mei 2026, 14:55</td>
+              <td class="py-3 px-6 text-sm font-medium text-purple-700">iPhone</td>
+              <td class="py-3 px-6 text-sm font-mono text-gray-600">114.124.45.67</td>
+              <td class="py-3 px-6 text-center text-sm text-emerald-600"><i class="fas fa-globe mr-1"></i> Indonesia</td>
+            </tr>
+          `;
+        }
+      }
+    }
+
     function showSection(sectionId) {
       // Hide all sections
       document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
@@ -1554,6 +1651,7 @@ layout: null
       if (sectionId === 'apbdes-management' && typeof loadAPBDesData === 'function') setTimeout(loadAPBDesData, 50);
       if (sectionId === 'team-management' && typeof loadTeamData === 'function') setTimeout(loadTeamData, 50);
       if (sectionId === 'population-management' && typeof loadPopulationData === 'function') setTimeout(loadPopulationData, 50);
+      if (sectionId === 'status-section' && typeof loadVisitorList === 'function') setTimeout(loadVisitorList, 50);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1567,16 +1665,11 @@ layout: null
       // Show Status by default
       showSection('status-section');
 
-      // Initial sync
+      // Initial sync - load visitor stats from viewer.js
       setTimeout(() => {
         if (typeof loadTeamData === 'function') loadTeamData();
         if (typeof loadPopulationData === 'function') loadPopulationData();
-        if (typeof loadDashboardStats === 'function') loadDashboardStats();
-
-        // Always initialize weekly chart (even if backend fails)
-        if (typeof loadVisitorList === 'function') {
-          loadVisitorList();
-        }
+        if (typeof loadVisitorList === 'function') loadVisitorList();
       }, 400);
 
       // Auth check (must be after DOM ready)
