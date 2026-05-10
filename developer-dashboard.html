@@ -1487,14 +1487,32 @@ layout: null
     }
 
     // MAP POINTS MANAGEMENT
-    let mapPoints = JSON.parse(localStorage.getItem('mapPoints') || '[]');
+    let mapPoints = [];
 
-    function loadMapPoints() {
+    async function loadMapPoints() {
+      try {
+        const res = await fetch(`${API_URL}/api/map-points`);
+        if (res.ok) {
+          mapPoints = await res.json();
+          if (!Array.isArray(mapPoints)) mapPoints = [];
+          console.log('%c[BACKEND] ✓ Loaded ' + mapPoints.length + ' map points from backend', 'color:#10b981');
+        } else {
+          console.warn('Failed to load map points from backend');
+          mapPoints = [];
+        }
+      } catch (e) {
+        console.error('Error loading map points:', e);
+        mapPoints = [];
+      }
+      renderMapPoints();
+    }
+    
+    function renderMapPoints() {
       const tbody = document.getElementById('mapTableBody');
       if (!tbody) return;
       tbody.innerHTML = '';
       
-      if (mapPoints.length === 0) {
+      if (!mapPoints || mapPoints.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Belum ada titik peta</td></tr>';
         return;
       }
@@ -1626,11 +1644,10 @@ layout: null
         mapPoints.push(newPoint);
       }
       
-      localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
-      loadMapPoints();
+      renderMapPoints();
       document.querySelector('.fixed').remove();
       
-      alert('✅ Titik peta berhasil disimpan!');
+      alert('✅ Titik peta berhasil disimpan! (Simpan ke backend dengan tombol "Simpan Semua ke Backend")');
     }
 
     function editMapPoint(index) {
@@ -1640,8 +1657,7 @@ layout: null
     function deleteMapPoint(index) {
       if (!confirm('Hapus titik ini?')) return;
       mapPoints.splice(index, 1);
-      localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
-      loadMapPoints();
+      renderMapPoints();
     }
 
     async function saveAllMapPointsToBackend() {
@@ -1656,13 +1672,14 @@ layout: null
         });
         
         if (res.ok) {
+          const result = await res.json().catch(() => ({}));
           alert('✅ Semua titik peta berhasil disimpan ke backend!\n\nSekarang titik akan muncul di HP/Android/iPhone.');
+          loadMapPoints(); // refresh table
         } else {
-          throw new Error('Backend belum support');
+          throw new Error('Gagal menyimpan ke backend');
         }
       } catch (e) {
-        localStorage.setItem('mapPoints', JSON.stringify(mapPoints));
-        alert('✅ Tersimpan lokal.\n\nBackend perlu endpoint POST /api/map-points/bulk untuk sinkron ke HP.');
+        alert('⚠️ Gagal sync ke backend: ' + (e.message || 'Unknown') + '\n\nPeriksa koneksi backend dan coba lagi.');
       }
     }
 
