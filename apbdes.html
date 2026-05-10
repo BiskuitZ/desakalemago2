@@ -466,5 +466,31 @@
       }
     });
   </script>
+
+  <!-- Automatic Visitor Tracking - Data pengunjung tersimpan otomatis -->
+  <script>
+    // Simpan data pengunjung secara otomatis ke backend (viewer.js) setiap kunjungan
+    // Hanya sekali per sesi browser untuk menghindari hitungan ganda
+    const VISITOR_API_URL = 'https://desakalemago2-backend-production.up.railway.app';
+
+    async function trackVisitor() {
+      try {
+        const res = await fetch(`${VISITOR_API_URL}/api/visitor`, { method: 'POST' });
+        if (res.ok) {
+          console.log('%c✅ [Visitor] Data pengunjung berhasil disimpan otomatis ke backend', 'color:#10b981');
+        }
+      } catch (err) {
+        console.log('%c⚠️ [Visitor] Gagal mencatat kunjungan (backend offline atau CORS)', 'color:#f59e0b');
+      }
+    }
+
+    // Jalankan tracking otomatis
+    if (!sessionStorage.getItem('kalemagoVisitorTracked')) {
+      setTimeout(() => {
+        trackVisitor();
+        sessionStorage.setItem('kalemagoVisitorTracked', 'true');
+      }, 800);
+    }
+  </script>
 </body>
 </html>
