@@ -1169,11 +1169,17 @@ console.log('%c[Developer Dashboard] Using API: ' + API_URL, 'color:#a855f7');
         const data = await res.json();
         if (data.success && data.data) {
           const p = data.data;
-          // Fill form fields if they exist
-          if (document.getElementById('popTotal')) document.getElementById('popTotal').value = p.total || 0;
           if (document.getElementById('popMale')) document.getElementById('popMale').value = p.male || 0;
           if (document.getElementById('popFemale')) document.getElementById('popFemale').value = p.female || 0;
           if (document.getElementById('popFamilies')) document.getElementById('popFamilies').value = p.families || 0;
+          if (document.getElementById('popRT')) document.getElementById('popRT').value = p.rt || 0;
+          if (document.getElementById('popRW')) document.getElementById('popRW').value = p.rw || 0;
+          if (document.getElementById('popMale0_15')) document.getElementById('popMale0_15').value = p.male0_15 || 0;
+          if (document.getElementById('popMale16_55')) document.getElementById('popMale16_55').value = p.male16_55 || 0;
+          if (document.getElementById('popMale55')) document.getElementById('popMale55').value = p.male55 || 0;
+          if (document.getElementById('popFemale0_15')) document.getElementById('popFemale0_15').value = p.female0_15 || 0;
+          if (document.getElementById('popFemale16_55')) document.getElementById('popFemale16_55').value = p.female16_55 || 0;
+          if (document.getElementById('popFemale55')) document.getElementById('popFemale55').value = p.female55 || 0;
         }
       } catch (err) {
         console.error('Error loading population:', err);
