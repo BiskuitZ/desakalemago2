@@ -906,6 +906,44 @@ console.log('%c[Developer Dashboard] Using API: ' + API_URL, 'color:#a855f7');
       }
     }
 
+    async function savePopulationData() {
+      const data = {
+        total: parseInt(document.getElementById('popMale').value || 0) + parseInt(document.getElementById('popFemale').value || 0),
+        male: parseInt(document.getElementById('popMale').value) || 0,
+        female: parseInt(document.getElementById('popFemale').value) || 0,
+        families: parseInt(document.getElementById('popFamilies').value) || 0,
+        rt: parseInt(document.getElementById('popRT').value) || 0,
+        rw: parseInt(document.getElementById('popRW').value) || 0,
+        male0_15: parseInt(document.getElementById('popMale0_15').value) || 0,
+        male16_55: parseInt(document.getElementById('popMale16_55').value) || 0,
+        male55: parseInt(document.getElementById('popMale55').value) || 0,
+        female0_15: parseInt(document.getElementById('popFemale0_15').value) || 0,
+        female16_55: parseInt(document.getElementById('popFemale16_55').value) || 0,
+        female55: parseInt(document.getElementById('popFemale55').value) || 0
+      };
+
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const res = await fetch(`${API_URL}/api/population`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-username': user.username
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        if (result.success) {
+          alert('✅ Data Penduduk berhasil disimpan!');
+        } else {
+          alert('❌ Gagal menyimpan: ' + (result.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    }
+
     async function deleteUser(id) {
       if (!confirm('Yakin ingin menghapus user ini?')) return;
       try {
