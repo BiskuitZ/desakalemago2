@@ -152,10 +152,10 @@
           </button>
 
           <!-- Login Button (Desktop only) -->
-          <a href="login.html" class="hidden md:flex items-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-2 rounded-2xl text-sm font-semibold transition">
+          <button onclick="window.location.href='login.html'" class="hidden md:flex items-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-2 rounded-2xl text-sm font-semibold transition">
             <i class="fas fa-user-shield"></i>
             <span>Login Admin</span>
-          </a>
+          </button>
 
           <!-- Hamburger Button (Mobile only) -->
           <button onclick="toggleSidebar()" class="md:hidden text-white focus:outline-none p-2">
@@ -188,10 +188,10 @@
         
         <div class="border-t border-white/20 my-4"></div>
         
-        <a href="login.html" class="py-4 px-4 bg-emerald-700 hover:bg-emerald-600 rounded-2xl flex items-center justify-center gap-2 font-semibold">
+        <button onclick="window.location.href='login.html'" class="py-4 px-4 bg-emerald-700 hover:bg-emerald-600 rounded-2xl flex items-center justify-center gap-2 font-semibold w-full text-left">
           <i class="fas fa-user-shield"></i> 
           <span>Login Admin</span>
-        </a>
+        </button>
       </div>
     </div>
   </div>
@@ -348,7 +348,7 @@
     </div>
     <div class="bg-emerald-800 rounded-lg shadow-lg p-6 text-white">
       <h3 class="text-xl font-bold mb-6">Peta Desa</h3>
-      <img src="fotokkn/PETA.jpg" alt="Peta Desa Kalemago" class="w-full h-[600px] object-contain rounded-lg shadow-lg">
+      <img src="fotokkn/PETA.png" alt="Peta Desa Kalemago" class="w-full h-[600px] object-contain rounded-lg shadow-lg">
       <p class="mt-4 text-sm leading-relaxed opacity-90">Menampilkan Peta Desa Dengan <em>Interest Point</em> Desa Kalemago</p>
     </div>
   </section>
@@ -368,7 +368,7 @@
         <p class="max-w-xl text-lg leading-relaxed text-white/90">
           <strong>Assalamu Alaikum Warohmatullahi Wabarakatu.</strong><br />
           Website ini hadir sebagai wujud transformasi desa Kalemago menjadi desa yang mampu memanfaatkan teknologi informasi dan komunikasi, terintegrasi kedalam sistem online. Keterbukaan informasi publik, pelayanan publik dan kegiatan perekonomian di desa, guna mewujudukan desa Kalemago sebagai desa wisata yang berkelanjutan, adaptasi dan mitigasi terhadap perubahan iklim serta menjadi desa yang mandiri.<br /><br />
-          Terima kasih kepada semua pihak yang telah banyak memberi dukungan dan kontribusi baik berupa tenaga, pikiran dan semangat, terkhusus kepada Kelompok Kuliah Kerja Nyata (KKNT) Unsimar 2025 dengan bantuan Program Kerjanya sehingga website ini dapat terealisasi.
+          Terima kasih kepada semua pihak yang telah banyak memberi dukungan dan kontribusi baik berupa tenaga, pikiran dan semangat, terkhusus kepada Kelompok Kuliah Kerja Nyata (KKNT) Unsimar 2026 dengan bantuan Program Kerjanya sehingga website ini dapat terealisasi.
         </p>
       </div>
     </div>
@@ -423,101 +423,60 @@
     </div>
   </section>
 
-  <!-- STRUKTUR ORGANISASI POSKO KKNT DESA KALEMAGO (Persis Seperti Screenshot) -->
+  <!-- Struktur Organisasi Posko KKNT Desa Kalemago (Sinkron dengan Developer Page) -->
   <section class="bg-[#f8f9fa] py-16" data-scroll="fade-up">
     <div class="container mx-auto px-6">
       <div class="text-center mb-12">
         <h2 class="text-4xl font-bold text-emerald-800 mb-4">Struktur Organisasi Posko KKNT Desa Kalemago</h2>
-        <p class="text-gray-600 max-w-2xl mx-auto">Tim yang solid dan terstruktur untuk membangun website Desa Kalemago</p>
+        <p class="text-gray-600 max-w-2xl mx-auto">Perubahan di halaman Developer otomatis muncul di sini</p>
       </div>
       
       <div id="orgChart" class="max-w-6xl mx-auto">
-        <!-- Skeleton Screen while loading from backend -->
-        <div class="animate-pulse">
-          <div class="flex justify-center mb-8">
-            <div class="w-80 h-48 bg-gray-200 rounded-3xl"></div>
+        <!-- Dynamic org chart will be rendered here by JavaScript -->
+        <div class="text-center py-8 text-gray-500">Memuat struktur organisasi...</div>
+      </div>
+
+      <!-- Member Detail Modal -->
+      <div id="memberModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+        <div onclick="event.target.closest('#memberModal').classList.add('hidden')" class="absolute inset-0"></div>
+        <div onclick="event.stopImmediatePropagation()" class="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 relative overflow-hidden">
+          <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 p-6 text-white">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 id="modalName" class="text-2xl font-bold"></h3>
+                <p id="modalRole" class="text-emerald-200"></p>
+              </div>
+              <button onclick="document.getElementById('memberModal').classList.add('hidden')" class="text-white/80 hover:text-white text-2xl leading-none">&times;</button>
+            </div>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
-            <div class="h-40 bg-gray-200 rounded-3xl"></div>
-            <div class="h-40 bg-gray-200 rounded-3xl"></div>
+          
+          <div class="p-6">
+            <div id="modalPhoto" class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-emerald-200 shadow-lg">
+              <!-- Photo injected by JS -->
+            </div>
+            
+            <div class="space-y-3 text-center">
+              <div id="modalParent" class="text-sm text-gray-600"></div>
+              <div id="modalInstagram" class="flex justify-center"></div>
+            </div>
           </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
-            <div class="h-32 bg-gray-200 rounded-2xl"></div>
-            <div class="h-32 bg-gray-200 rounded-2xl"></div>
-            <div class="h-32 bg-gray-200 rounded-2xl"></div>
-            <div class="h-32 bg-gray-200 rounded-2xl"></div>
+          
+          <div class="border-t p-4 flex gap-3">
+            <button onclick="document.getElementById('memberModal').classList.add('hidden')" 
+                    class="flex-1 py-3 rounded-2xl border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50">Tutup</button>
+            <button onclick="copyMemberInfo()" 
+                    class="flex-1 py-3 rounded-2xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700">Salin Info</button>
           </div>
         </div>
       </div>
     </div>
   </section>
-
-  <style>
-    .org-tree {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .org-node {
-      background: #10b981;
-      color: white;
-      padding: 16px 24px;
-      border-radius: 16px;
-      text-align: center;
-      min-width: 220px;
-      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-      position: relative;
-      z-index: 2;
-      transition: all 0.3s ease;
-    }
-    .org-node:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 25px 50px -12px rgb(16 185 129 / 0.4);
-    }
-    .org-node.child {
-      background: #34d399;
-      min-width: 200px;
-    }
-    .org-connector {
-      width: 3px;
-      height: 50px;
-      background: linear-gradient(to bottom, #10b981, #34d399);
-      margin: 0 auto;
-      position: relative;
-    }
-    .org-connector::after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 12px;
-      height: 12px;
-      background: #10b981;
-      border-radius: 50%;
-      border: 3px solid #fff;
-    }
     .org-children {
       display: flex;
       justify-content: center;
-      gap: 60px;
-      margin-top: 20px;
+      gap: 40px;
+      margin-top: 8px;
       position: relative;
-    }
-    .org-children::before {
-      content: '';
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 120px);
-      height: 3px;
-      background: linear-gradient(to right, transparent, #10b981, transparent);
-    }
-    .org-children > div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
   </style>
 
@@ -525,14 +484,14 @@
   <section class="bg-gradient-to-br from-emerald-900 to-emerald-800 py-16 md:py-20 shadow-lg text-white">
     <div class="container mx-auto px-6 flex flex-col md:flex-row items-center md:items-start gap-12">
       <div class="w-full md:w-auto flex justify-center">
-          <img src="fotokkn/logoposko.jpg" alt="Logo KKNT 2025" class="w-64 md:w-80 aspect-square object-contain drop-shadow-2xl" />
+          <img src="fotokkn/logoposko.jpg" alt="Logo KKNT 2026" class="w-64 md:w-80 aspect-square object-contain drop-shadow-2xl" />
       </div>
       <div class="flex-1 max-w-3xl">
         <h2 class="text-3xl font-bold mb-4 text-yellow-300">Sambutan KKNT</h2>
-        <h3 class="text-4xl font-extrabold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-yellow-200">KKNT Unsimar 2025</h3>
+        <h3 class="text-4xl font-extrabold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-yellow-200">KKNT Unsimar 2026</h3>
         <h4 class="text-2xl font-semibold mb-8 text-white/90">Posko 08 Desa Kalemago</h4>
         <p class="text-lg leading-relaxed text-white/90 space-y-6">
-          Posko Kuliah Kerja Nyata Tematik (KKNT) Tahun 2025 diresmikan oleh Rektor Universitas Sintuwu Maroso, Panitia KKNT beserta perangkat LLPM lainnya di Universitas Sintuwu Maroso Pada tanggal 14 April 2025 yang di peruntukkan untuk Mahasiswa agar bisa melakukan tugas Tri Dharma Perguruan Tinggi pada point ke tiga yaitu Pengabdian Kepada Masyarakat.<br /><br />
+          Posko Kuliah Kerja Nyata Tematik (KKNT) Tahun 2026 diresmikan oleh Rektor Universitas Sintuwu Maroso, Panitia KKNT beserta perangkat LLPM lainnya di Universitas Sintuwu Maroso Pada tanggal 14 April 2026 yang di peruntukkan untuk Mahasiswa agar bisa melakukan tugas Tri Dharma Perguruan Tinggi pada point ke tiga yaitu Pengabdian Kepada Masyarakat.<br /><br />
           Hal itu juga agar Mahasiswa bisa menambah pengetahuan luas di lapangan khususnya di Desa Kalemago ini agar bisa membangun, memajukan, mensejahterakan Desa Kalemago pada tahun yang akan mendatang.<br /><br />
           Dengan adanya Website ini, Pemerintah Desa Kalemago, Masyarakat Desa Kalemago, dan siapa saja yang akan mengunjungi Desa Kalemago bisa mengetahui apa yang ada di Desa Kalemago ini.
         </p>
@@ -540,27 +499,59 @@
     </div>
   </section>
 
-  <!-- Struktur Organisasi Section -->
-  <section class="bg-gradient-to-br from-blue-900 to-blue-800 py-16 text-white" data-scroll="fade-up">
-    <div class="container mx-auto px-6">
-      <h2 class="text-3xl font-bold text-center mb-4">Supporter</h2>
-      <p class="text-white/90 text-center mb-12 max-w-3xl mx-auto">Berikut adalah nama-nama supporter yang telah berkontribusi dalam pengembangan dan pengelolaan website Desa Kalemago.</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 flex items-center space-x-4 shadow-lg hover:scale-105 transition transform duration-300">
-          <img src="fotokkn/yumi.jpg" alt="Ahmad Fadli" class="w-16 h-16 rounded-full object-cover" />
-          <p class="text-xl font-semibold">Dwi Oktaviani M.</p>
-        </div>
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 flex items-center space-x-4 shadow-lg hover:scale-105 transition transform duration-300">
-          <img src="fotokkn/kia.jpg" alt="Siti Aminah" class="w-16 h-16 rounded-full object-cover" />
-          <p class="text-xl font-semibold">Alkia Djaniba</p>
-        </div>
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 flex items-center space-x-4 shadow-lg hover:scale-105 transition transform duration-300">
-          <img src="fotokkn/melkris.jpg" alt="Budi Santoso" class="w-16 h-16 rounded-full object-cover" />
-          <p class="text-xl font-semibold">Melkris Nofker Perabu</p>
-        </div>
+  <!-- Made By Section -->
+  <section class="bg-black py-12 border-t border-gray-800">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <p class="text-yellow-400 text-sm mb-4 tracking-widest">WEBSITE INI DIBUAT OLEH</p>
+      
+      <div class="flex justify-center mb-6">
+        <a href="https://asindu.site" target="_blank" class="relative inline-block shiny-logo group no-loader">
+          <img src="fotokkn/asindu.png" alt="Asindu Engineering Consultant" 
+               class="h-32 md:h-40 w-auto mx-auto object-contain transition-transform group-hover:scale-105" 
+               style="max-width: 450px; filter: contrast(1.2) brightness(1.15);" />
+        </a>
+      </div>
+      
+      <div class="space-y-1">
+        <h3 class="text-2xl font-bold text-yellow-300">Asindu Media Group</h3>
+        <p class="text-yellow-400 font-semibold">Asindu Engineering Consultant</p>
+      </div>
+      
+      <div class="mt-4 text-sm text-yellow-500 max-w-md mx-auto">
+        Jl. Hi. Agus Salim No. 31C, Kec. Poso Kota Utara,<br>
+        Kab. Poso, Provinsi Sulawesi Tengah
       </div>
     </div>
   </section>
+
+  <style>
+    .shiny-logo {
+      position: relative;
+      overflow: hidden;
+    }
+    .shiny-logo::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -100%;
+      width: 50%;
+      height: 200%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.9),
+        transparent
+      );
+      animation: shine 3s infinite;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+    @keyframes shine {
+      0% { left: -100%; }
+      20% { left: 200%; }
+      100% { left: 200%; }
+    }
+  </style>
 
   <!-- Footer -->
   <footer class="bg-emerald-800 py-8 text-center text-white">
@@ -570,17 +561,22 @@
       <a href="#" aria-label="Instagram" class="text-white hover:text-yellow-300 transition text-2xl"><i class="fab fa-instagram"></i></a>
       <a href="#" aria-label="LinkedIn" class="text-white hover:text-yellow-300 transition text-2xl"><i class="fab fa-linkedin"></i></a>
     </div>
-    <p class="text-white/80">&copy; 2025 Asindu Engineering Consultant. All rights reserved.</p>
+    <p class="text-white/80">&copy; 2026 Asindu Engineering Consultant. All rights reserved.</p>
   </footer>
 
   </div><!-- end of root div -->
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const links = document.querySelectorAll('a[href]');
-      links.forEach(link => {
+      // Only trigger loading screen for navbar links (top navigation)
+      const navLinks = document.querySelectorAll('nav a[href]');
+      navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-          if (this.href && this.href !== window.location.href && !this.href.includes('#') && !this.href.startsWith('javascript:')) {
+          const isExternal = this.hostname !== window.location.hostname;
+          const isBlank = this.target === '_blank';
+          const isHash = this.href.includes('#');
+          
+          if (!isExternal && !isBlank && !isHash && this.href && this.href !== window.location.href) {
             showLoading();
           }
         });
@@ -703,113 +699,9 @@
       }
     }
 
-    async function loadOrgChart() {
-      const container = document.getElementById('orgChart');
-      if (!container) return;
-
-      try {
-        const res = await fetch(`${API_URL}/api/team`);
-        const data = await res.json();
-        
-        if (data.success && data.team && data.team.length > 0) {
-          renderBeautifulOrgChart(data.team);
-        } else {
-          renderBeautifulOrgChart(getFallbackTeam());
-        }
-      } catch (err) {
-        console.log('Backend not available, using fallback data');
-        renderBeautifulOrgChart(getFallbackTeam());
-      }
-    }
-
-    function getFallbackTeam() {
-      return [
-        { id: 1, name: "Mohamad Zikron", role: "Koordinator Desa", photo: "", parentId: null, position: 1 },
-        { id: 2, name: "Aulia", role: "Sekretaris", photo: "", parentId: 1, position: 1, category: "1" },
-        { id: 3, name: "Novita Risyafana Ndese", role: "Bendahara", photo: "", parentId: 1, position: 2, category: "2" },
-        { id: 4, name: "Feliks Laeka", role: "Humas & Website Sponsored", photo: "", parentId: "group_1", position: 1, category: "1" },
-        { id: 5, name: "Gita Alifya Nusi", role: "Acara", photo: "", parentId: "group_1", position: 3, category: "1" },
-        { id: 6, name: "Arifin", role: "Perlengkapan", photo: "", parentId: "group_2", position: 1, category: "2" },
-        { id: 7, name: "Heldrison Karau", role: "Perlengkapan", photo: "", parentId: "group_2", position: 3, category: "2" },
-        { id: 8, name: "Abd Razaq Lelo", role: "Konsumsi", photo: "", parentId: "group_1", position: 2, category: "1" },
-        { id: 9, name: "Mohammad Fadly", role: "Pdd", photo: "", parentId: "group_2", position: 2, category: "2" }
-      ];
-    }
-
-    // HIERARCHICAL ORG CHART - Grouped by Parent + Left/Right Position
-    // UNLIMITED DEPTH ORG CHART - With Connecting Lines & Unlimited Grouping
-    function renderBeautifulOrgChart(team) {
-      const container = document.getElementById('orgChart');
-      if (!container) return;
-
-      if (!team || team.length === 0) {
-        container.innerHTML = '<div class="text-center text-gray-500 py-8">Belum ada data tim</div>';
-        return;
-      }
-
-      let html = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">';
-
-      team.forEach(member => {
-        // Handle parent display (support group_1, group_2, etc.)
-        let parentDisplay = 'Root';
-        if (member.parentId) {
-          if (typeof member.parentId === 'string' && member.parentId.startsWith('group_')) {
-            parentDisplay = '📁 Kelompok ' + member.parentId.replace('group_', '');
-          } else {
-            const parentMember = team.find(m => m.id === member.parentId);
-            if (parentMember) parentDisplay = parentMember.name;
-          }
-        }
-
-        html += `
-          <div class="bg-white rounded-3xl p-5 shadow-xl text-center border border-gray-100 hover:border-emerald-200 transition-all">
-            <div class="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-4 border-emerald-500">
-              ${member.photo ? 
-                `<img src="${member.photo}" alt="${member.name}" class="w-full h-full object-cover">` : 
-                `<div class="w-full h-full bg-emerald-100 flex items-center justify-center"><i class="fas fa-user text-5xl text-emerald-600"></i></div>`
-              }
-            </div>
-            
-            <div class="mb-2">
-              <span class="inline-block bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">${member.role}</span>
-            </div>
-            
-            <h3 class="font-bold text-lg text-gray-800 mb-1">${member.name}</h3>
-            
-            <div class="text-sm text-gray-500">
-              Atasan: <span class="font-semibold text-emerald-600">${parentDisplay}</span>
-            </div>
-          </div>
-        `;
-      });
-
-      html += '</div>';
-      container.innerHTML = html;
-    }
-          
-          html += `
-            <div class="flex flex-col items-center">
-              <!-- Member Card -->
-              <div class="bg-white rounded-3xl p-4 shadow-xl w-64 text-center border-4 ${level === 0 ? 'border-emerald-500' : 'border-yellow-400'} transform hover:scale-105 transition-all">
-                <div class="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden border-4 border-white shadow-md">
-                  ${member.photo ? 
-                    `<img src="${member.photo}" alt="${member.name}" class="w-full h-full object-cover">` : 
-                    `<div class="w-full h-full bg-emerald-100 flex items-center justify-center"><i class="fas fa-user text-3xl text-emerald-600"></i></div>`
-                  }
-                </div>
-                <div class="bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded-full inline-block mb-1">${member.role}</div>
-                <h4 class="font-bold text-gray-800">${member.name}</h4>
-              </div>
-
-              <!-- Vertical Connecting Line -->
-              ${hasChildren ? `
-                <div class="w-0.5 h-8 bg-emerald-400 my-1"></div>
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
       loadPopulationData();
       loadAPBDesData();
-      loadOrgChart();
     });
 
     // Scroll to Top Button
@@ -916,6 +808,234 @@ Mohon ditindaklanjuti. Terima kasih.`;
       }, 500);
     }
     */
+  </script>
+
+  <!-- Dynamic Org Chart (Sinkron dengan Developer Page) -->
+  <script>
+    async function loadOrgChart() {
+      const container = document.getElementById('orgChart');
+      if (!container) return;
+
+      // Hubungkan ke backend: https://github.com/BiskuitZ/desakalemago2-backend.git
+      const BACKEND_URL = 'https://desakalemago2-backend-production.up.railway.app';
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/team`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.team && data.team.length > 0) {
+            renderOrgChart(data.team);
+            return;
+          }
+        }
+      } catch (e) {
+        console.log('Backend not reachable, using local fallback');
+      }
+
+      // Fallback data - FULL team from backend/team.json (so it always works even if backend down)
+      const fallback = [
+        { id: 1777729859432, name: "Mohamad Zikron", role: "Koordinator Desa", photo: "", parentId: null, color: "#10b981" },
+        { id: 1777731514683, name: "Aulia", role: "Sekertaris", photo: "", parentId: 1777729859432, color: "#10b981" },
+        { id: 1777731548035, name: "Novita Risyafana Ndese", role: "Bendahara", photo: "", parentId: 1777729859432, color: "#10b981" },
+        { id: 1777778058374, name: "Feliks Laeka", role: "Humas & Website Sponsored", parentId: 1777731514683, position: 1, category: "1", photo: "", instagram: "#", color: "#10b981" },
+        { id: 1777778084845, name: "Gita Alifya Nusi", role: "Acara", parentId: 1777731514683, position: 3, category: "1", photo: "", instagram: "#", color: "#10b981" },
+        { id: 1777778170876, name: "Arifin", role: "Perlengkapan", parentId: 1777731548035, position: 1, category: "2", photo: "", instagram: "#", color: "#10b981" },
+        { id: 1777778194076, name: "Heldrison Karau", role: "Perlengkapan", parentId: 1777731548035, position: 3, category: "2", photo: "", instagram: "#", color: "#10b981" },
+        { id: 1777778483089, name: "Abd Razak Lelo", role: "Konsumsi", parentId: "group_1", position: 2, category: "", photo: "", instagram: "#", color: "#10b981" },
+        { id: 1777778500408, name: "Mohammad Fadly", role: "PDD", parentId: "group_2", position: 2, category: "", photo: "", instagram: "#", color: "#10b981" }
+      ];
+      renderOrgChart(fallback);
+    }
+
+    function renderOrgChart(team) {
+      const container = document.getElementById('orgChart');
+      if (!container) return;
+
+      if (!team || team.length === 0) {
+        container.innerHTML = '<div class="text-center text-gray-500 py-8">Belum ada data tim</div>';
+        return;
+      }
+
+      // Normalize all ids and parentIds to string
+      team.forEach(m => {
+        if (m.id !== undefined && m.id !== null) m.id = String(m.id);
+        if (m.parentId !== undefined && m.parentId !== null) m.parentId = String(m.parentId);
+      });
+
+      // Build map: groupId → real parentId
+      const groupToRealParent = {};
+      team.forEach(m => {
+        if (m.isVirtualGroup && String(m.id).startsWith('group_')) {
+          groupToRealParent[m.id] = m.parentId;
+        }
+      });
+
+      // Resolve group parentId to real parent (so no group box appears in public chart)
+      team.forEach(m => {
+        if (m.parentId && String(m.parentId).startsWith('group_') && groupToRealParent[m.parentId]) {
+          m._originalParentId = m.parentId;
+          m.parentId = groupToRealParent[m.parentId];
+        }
+      });
+
+      // Find root
+      let root = team.find(m => !m.parentId || m.parentId === 'null');
+      if (!root) root = team[0];
+
+      function getChildren(parentId) {
+        if (!parentId) return [];
+        return team.filter(m => m.parentId === String(parentId) && !m.isVirtualGroup);
+      }
+
+      function findParentName(parentId, originalParentId) {
+        if (originalParentId && String(originalParentId).startsWith('group_')) {
+          return `📁 Kelompok ${originalParentId.replace('group_', '')}`;
+        }
+        if (!parentId) return 'Root / Koordinator';
+        const parent = team.find(m => m.id === String(parentId));
+        return parent ? parent.name : 'Tidak diketahui';
+      }
+
+      function showMemberModal(member) {
+        const modal = document.getElementById('memberModal');
+        if (!modal) return;
+
+        document.getElementById('modalName').textContent = member.name;
+        document.getElementById('modalRole').textContent = member.role || 'Anggota Tim';
+
+        // Photo
+        const photoContainer = document.getElementById('modalPhoto');
+        if (member.photo && member.photo.trim() !== '') {
+          photoContainer.innerHTML = `<img src="${member.photo}" alt="${member.name}" class="w-full h-full object-cover">`;
+        } else {
+          photoContainer.innerHTML = `
+            <div class="w-full h-full bg-emerald-100 flex items-center justify-center">
+              <i class="fas fa-user text-5xl text-emerald-600"></i>
+            </div>
+          `;
+        }
+
+        // Parent info
+        document.getElementById('modalParent').innerHTML = `
+          <span class="font-semibold">Atasan:</span> ${findParentName(member.parentId, member._originalParentId)}
+        `;
+
+        // Instagram
+        const igContainer = document.getElementById('modalInstagram');
+        if (member.instagram && member.instagram !== '#') {
+          igContainer.innerHTML = `
+            <a href="${member.instagram}" target="_blank" 
+               class="inline-flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-2xl text-sm font-semibold transition">
+              <i class="fab fa-instagram"></i> 
+              <span>Buka Instagram</span>
+            </a>
+          `;
+        } else {
+          igContainer.innerHTML = `<span class="text-gray-400 text-sm">Instagram tidak tersedia</span>`;
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      // Make showMemberModal global so onclick works
+      window.showMemberModal = showMemberModal;
+
+      function buildHTML(node, level = 0) {
+        const children = getChildren(node.id);
+        let html = '<div class="flex flex-col items-center">';
+
+        const isGroup = node.isVirtualGroup || (typeof node.id === 'string' && node.id.startsWith('group_'));
+        const bgColor = isGroup ? 'bg-blue-600 hover:bg-blue-700 border-blue-400' : 'bg-emerald-600 hover:bg-emerald-700 border-emerald-400';
+
+        const hasPhoto = node.photo && node.photo.trim() !== '';
+        const photoHTML = hasPhoto 
+          ? `<img src="${node.photo}" class="w-9 h-9 rounded-full object-cover border border-white/50 mb-1.5">` 
+          : `<div class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center mb-1.5"><i class="fas fa-user text-base"></i></div>`;
+
+        // Smaller nodes for deeper levels or many siblings
+        const nodeSize = level > 1 || children.length > 4 ? 'min-w-[135px] px-3 py-2.5 text-sm' : 'min-w-[155px] px-4 py-3';
+
+        html += `
+          <div onclick="window.showMemberModal(${JSON.stringify(node).replace(/"/g, '&quot;')})" 
+               class="${bgColor} transition-all text-white ${nodeSize} rounded-2xl text-center shadow-xl border-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]">
+            ${photoHTML}
+            <div class="font-bold leading-tight">${node.name}</div>
+            <div class="text-[10px] opacity-90 mt-0.5 line-clamp-1">${node.role}</div>
+            ${node.isVirtualGroup ? '<div class="text-[8px] mt-0.5 opacity-70">📁 KELOMPOK</div>' : ''}
+          </div>
+        `;
+
+        if (children.length > 0) {
+          // Better connecting line for many children
+          html += `
+            <div class="relative flex justify-center w-full my-1">
+              <div class="w-0.5 h-6 bg-gradient-to-b from-emerald-600 to-emerald-400"></div>
+            </div>
+            
+            <div class="flex ${children.length > 3 ? 'flex-wrap' : ''} gap-4 justify-center px-2 -mt-1 max-w-full overflow-x-auto pb-2">
+          `;
+          children.forEach(child => {
+            html += buildHTML(child, level + 1);
+          });
+          html += '</div>';
+        }
+
+        html += '</div>';
+        return html;
+      }
+
+      container.innerHTML = `
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center gap-3 bg-white shadow px-5 py-2 rounded-2xl border border-emerald-100">
+            <div class="w-8 h-8 bg-emerald-600 rounded-xl flex items-center justify-center">
+              <i class="fas fa-sitemap text-white text-lg"></i>
+            </div>
+            <div class="text-left">
+              <div class="font-bold text-emerald-800">Struktur Organisasi Posko KKNT 2026</div>
+              <div class="text-[10px] text-emerald-600 -mt-0.5">Unlimited • ${team.length} Anggota • Sinkron dengan Developer</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex justify-center overflow-x-auto pb-4">
+          ${buildHTML(root)}
+        </div>
+        
+        <div class="text-center mt-6 text-xs text-gray-500">
+          <span class="font-semibold text-emerald-600">Tidak ada batasan</span> — bisa tambah anggota & level sebanyak-banyaknya • 
+          <button onclick="loadOrgChart()" class="underline hover:text-emerald-600">Muat Ulang</button>
+        </div>
+      `;
+    }
+
+    // Helper: Copy member info to clipboard
+    window.copyMemberInfo = function() {
+      const name = document.getElementById('modalName').textContent;
+      const role = document.getElementById('modalRole').textContent;
+      const parent = document.getElementById('modalParent').textContent;
+      
+      const text = `👤 ${name}\n📌 ${role}\n${parent}\n\nStruktur Organisasi Posko KKNT Desa Kalemago 2026`;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        const btns = document.querySelectorAll('#memberModal button');
+        const originalText = btns[1].innerHTML;
+        btns[1].innerHTML = '✅ Tersalin!';
+        setTimeout(() => {
+          btns[1].innerHTML = originalText;
+          document.getElementById('memberModal').classList.add('hidden');
+        }, 1200);
+      }).catch(() => {
+        alert(text); // fallback
+      });
+    };
+
+    // Load org chart when page is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('orgChart')) {
+        loadOrgChart();
+      }
+    });
   </script>
 </body>
 </html>
