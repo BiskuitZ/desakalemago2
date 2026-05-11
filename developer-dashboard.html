@@ -869,6 +869,43 @@ console.log('%c[Developer Dashboard] Using API: ' + API_URL, 'color:#a855f7');
       }
     }
 
+    // ============================================
+    // POPULATION & APBDES MANAGEMENT (Added)
+    // ============================================
+
+    async function loadPopulationData() {
+      try {
+        const res = await fetch(`${API_URL}/api/population`);
+        const data = await res.json();
+        if (data.success && data.data) {
+          const p = data.data;
+          // Fill form fields if they exist
+          if (document.getElementById('popTotal')) document.getElementById('popTotal').value = p.total || 0;
+          if (document.getElementById('popMale')) document.getElementById('popMale').value = p.male || 0;
+          if (document.getElementById('popFemale')) document.getElementById('popFemale').value = p.female || 0;
+          if (document.getElementById('popFamilies')) document.getElementById('popFamilies').value = p.families || 0;
+        }
+      } catch (err) {
+        console.error('Error loading population:', err);
+      }
+    }
+
+    async function loadAPBDesData() {
+      try {
+        const res = await fetch(`${API_URL}/api/apbdes`);
+        const data = await res.json();
+        if (data.success && data.data) {
+          document.getElementById('apbPendapatan').value = data.data.pendapatan || 0;
+          document.getElementById('apbBelanja').value = data.data.belanja || 0;
+          document.getElementById('apbPegawai').value = data.data.belanjaPegawai || 0;
+          document.getElementById('apbBarang').value = data.data.belanjaBarang || 0;
+          document.getElementById('apbModal').value = data.data.belanjaModal || 0;
+        }
+      } catch (err) {
+        console.error('Error loading APBDes:', err);
+      }
+    }
+
     async function deleteUser(id) {
       if (!confirm('Yakin ingin menghapus user ini?')) return;
       try {
