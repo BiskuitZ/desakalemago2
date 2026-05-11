@@ -328,6 +328,7 @@ layout: null
   </div>
 
   <script>
+    // @ts-nocheck
     const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
 console.log('%c[Developer Dashboard] Using API: ' + API_URL, 'color:#a855f7');
 
@@ -979,6 +980,94 @@ console.log('%c[Developer Dashboard] Using API: ' + API_URL, 'color:#a855f7');
         alert('Gagal menghapus produk');
       }
     }
+
+    // ============================================
+    // PRODUCT MODAL FUNCTIONS (Fixed)
+    // ============================================
+
+    function showAddProductModal() {
+      const modal = document.getElementById('addProductModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeAddProductModal() {
+      const modal = document.getElementById('addProductModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    async function addProduct() {
+      const name = document.getElementById('productName').value;
+      const price = parseInt(document.getElementById('productPrice').value);
+      const description = document.getElementById('productDescription').value;
+      const imageFile = document.getElementById('productImageFile').files[0];
+
+      if (!name || !price) {
+        alert('Nama dan Harga produk wajib diisi!');
+        return;
+      }
+
+      let imageBase64 = '';
+      if (imageFile) {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          imageBase64 = e.target.result;
+          await submitProduct(name, price, description, imageBase64);
+        };
+        reader.readAsDataURL(imageFile);
+        return;
+      } else {
+        await submitProduct(name, price, description, '');
+      }
+    }
+
+    async function submitProduct(name, price, description, imageBase64) {
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const res = await fetch(`${API_URL}/api/products`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-username': user.username
+          },
+          body: JSON.stringify({
+            name: name,
+            price: price,
+            description: description,
+            image: imageBase64,
+            stock: 10
+          })
+        });
+
+        const result = await res.json();
+        if (result.success) {
+          alert('✅ Produk berhasil ditambahkan!');
+          closeAddProductModal();
+          loadProductManagement();
+          // Clear form
+          document.getElementById('productName').value = '';
+          document.getElementById('productPrice').value = '';
+          document.getElementById('productDescription').value = '';
+        } else {
+          alert('❌ Gagal: ' + (result.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(e) {
+      const modal = document.getElementById('addProductModal');
+      if (modal && e.target === modal) {
+        closeAddProductModal();
+      }
+    });
 
   </script>
 </body>
