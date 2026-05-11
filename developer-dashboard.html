@@ -1096,6 +1096,11 @@ console.log('%c[Developer Dashboard] Using API: ' + API_URL, 'color:#a855f7');
         activeNav.classList.add('bg-purple-100', 'text-purple-700', 'font-semibold');
         activeNav.classList.remove('hover:bg-purple-50', 'text-gray-700');
       }
+
+      // Auto-refresh data from backend when opening these sections
+      if (sectionId === 'section-population') setTimeout(loadPopulationData, 100);
+      if (sectionId === 'section-apbdes') setTimeout(loadAPBDesData, 100);
+      if (sectionId === 'section-team') setTimeout(loadTeamData, 100);
     }
 
     // ============================================
