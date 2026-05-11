@@ -36,10 +36,11 @@ layout: null
     </div>
   </nav>
 
-  <div class="max-w-7xl mx-auto px-6 py-8 flex gap-8">
+  <!-- LAYOUT UTAMA - STANDAR ADMIN DASHBOARD -->
+  <div class="flex min-h-screen bg-gray-100 pt-16">
     
-    <!-- SIDEBAR -->
-    <div class="w-72 bg-white rounded-3xl shadow-lg p-6 h-fit sticky top-24">
+    <!-- SIDEBAR (Tempel di Kiri - Tidak Tertutup) -->
+    <div class="w-72 bg-white border-r border-gray-200 fixed left-0 top-16 bottom-0 z-40 shadow-lg overflow-y-auto p-6">
       <h3 class="text-lg font-bold text-purple-800 mb-4 flex items-center gap-2">
         <i class="fas fa-bars text-purple-600"></i> 
         Menu
@@ -79,46 +80,175 @@ layout: null
     </div>
 
     <!-- MAIN CONTENT -->
-    <div class="flex-1">
+    <div class="flex-1 ml-72 p-8">
     
-      <!-- WELCOME BANNER -->
-      <div class="bg-gradient-to-r from-purple-700 to-purple-600 rounded-3xl p-8 text-white mb-8 shadow-xl">
-        <h2 class="text-4xl font-bold mb-2">Developer Panel 👨‍💻</h2>
-        <p class="text-purple-200 text-lg" id="welcomeMessage">Memuat...</p>
-      </div>
-
       <!-- SECTION: STATISTIK PENGUNJUNG -->
       <div id="section-visitor" class="section">
         <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
-      <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
-        <i class="fas fa-chart-line text-purple-600"></i>
-        Statistik Pengunjung
-      </h3>
-      
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="bg-purple-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-purple-800" id="totalVisitors">0</p>
-          <p class="text-purple-600 font-semibold mt-2">Total Pengunjung</p>
-        </div>
-        
-        <div class="bg-blue-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-blue-800" id="todayVisitors">0</p>
-          <p class="text-blue-600 font-semibold mt-2">Pengunjung Hari Ini</p>
-        </div>
-        
-        <div class="bg-emerald-50 rounded-2xl p-6 text-center">
-          <p class="text-6xl font-extrabold text-emerald-800" id="onlineVisitors">12</p>
-          <p class="text-emerald-600 font-semibold mt-2">Sedang Online</p>
+          <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
+            <i class="fas fa-chart-line text-purple-600"></i>
+            Statistik Pengunjung
+          </h3>
+          
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-purple-50 rounded-2xl p-6 text-center">
+              <p class="text-6xl font-extrabold text-purple-800" id="totalVisitors">0</p>
+              <p class="text-purple-600 font-semibold mt-2">Total Pengunjung</p>
+            </div>
+            <div class="bg-blue-50 rounded-2xl p-6 text-center">
+              <p class="text-6xl font-extrabold text-blue-800" id="todayVisitors">0</p>
+              <p class="text-blue-600 font-semibold mt-2">Pengunjung Hari Ini</p>
+            </div>
+            <div class="bg-emerald-50 rounded-2xl p-6 text-center">
+              <p class="text-6xl font-extrabold text-emerald-800" id="onlineVisitors">12</p>
+              <p class="text-emerald-600 font-semibold mt-2">Sedang Online</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-
-      </div>
-    </div>
 
       <!-- SECTION: MANAJEMEN PENGGUNA -->
       <div id="section-users" class="section hidden">
-        <div class="bg-white rounded-3xl shadow-lg p-8">
+        <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
+          <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
+            <i class="fas fa-users-cog text-purple-600"></i>
+            Manajemen Pengguna
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-gray-200">
+                  <th class="text-left py-3 px-4 font-semibold text-gray-600">ID</th>
+                  <th class="text-left py-3 px-4 font-semibold text-gray-600">Username</th>
+                  <th class="text-left py-3 px-4 font-semibold text-gray-600">Nama</th>
+                  <th class="text-left py-3 px-4 font-semibold text-gray-600">Role</th>
+                  <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="userTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: MANAJEMEN PRODUK -->
+      <div id="section-products" class="section hidden">
+        <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
+              <i class="fas fa-box text-purple-600"></i>
+              Manajemen Produk (Belanja)
+            </h3>
+            <button onclick="showAddProductModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
+              <i class="fas fa-plus"></i>
+              <span>Tambah Produk</span>
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-gray-200">
+                  <th class="text-left py-3 px-4 font-semibold text-gray-600">ID</th>
+                  <th class="text-left py-3 px-4 font-semibold text-gray-600">Nama Produk</th>
+                  <th class="text-left py-3 px-4 font-semibold text-gray-600">Harga</th>
+                  <th class="text-left py-3 px-4 font-semibold text-gray-600">Stok</th>
+                  <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: EDIT DATA PENDUDUK -->
+      <div id="section-population" class="section hidden">
+        <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
+          <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
+            <i class="fas fa-users text-purple-600"></i>
+            Edit Data Administrasi Penduduk
+          </h3>
+          <!-- Form fields here (keep original inputs) -->
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Laki-laki</label>
+              <input type="number" id="popMale" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Perempuan</label>
+              <input type="number" id="popFemale" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+            </div>
+          </div>
+          <button onclick="savePopulationData()" class="mt-6 bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-2xl font-semibold flex items-center gap-2">
+            <i class="fas fa-save"></i>
+            <span>Simpan Perubahan</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION: EDIT DATA APB DESA -->
+      <div id="section-apbdes" class="section hidden">
+        <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
+          <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
+            <i class="fas fa-wallet text-purple-600"></i>
+            Edit Data APB Desa
+          </h3>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Total Pendapatan (Rp)</label>
+              <input type="number" id="apbPendapatan" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Total Belanja (Rp)</label>
+              <input type="number" id="apbBelanja" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500">
+            </div>
+          </div>
+          <button onclick="saveAPBDesData()" class="mt-6 bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-2xl font-semibold flex items-center gap-2">
+            <i class="fas fa-save"></i>
+            <span>Simpan Perubahan</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SECTION: EDIT TIM WEB DESIGNER -->
+      <div id="section-team" class="section hidden">
+        <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
+              <i class="fas fa-users text-purple-600"></i>
+              Edit Tim Web Designer
+            </h3>
+            <button onclick="showMemberModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
+              <i class="fas fa-plus"></i>
+              <span>Tambah Anggota</span>
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-gray-200">
+                  <th class="text-left py-3 px-4 font-semibold text-gray-600">No</th>
+                  <th class="text-left py-3 px-4 font-semibold text-gray-600">Nama</th>
+                  <th class="text-left py-3 px-4 font-semibold text-gray-600">Jabatan</th>
+                  <th class="text-center py-3 px-4 font-semibold text-gray-600">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="teamTableBody"></tbody>
+            </table>
+          </div>
+          <button onclick="saveTeamData()" class="mt-6 bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-2xl font-semibold flex items-center gap-2">
+            <i class="fas fa-save"></i>
+            <span>Simpan Perubahan</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+      <!-- SECTION: MANAJEMEN PENGGUNA -->
+      <div id="section-users" class="section hidden">
+        <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
           <i class="fas fa-users-cog text-purple-600"></i>
@@ -146,8 +276,12 @@ layout: null
       </div>
     </div>
 
-    <!-- PRODUCT MANAGEMENT -->
-    <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
+      </div>
+    </div>
+
+      <!-- SECTION: MANAJEMEN PRODUK -->
+      <div id="section-products" class="section hidden">
+        <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-2xl font-bold text-purple-800 flex items-center gap-3">
           <i class="fas fa-box text-purple-600"></i>
@@ -178,8 +312,9 @@ layout: null
       </div>
     </div>
 
-      <!-- SECTION: EDIT DATA PENDUDUK -->
-      <div id="section-population" class="section hidden">
+      <!-- SECTION: MANAJEMEN PRODUK -->
+      <div id="section-products" class="section hidden">
+        <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
         <div class="bg-white rounded-3xl shadow-lg p-8 mt-8">
       <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center gap-3">
         <i class="fas fa-users text-purple-600"></i>
