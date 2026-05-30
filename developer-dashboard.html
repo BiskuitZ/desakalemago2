@@ -443,15 +443,40 @@ layout: null
     // ============================================
 
     async function loadUserAccounts() {
+      const tbody = document.getElementById('userAccountTableBody');
+      if (!tbody) return;
+
       try {
         const res = await authFetch(`${API_URL}/api/admin/users`);
+
+        if (res.status === 401 || res.status === 403) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="5" class="py-8 text-center">
+                <div class="text-red-600 font-semibold mb-2">Akses Ditolak</div>
+                <div class="text-gray-600 text-sm">
+                  Token Anda tidak memiliki hak untuk melihat daftar user.<br>
+                  Silakan login ulang menggunakan akun Developer.
+                </div>
+                <button onclick="forceDeveloperLogin()" 
+                        class="mt-4 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-xl text-sm font-semibold">
+                  Login sebagai Developer (Sementara)
+                </button>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
         const data = await res.json();
 
         if (data.success) {
-          const tbody = document.getElementById('userAccountTableBody');
-          if (!tbody) return;
-
           tbody.innerHTML = '';
+
+          if (data.users.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-gray-500">Belum ada akun pengguna.</td></tr>`;
+            return;
+          }
 
           data.users.forEach(user => {
             const row = document.createElement('tr');
@@ -486,9 +511,46 @@ layout: null
             `;
             tbody.appendChild(row);
           });
+        } else {
+          tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-red-500">Gagal memuat data akun.</td></tr>`;
         }
       } catch (err) {
         console.error('Error loading user accounts:', err);
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="py-8 text-center">
+              <div class="text-red-600">Gagal memuat data akun.</div>
+              <button onclick="forceDeveloperLogin()" 
+                      class="mt-3 bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl text-sm font-semibold">
+                Coba Login sebagai Developer
+              </button>
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    // Temporary helper to force developer login from dashboard (for development only)
+    window.forceDeveloperLogin = async function() {
+      try {
+        const res = await fetch(`${API_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: 'developer', password: 'dev123' })
+        });
+
+        const data = await res.json();
+
+        if (data.success && data.token) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          alert('Login sebagai Developer berhasil! Halaman akan dimuat ulang.');
+          window.location.reload();
+        } else {
+          alert('Gagal login sebagai Developer: ' + (data.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
       }
     }
 
