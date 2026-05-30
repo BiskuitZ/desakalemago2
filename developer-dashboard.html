@@ -363,7 +363,28 @@ layout: null
   </div>
 
   <script>
-    const API_URL = 'https://desakalemago2-backend-production.up.railway.app';
+    const API_URL = 'https://desakalemago2-backend-production-674c.up.railway.app';
+
+    /**
+     * Secure fetch helper - uses JWT token instead of weak x-username
+     */
+    function getAuthHeaders(extra = {}) {
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Content-Type': 'application/json',
+        ...extra
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      return headers;
+    }
+
+    async function authFetch(url, options = {}) {
+      const headers = getAuthHeaders(options.headers || {});
+      return fetch(url, { ...options, headers });
+    }
 
     async function checkAuth() {
       const userStr = localStorage.getItem('user');
@@ -418,9 +439,7 @@ layout: null
     // USER MANAGEMENT
     async function loadUserManagement() {
       try {
-        const res = await fetch(`${API_URL}/api/admin/users`, {
-          headers: { 'x-username': JSON.parse(localStorage.getItem('user')).username }
-        });
+        const res = await authFetch(`${API_URL}/api/admin/users`);
         
         const data = await res.json();
         if (data.success) {
@@ -462,12 +481,8 @@ layout: null
       if (!newRole) return;
       
       try {
-        const res = await fetch(`${API_URL}/api/admin/users/${id}`, {
+        const res = await authFetch(`${API_URL}/api/admin/users/${id}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
           body: JSON.stringify({ username: newUsername, name: newName, password: newPassword || undefined, role: newRole })
         });
         
@@ -487,9 +502,8 @@ layout: null
       if (!confirm(`Yakin ingin menghapus user "${username}"?`)) return;
       
       try {
-        const res = await fetch(`${API_URL}/api/admin/users/${id}`, {
-          method: 'DELETE',
-          headers: { 'x-username': JSON.parse(localStorage.getItem('user')).username }
+        const res = await authFetch(`${API_URL}/api/admin/users/${id}`, {
+          method: 'DELETE'
         });
         
         const data = await res.json();
@@ -579,12 +593,8 @@ layout: null
         const base64Image = e.target.result;
         
         try {
-          const res = await fetch(`${API_URL}/api/products`, {
+          const res = await authFetch(`${API_URL}/api/products`, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-username': JSON.parse(localStorage.getItem('user')).username
-            },
             body: JSON.stringify({
               name,
               price: parseInt(price),
@@ -671,12 +681,8 @@ layout: null
       }
       
       try {
-        const res = await fetch(`${API_URL}/api/products/${id}`, {
+        const res = await authFetch(`${API_URL}/api/products/${id}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
           body: JSON.stringify({
             name: newName,
             price: parseInt(newPrice),
@@ -705,7 +711,7 @@ layout: null
       try {
         const res = await fetch(`${API_URL}/api/products/${id}`, {
           method: 'DELETE',
-          headers: { 'x-username': JSON.parse(localStorage.getItem('user')).username }
+          headers: getAuthHeaders()
         });
         
         const data = await res.json();
@@ -771,12 +777,8 @@ layout: null
       };
       
       try {
-        const res = await fetch(`${API_URL}/api/population`, {
+        const res = await authFetch(`${API_URL}/api/population`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
           body: JSON.stringify(data)
         });
         
@@ -822,10 +824,7 @@ layout: null
       try {
         const res = await fetch(`${API_URL}/api/apbdes`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
+          headers: getAuthHeaders(),
           body: JSON.stringify(data)
         });
         
@@ -1036,12 +1035,8 @@ layout: null
 
     async function saveTeamData() {
       try {
-        const res = await fetch(`${API_URL}/api/team`, {
+        const res = await authFetch(`${API_URL}/api/team`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-username': JSON.parse(localStorage.getItem('user')).username
-          },
           body: JSON.stringify(currentTeam)
         });
         

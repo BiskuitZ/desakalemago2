@@ -1,0 +1,43 @@
+===============================================
+   CARA UPDATE URL BACKEND (PALING MUDAH)
+===============================================
+
+LANGKAH 1: Update URL Backend
+-----------------------------
+1. Buka folder frontend:
+   C:\Users\ASUS\Projects\desakalemago2
+
+2. Double klik file:
+   update-backend-url.bat
+
+3. Tunggu sampai muncul tulisan "Selesai!"
+4. Tutup jendela tersebut.
+
+
+LANGKAH 2: Push ke GitHub
+-------------------------
+1. Buka folder yang sama di File Explorer.
+
+2. Double klik file:
+   push-ke-github.bat   (kalau belum ada, buat dulu atau pakai cara manual)
+
+   Atau lakukan manual:
+   - Klik kanan di folder kosong → Git Bash Here (kalau ada)
+   - Atau buka PowerShell dan ketik:
+     git add .
+     git commit -m "Update backend URL ke Railway baru"
+     git push
+
+
+SETELAH PUSH:
+- Tunggu 1-2 menit.
+- Buka website kamu (GitHub Pages).
+- Coba login pakai admin / admin123.
+
+===============================================
+Catatan:
+- URL baru backend kamu:
+  https://desakalemago2-backend-production-674c.up.railway.app
+
+- Kalau ada error, screenshot dan kirim ke saya.
+===============================================

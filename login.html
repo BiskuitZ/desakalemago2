@@ -68,7 +68,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://desakalemago2-backend-production.up.railway.app/api/auth/login';
+    const API_URL = 'https://desakalemago2-backend-production-674c.up.railway.app/api/auth/login';
 
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -92,7 +92,11 @@
         const data = await response.json();
 
         if (data.success) {
+          // Store both user and JWT token (new secure system)
           localStorage.setItem('user', JSON.stringify(data.user));
+          if (data.token) {
+            localStorage.setItem('token', data.token);
+          }
           
           // REDIRECT BERDASARKAN ROLE
           if (data.user.role === 'developer') {

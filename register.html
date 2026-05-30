@@ -81,7 +81,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://desakalemago2-backend-production.up.railway.app/api/auth/register';
+    const API_URL = 'https://desakalemago2-backend-production-674c.up.railway.app/api/auth/register';
 
     document.getElementById('registerForm').addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -139,7 +139,7 @@
           registerBtn.innerHTML = '<i class="fas fa-user-plus mr-2"></i> Daftar Sekarang';
         }
       } catch (error) {
-        messageBox.textContent = 'Tidak dapat terhubung ke server. Pastikan backend berjalan di https://desakalemago2-backend-production.up.railway.app';
+        messageBox.textContent = 'Tidak dapat terhubung ke server. Pastikan backend berjalan di https://desakalemago2-backend-production-674c.up.railway.app';
         messageBox.classList.remove('hidden');
         messageBox.classList.add('bg-red-100', 'border', 'border-red-400', 'text-red-700');
         registerBtn.disabled = false;
